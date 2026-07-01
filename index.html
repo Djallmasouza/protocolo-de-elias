@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Descanso Permitido | Pleno</title>
+  <meta name="description" content="Aprenda a parar sem sentir que esta falhando, seguindo o caminho biblico de restauracao em 7 dias.">
+
+  <!-- META PIXEL: substituir pelo codigo real antes de subir trafego -->
+  <!--
+  <script>
+    !function(f,b,e,v,n,t,s){...}
+  </script>
+  <noscript>...</noscript>
+  -->
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background-color: #FAF7F2;
+      color: #1C1208;
+      font-size: 16px;
+      line-height: 1.75;
+    }
+    .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
+
+    /* HERO */
+    .hero { background: #1C1208; color: #FAF7F2; padding: 52px 20px 44px; text-align: center; }
+    .hero-eyebrow { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #C4973B; margin-bottom: 20px; }
+    .hero-question {
+      font-size: 17px; font-style: italic; color: #D8C9A8; margin-bottom: 28px; line-height: 1.6;
+      border-left: 3px solid #C4973B; padding-left: 16px;
+      text-align: left; max-width: 460px; margin-left: auto; margin-right: auto;
+    }
+    h1 { font-size: 28px; font-weight: 700; line-height: 1.3; margin-bottom: 18px; }
+    .hero-sub { font-size: 14px; color: #B0A080; margin-bottom: 36px; line-height: 1.6; }
+
+    /* SECTIONS */
+    .section { padding: 44px 20px; }
+    .section-cream { background: #FAF7F2; }
+    .section-warm { background: #F0E8D8; }
+    .section-dark { background: #241A0C; color: #F0E8D8; }
+
+    p { margin-bottom: 16px; }
+    h2 { font-size: 23px; font-weight: 700; line-height: 1.3; margin-bottom: 20px; }
+    h3 { font-size: 19px; font-weight: 700; margin-bottom: 10px; }
+
+    .label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #C4973B; margin-bottom: 8px; }
+
+    .btn-cta {
+      display: block; background: #C4973B; color: #1C1208;
+      text-align: center; text-decoration: none;
+      font-family: Georgia, serif; font-weight: 700; font-size: 15px;
+      padding: 18px 28px; border-radius: 4px;
+      margin: 28px auto; max-width: 420px;
+      letter-spacing: 0.5px; line-height: 1.4;
+    }
+
+    .divider { width: 50px; height: 2px; background: #C4973B; margin: 28px auto; }
+
+    .pull-quote {
+      border-left: 3px solid #C4973B; padding: 12px 20px;
+      margin: 24px 0; font-style: italic; font-size: 17px;
+      color: #4A3520; background: #F7F0E4;
+    }
+
+    .phase-block {
+      background: #FFFFFF; border-radius: 6px; padding: 22px 20px;
+      margin-bottom: 14px; border-left: 4px solid #C4973B;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .phase-block.locked { opacity: 0.45; border-left-color: #9A8060; }
+    .phase-block.locked h3 { color: #9A8060; }
+    .phase-num { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #C4973B; margin-bottom: 6px; }
+    .phase-block.locked .phase-num { color: #9A8060; }
+    .phase-note { font-size: 13px; color: #8A7060; font-style: italic; margin-top: 12px; text-align: center; }
+
+    .qual-list { list-style: none; padding: 0; }
+    .qual-list li {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 0; border-bottom: 1px solid #E0D4C0; font-size: 15px;
+    }
+    .qual-list li:last-child { border-bottom: none; }
+    .qual-arrow { color: #C4973B; font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .warning-text {
+      font-size: 13px; color: #7A6050; font-style: italic;
+      margin-top: 16px; padding: 14px 16px; background: #F7F0E4; border-radius: 4px;
+    }
+
+    .offer-box {
+      background: #1C1208; color: #F0E8D8; border-radius: 8px;
+      padding: 36px 24px; text-align: center; margin: 24px 0;
+      border: 1px solid #3A2810;
+    }
+    .offer-name { font-size: 24px; font-weight: 700; margin-bottom: 6px; color: #FFFFFF; }
+    .offer-phase { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #C4973B; margin-bottom: 16px; }
+    .offer-desc { font-size: 14px; color: #B0A080; margin-bottom: 28px; line-height: 1.65; }
+    .offer-price { font-size: 48px; font-weight: 700; color: #C4973B; line-height: 1; margin-bottom: 6px; }
+    .offer-detail { font-size: 13px; color: #8A7860; margin-bottom: 24px; }
+    .offer-gap { font-size: 13px; color: #8A7860; font-style: italic; margin-top: 16px; }
+
+    .seals {
+      display: flex; justify-content: center; gap: 18px;
+      flex-wrap: wrap; margin: 14px 0 0; font-size: 12px; color: #8A7060;
+    }
+    .seals span { display: flex; align-items: center; gap: 4px; }
+
+    .guarantee-box {
+      background: #F7F0E4; border-radius: 8px; padding: 28px 24px;
+      text-align: center; border: 1px solid #E0D0B0;
+    }
+    .guarantee-icon { font-size: 40px; margin-bottom: 12px; }
+    .guarantee-title { font-size: 20px; font-weight: 700; margin-bottom: 14px; }
+
+    .bullet-list { list-style: none; padding: 0; }
+    .bullet-list li {
+      padding: 14px 0 14px 24px; border-bottom: 1px solid rgba(200,180,140,0.2);
+      position: relative; font-size: 15px;
+    }
+    .bullet-list li:last-child { border-bottom: none; }
+    .bullet-list li::before {
+      content: "\203a"; position: absolute; left: 0;
+      color: #C4973B; font-size: 22px; line-height: 1.5;
+    }
+
+    footer {
+      background: #100C06; color: #5A4830;
+      padding: 36px 20px; text-align: center;
+      font-size: 12px; line-height: 2;
+    }
+    footer a { color: #7A6040; text-decoration: none; }
+    .footer-disclaimer { font-size: 11px; color: #3A2810; margin-top: 12px; line-height: 1.6; }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 24px; }
+      h2 { font-size: 20px; }
+      .offer-price { font-size: 40px; }
+      .btn-cta { font-size: 14px; padding: 16px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BLOCO 1: HERO -->
+  <section class="hero">
+    <div class="container">
+      <p class="hero-eyebrow">Pleno</p>
+      <p class="hero-question">Por que Deus mandou Elias dormir antes de falar com ele?</p>
+      <h1>Voce ainda ama a Deus.<br>Mas esta cansada ate de fingir que esta bem.</h1>
+      <p class="hero-sub">Baseado no caminho que Deus usou para restaurar Elias quando ele ja nao tinha forcas nem para continuar vivendo.</p>
+      <a href="LINK_CHECKOUT_PAYT" class="btn-cta">QUERO DESCANSAR EM DEUS</a>
+    </div>
+  </section>
+
+  <!-- BLOCO 2: PROBLEMA -->
+  <section class="section section-cream">
+    <div class="container">
+      <p class="label">O que esta acontecendo</p>
+      <h2>A voz nao sumiu.<br>O canal esta tampado pelo cansaco.</h2>
+
+      <p>Ela serve a Deus com tudo que tem.</p>
+      <p>A familia. A igreja. O marido. Os filhos.</p>
+      <p>Mas existe algo que ela nao conta pra ninguem: por dentro, esta vazia.</p>
+
+      <div class="divider"></div>
+
+      <p>Voce termina o culto.</p>
+      <p>Abraca todo mundo.</p>
+      <p>Diz que esta tudo bem.</p>
+      <p>Entra no carro.</p>
+      <p>E chora sozinha antes de ligar o motor.</p>
+
+      <div class="divider"></div>
+
+      <p>Nao e fraqueza.</p>
+      <p>E o peso de carregar o dia inteiro sem que ninguem perceba.</p>
+      <p>Voce perdeu as forcas de fingir que esta bem.</p>
+
+      <div class="pull-quote">
+        Talvez o problema nao seja falta de fe.<br>
+        Talvez Deus nao esteja pedindo mais esforco agora.
+      </div>
+
+      <p>Porque quando Elias chegou ao limite, Deus nao exigiu mais oracao. Exigiu que ele parasse.</p>
+      <p>Muitos dizem que descansar e falta de fe.</p>
+      <p>Para Elias, foi a unica forma de Deus entregar a direcao que ele tanto buscava.</p>
+      <p>Chegou com comida. E deixou ele dormir.</p>
+
+      <div class="divider"></div>
+
+      <p>Deus nao restaurou Elias porque ele era forte.</p>
+      <p>Restaurou porque ele ja nao conseguia continuar sozinho.</p>
+    </div>
+  </section>
+
+  <!-- BLOCO 3: MECANISMO -->
+  <section class="section section-warm">
+    <div class="container">
+      <p class="label">O metodo</p>
+      <h2>O Protocolo de Elias segue 3 fases.<br>As mesmas que Deus usou em 1 Reis 19.</h2>
+      <p style="margin-bottom: 28px;">Nao pedem esforco. Pedem que voce pare de resistir.</p>
+
+      <div class="phase-block">
+        <p class="phase-num">Fase 1</p>
+        <h3>Descanso Permitido</h3>
+        <p>Antes de falar, Deus deixou Elias dormir. Nao como recompensa. Como pre-requisito.</p>
+        <p style="margin-bottom: 0;">Voce vai aprender a parar sem sentir que esta falhando.</p>
+      </div>
+
+      <div class="phase-block locked">
+        <p class="phase-num">Fase 2</p>
+        <h3>Alimento Certo</h3>
+        <p style="margin-bottom: 0;">Elias nao recebeu uma missao. Recebeu comida. Deus sabia que corpo esgotado nao sustenta revelacao.</p>
+      </div>
+
+      <div class="phase-block locked">
+        <p class="phase-num">Fase 3</p>
+        <h3>Voz Mansa</h3>
+        <p style="margin-bottom: 0;">Elias nao ouviu Deus no trovao nem no terremoto. Ouviu no silencio, depois de descansar.</p>
+      </div>
+
+      <p class="phase-note">As Fases 2 e 3 existem. A restauracao comeca pela Fase 1.</p>
+    </div>
+  </section>
+
+  <!-- BLOCO 4: QUALIFICACAO -->
+  <section class="section section-cream">
+    <div class="container">
+      <p class="label">Isso e pra voce?</p>
+      <h2>Voce se reconhece aqui?</h2>
+
+      <ul class="qual-list">
+        <li>
+          <span class="qual-arrow">&#8250;</span>
+          <span>Voce serve, lidera ou cuida de pessoas, mas por dentro esta esgotada.</span>
+        </li>
+        <li>
+          <span class="qual-arrow">&#8250;</span>
+          <span>Faz tempo que voce nao sente Deus perto, mesmo orando.</span>
+        </li>
+        <li>
+          <span class="qual-arrow">&#8250;</span>
+          <span>Voce sente culpa toda vez que tenta descansar.</span>
+        </li>
+        <li>
+          <span class="qual-arrow">&#8250;</span>
+          <span>Voce ja pediu mais fe, ja orou mais. E o cansaco continua.</span>
+        </li>
+      </ul>
+
+      <div class="divider"></div>
+
+      <p>Se voce se identificou com pelo menos 2, o Descanso Permitido foi criado pra voce.</p>
+      <div class="warning-text">Este protocolo nao e para quem busca resultado sem aplicacao. Sao 7 dias de pratica honesta. Nada mais.</div>
+    </div>
+  </section>
+
+  <!-- BLOCO 5: OFERTA -->
+  <section class="section section-warm">
+    <div class="container">
+      <p class="label">O que voce recebe hoje</p>
+
+      <div class="offer-box">
+        <p class="offer-phase">Pleno | Fase 1 do Protocolo</p>
+        <p class="offer-name">Descanso Permitido</p>
+        <p class="offer-desc">O mesmo caminho que Deus usou com Elias antes de dar qualquer direcao. Guia pratico. Uma fase. Uma transformacao. Aplicavel em 7 dias, no seu ritmo, sem exigir mais do que voce ja tem para dar.</p>
+        <p class="offer-price">R$47,90</p>
+        <p class="offer-detail">Uma unica vez. Acesso imediato.</p>
+        <a href="LINK_CHECKOUT_PAYT" class="btn-cta">QUERO DESCANSAR EM DEUS</a>
+        <div class="seals">
+          <span>&#128274; Pagamento seguro</span>
+          <span>&#128241; Acesso pelo celular</span>
+          <span>&#9889; Entrega imediata</span>
+        </div>
+        <p class="offer-gap">As Fases 2 e 3 existem. A restauracao comeca aqui.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOCO 6: GARANTIA -->
+  <section class="section section-cream">
+    <div class="container">
+      <div class="guarantee-box">
+        <div class="guarantee-icon">&#128737;</div>
+        <h2 class="guarantee-title">7 dias de seguranca total</h2>
+        <p>Aplique o protocolo. Se em 7 dias voce nao sentir nenhum alivio, devolvo cada centavo.</p>
+        <p>Sem pergunta. Sem burocracia. Sem constrangimento.</p>
+        <p style="margin-bottom: 0; font-weight: 700;">O risco e todo meu.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOCO 7: BULLETS + CTA FINAL -->
+  <section class="section section-dark">
+    <div class="container">
+      <p class="label">O que voce vai descobrir</p>
+      <h2>O que muda quando voce aplica o Descanso Permitido</h2>
+
+      <ul class="bullet-list">
+        <li>Por que orar mais nao resolve o cansaco de alma, e o que Deus fez diferente com Elias</li>
+        <li>O que nenhuma lideranca da igreja te disse sobre esgotamento espiritual</li>
+        <li>Se voce ja tentou orar e nao sentiu nada, entao esta e a fase que estava faltando</li>
+        <li>A verdade sobre o que silencia a voz de Deus, e como desobstruir o canal</li>
+        <li>Voce acha que precisa de mais fe. Elias tambem achava. Deus discordou dos dois.</li>
+        <li>O que acontece com a mulher que finalmente para de correr e deixa Deus trabalhar</li>
+      </ul>
+
+      <div class="divider"></div>
+
+      <p>Cada dia que passa com o peso e mais um dia que Deus ja tem a resposta esperando.</p>
+      <p>Nao porque Ele esta distante. Porque o canal ainda esta tampado.</p>
+
+      <a href="LINK_CHECKOUT_PAYT" class="btn-cta">PARE DE ACORDAR COM ESSE PESO. COMECE AGORA.</a>
+
+      <div class="seals" style="color: #6A5840;">
+        <span>&#128274; Pagamento seguro</span>
+        <span>&#128737; Garantia de 7 dias</span>
+        <span>&#9889; Acesso imediato</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Pleno | Acesso Pleno Digital</p>
+    <p>CNPJ: INSERIR_CNPJ</p>
+    <p>
+      <a href="/privacidade">Politica de Privacidade</a>
+      &nbsp;|&nbsp;
+      <a href="/termos">Termos de Uso</a>
+    </p>
+    <p class="footer-disclaimer">Este produto nao garante resultados especificos. Resultados variam de acordo com o engajamento de cada pessoa.</p>
+  </footer>
+
+</body>
+</html>

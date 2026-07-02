@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Descanso Permitido — Guia de 7 Dias | Pleno</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #FAF7F2;
+      --cream2: #F0E8D8;
+      --dark: #1C1208;
+      --dark2: #241A0C;
+      --gold: #C4973B;
+      --gold-light: #D4A94B;
+      --brown: #3A2810;
+      --muted: #8A7060;
+      --muted2: #6A5840;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--cream); min-height: 100vh; font-size: 16px; line-height: 1.7; }
+    .header { background: #100C06; border-bottom: 1px solid #2A1E10; padding: 16px 20px; text-align: center; position: sticky; top: 0; z-index: 100; }
+    .header-brand { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+    .header-title { font-family: 'Lora', serif; font-size: 15px; color: var(--cream); font-weight: 600; }
+    .progress-bar-wrap { background: #100C06; padding: 12px 20px 16px; border-bottom: 1px solid #2A1E10; }
+    .progress-label { font-size: 11px; color: var(--muted); margin-bottom: 8px; display: flex; justify-content: space-between; letter-spacing: 1px; text-transform: uppercase; }
+    .progress-bar { height: 3px; background: #2A1E10; border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.5s ease; }
+    .day-selector { background: #100C06; padding: 16px 20px; border-bottom: 1px solid #2A1E10; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+    .day-selector::-webkit-scrollbar { display: none; }
+    .day-btn { flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid #3A2810; background: transparent; color: var(--muted); font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; position: relative; }
+    .day-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(196,151,59,0.08); }
+    .day-btn.completed { border-color: var(--gold); background: var(--gold); color: var(--dark); }
+    .day-btn.completed::after { content: '✓'; position: absolute; font-size: 14px; }
+    .day-btn.completed span { display: none; }
+    .main { max-width: 640px; margin: 0 auto; padding: 32px 20px 80px; }
+    .day-panel { display: none; }
+    .day-panel.active { display: block; }
+    .day-eyebrow { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .day-title { font-family: 'Lora', serif; font-size: 28px; line-height: 1.25; color: var(--cream); margin-bottom: 6px; font-weight: 700; }
+    .day-subtitle { font-family: 'Lora', serif; font-style: italic; font-size: 15px; color: var(--muted); margin-bottom: 32px; }
+    .verse-box { background: #100C06; border: 1px solid #2A1E10; border-left: 3px solid var(--gold); border-radius: 6px; padding: 20px; margin-bottom: 28px; }
+    .verse-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; font-weight: 600; }
+    .verse-text { font-family: 'Lora', serif; font-style: italic; font-size: 18px; line-height: 1.75; color: #EDE0C8; }
+    .verse-ref { font-size: 12px; color: var(--muted); margin-top: 10px; }
+    .section-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; font-weight: 700; }
+    .reflexao-text { color: #E8DDD0; font-size: 17px; line-height: 1.85; margin-bottom: 28px; }
+    .reflexao-text p { margin-bottom: 14px; }
+    .reflexao-text p:last-child { margin-bottom: 0; }
+    .pergunta-box { background: rgba(196,151,59,0.06); border: 1px solid rgba(196,151,59,0.2); border-radius: 6px; padding: 18px 20px; margin-bottom: 28px; }
+    .pergunta-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; font-weight: 600; }
+    .pergunta-text { font-size: 16px; font-weight: 500; color: #F0E8D8; line-height: 1.65; }
+    .pratica-box { background: #100C06; border: 1px solid #2A1E10; border-radius: 6px; padding: 22px 20px; margin-bottom: 28px; }
+    .pratica-list { list-style: none; padding: 0; }
+    .pratica-list li { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid #1E1408; color: #E8DDD0; font-size: 16px; line-height: 1.7; }
+    .pratica-list li:last-child { border-bottom: none; }
+    .pratica-num { flex-shrink: 0; width: 22px; height: 22px; background: var(--gold); color: var(--dark); border-radius: 50%; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+    .oracao-box { background: linear-gradient(135deg, #1C1208 0%, #241A0C 100%); border: 1px solid #3A2810; border-radius: 8px; padding: 24px 20px; margin-bottom: 36px; }
+    .oracao-text { font-size: 16px; line-height: 1.85; color: #EDE0C8; }
+    .oracao-text p { margin-bottom: 12px; }
+    .oracao-text p:last-child { margin-bottom: 0; }
+    .complete-btn { width: 100%; padding: 18px; background: var(--gold); color: var(--dark); border: none; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; margin-bottom: 12px; }
+    .complete-btn:hover { background: var(--gold-light); }
+    .complete-btn:disabled { background: #3A2810; color: var(--muted); cursor: default; }
+    .next-btn { width: 100%; padding: 14px; background: transparent; color: var(--gold); border: 1px solid var(--gold); border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: none; }
+    .next-btn:hover { background: rgba(196,151,59,0.08); }
+    .next-btn.visible { display: block; }
+    .divider { width: 40px; height: 2px; background: var(--gold); margin: 28px 0; opacity: 0.5; }
+    .final-badge { text-align: center; padding: 32px 20px; background: #100C06; border: 1px solid #3A2810; border-radius: 8px; margin-bottom: 28px; }
+    .final-icon { font-size: 48px; margin-bottom: 16px; }
+    .final-title { font-family: 'Lora', serif; font-size: 22px; color: var(--gold); margin-bottom: 10px; }
+    .final-text { color: var(--muted); font-size: 14px; line-height: 1.7; }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--gold); color: var(--dark); padding: 12px 24px; border-radius: 40px; font-size: 13px; font-weight: 700; transition: transform 0.3s ease; z-index: 200; white-space: nowrap; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    @media (max-width: 480px) { .day-title { font-size: 24px; } .verse-text { font-size: 15px; } }
+  </style>
+</head>
+<body>
+<div class="header">
+  <p class="header-brand">Pleno</p>
+  <p class="header-title">Descanso Permitido — Guia de 7 Dias</p>
+</div>
+<div class="progress-bar-wrap">
+  <div class="progress-label"><span>Seu progresso</span><span id="progress-text">0 de 7 dias</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+</div>
+<div class="day-selector">
+  <button class="day-btn active" onclick="goToDay(1)" id="btn-1"><span>1</span></button>
+  <button class="day-btn" onclick="goToDay(2)" id="btn-2"><span>2</span></button>
+  <button class="day-btn" onclick="goToDay(3)" id="btn-3"><span>3</span></button>
+  <button class="day-btn" onclick="goToDay(4)" id="btn-4"><span>4</span></button>
+  <button class="day-btn" onclick="goToDay(5)" id="btn-5"><span>5</span></button>
+  <button class="day-btn" onclick="goToDay(6)" id="btn-6"><span>6</span></button>
+  <button class="day-btn" onclick="goToDay(7)" id="btn-7"><span>7</span></button>
+</div>
+<div class="main">
+
+  <div class="day-panel active" id="day-1">
+    <p class="day-eyebrow">Dia 1 de 7</p>
+    <h1 class="day-title">A Sombra do Zimbreiro</h1>
+    <p class="day-subtitle">Permissão para estar cansada</p>
+    <div class="verse-box"><p class="verse-label">Passagem de hoje</p><p class="verse-text">“Andou um dia pelo deserto e veio assentar-se debaixo de um zimbro e pediu que morresse, dizendo: Já basta, Senhor; tira a minha alma, pois não sou melhor do que meus pais.”</p><p class="verse-ref">1 Reis 19:4</p></div>
+    <p class="section-title">Reflexão</p>
+    <div class="reflexao-text">
+      <p>Elias era um profeta. Um homem que chamou fogo do céu. Que confrontou 450 profetas de Baal sozinho. Que viu o poder de Deus de um jeito que pouquíssimas pessoas na história viram.</p>
+      <p>E esse mesmo homem se sentou debaixo de uma árvore e pediu para morrer.</p>
+      <p>Não porque perdeu a fé. Mas porque estava esgotado de uma forma que fé, oração e determinação não conseguem curar sozinhos.</p>
+      <p>O cansaço de alma tem um peso que vai além do físico. É o peso de quem deu tudo pela família, pela igreja, pelos outros, e ficou vazia sem perceber quando aconteceu.</p>
+      <p>Deus não repreendeu Elias por estar debaixo do zimbro. A primeira coisa que fez foi deixá-lo dormir. Isso não é fraqueza. É o início da restauração.</p>
+    </div>
+    <div class="pergunta-box"><p class="pergunta-label">Pergunta para hoje</p><p class="pergunta-text">Qual é o seu “zimbro”, o lugar onde você finalmente parou de fingir que estava bem?</p></div>
+    <div class="divider"></div>
+    <p class="section-title">Prática do dia</p>
+    <div class="pratica-box"><ul class="pratica-list">
+      <li><span class="pratica-num">1</span><span>Reserve 10 minutos em silêncio, sem celular e sem compromissos. Pode ser logo de manhã ou antes de dormir.</span></li>
+      <li><span class="pratica-num">2</span><span>Escreva uma frase honesta sobre como você está se sentindo por dentro. Não para mostrar para ninguém, só para você e Deus.</span></li>
+      <li><span class="pratica-num">3</span><span>Leia em voz alta: <em>“Senhor, é aqui que eu estou. E está tudo bem estar aqui.”</em></span></li>
+    </ul></div>
+    <p class="section-title">Oração guiada</p>
+    <div class="oracao-box"><div class="oracao-text">
+      <p>Senhor, estou cansada. Não de você. Mas do peso que carrego sem que ninguém perceba.</p>
+      <p>Hoje eu escolho me sentar debaixo do zimbro, meu lugar de cansaço honesto, e não fingir mais que estou bem quando não estou.</p>
+      <p>Me encontra aqui. Como encontrou Elias. Amém.</p>
+    </div></div>
+    <button class="complete-btn" id="complete-1" onclick="completeDay(1)">Concluir o Dia 1</button>
+    <button class="next-btn" id="next-1" onclick="goToDay(2)">Ir para o Dia 2 →</button>
+  </div>
+
+  <div class="day-panel" id="day-2">
+    <p class="day-eyebrow">Dia 2 de 7</p>
+    <h1 class="day-title">O Toque que Acorda</h1>
+    <p class="day-subtitle">Deus não grita com quem está esgotado</p>
+    <div class="verse-box"><p class="verse-label">Passagem de hoje</p><p class="verse-text">“E eis que um anjo o tocou e lhe disse: Levanta e come.”</p><p class="verse-ref">1 Reis 19:5</p></div>
+    <p class="section-title">Reflexão</p>
+    <div class="reflexao-text">
+      <p>Elias dormiu. E enquanto dormia, um anjo veio. Não com uma missão. Não com uma cobrança. O anjo o tocou. Uma palavra. Uma ação gentil.</p>
+      <p>Com Elias, Deus chegou no momento de maior fragilidade, quando ele estava dormindo, longe de tudo.</p>
+      <p>O toque de Deus não exige que você esteja pronta. Em vez de tentar chegar até Deus com esforço, permita que ele venha até onde você está.</p>
+    </div>
+    <div class="pergunta-box"><p class="pergunta-label">Pergunta para hoje</p><p class="pergunta-text">Você tem tentado chegar até Deus pelo esforço, ou tem deixado espaço para ele chegar até você?</p></div>
+    <div class="divider"></div>
+    <p class="section-title">Prática do dia</p>
+    <div class="pratica-box"><ul class="pratica-list">
+      <li><span class="pratica-num">1</span><span>Deite de costas por 5 minutos com os olhos fechados. Não faça nada. Não ore com palavras. Apenas esteja presente.</span></li>
+      <li><span class="pratica-num">2</span><span>Repita mentalmente 3 vezes: <em>“Eu não preciso chegar até Você. Você já está aqui.”</em></span></li>
+      <li><span class="pratica-num">3</span><span>Observe o que aparece: tensão, pensamentos, sensações. Não tente controlar. Só perceba.</span></li>
+    </ul></div>
+    <p class="section-title">Oração guiada</p>
+    <div class="oracao-box"><div class="oracao-text">
+      <p>Senhor, estou aprendendo a receber o que eu sempre tentei conquistar. A Sua presença. O Seu toque. A Sua voz.</p>
+      <p>Toca a minha alma hoje. Com a mesma ternura que usou com Elias debaixo do zimbro. Amém.</p>
+    </div></div>
+    <button class="complete-btn" id="complete-2" onclick="completeDay(2)">Concluir o Dia 2</button>
+    <button class="next-btn" id="next-2" onclick="goToDay(3)">Ir para o Dia 3 →</button>
+  </div>
+
+  <div class="day-panel" id="day-3">
+    <p class="day-eyebrow">Dia 3 de 7</p>
+    <h1 class="day-title">O Bolo no Carvão</h1>
+    <p class="day-subtitle">Receber é um ato espiritual</p>
+    <div class="verse-box"><p class="verse-label">Passagem de hoje</p><p class="verse-text">“Então olhou, e eis que havia à sua cabeceira um bolo cozido sobre brasas e um vaso d’água. E comeu e bebeu, e tornou a deitar-se.”</p><p class="verse-ref">1 Reis 19:6</p></div>
+    <p class="section-title">Reflexão</p>
+    <div class="reflexao-text">
+      <p>Deus não mandou Elias buscar comida. Preparou o bolo. Colocou do lado dele. E só então disse: levanta e come.</p>
+      <p>A mulher que serve e cuida tem muita dificuldade em receber. Receber parece fraqueza. Mas o bolo estava lá, não como recompensa, mas como cuidado puro e simples.</p>
+      <p>Quando foi a última vez que você recebeu algo sem precisar justificar ou merecê-lo?</p>
+    </div>
+    <div class="pergunta-box"><p class="pergunta-label">Pergunta para hoje</p><p class="pergunta-text">O que Deus já colocou do seu lado e você ainda não parou para comer?</p></div>
+    <div class="divider"></div>
+    <p class="section-title">Prática do dia</p>
+    <div class="pratica-box"><ul class="pratica-list">
+      <li><span class="pratica-num">1</span><span>Escolha algo simples que você gosta e faça com atenção total. Sem culpa. Sem pressa.</span></li>
+      <li><span class="pratica-num">2</span><span>Diga mentalmente: <em>“Eu recebo isso. Eu mereço isso. Deus preparou isso para mim.”</em></span></li>
+      <li><span class="pratica-num">3</span><span>Anote uma coisa que você tem dado mas não recebido de volta. Reconheça sem culpa.</span></li>
+    </ul></div>
+    <p class="section-title">Oração guiada</p>
+    <div class="oracao-box"><div class="oracao-text">
+      <p>Senhor, eu aprendi muito bem a dar. Mas hoje reconheço que esqueci de receber.</p>
+      <p>Me ensina a receber o Seu cuidado como Elias recebeu o bolo, sem questionar se mereceu. O que você preparou para mim? Eu quero receber. Amém.</p>
+    </div></div>
+    <button class="complete-btn" id="complete-3" onclick="completeDay(3)">Concluir o Dia 3</button>
+    <button class="next-btn" id="next-3" onclick="goToDay(4)">Ir para o Dia 4 →</button>
+  </div>
+
+  <div class="day-panel" id="day-4">
+    <p class="day-eyebrow">Dia 4 de 7</p>
+    <h1 class="day-title">O Segundo Sono</h1>
+    <p class="day-subtitle">Descansar duas vezes não é fraqueza</p>
+    <div class="verse-box"><p class="verse-label">Passagem de hoje</p><p class="verse-text">“E o anjo do Senhor tornou segunda vez, e o tocou, e disse: Levanta e come, porque o caminho é longo demais para ti.”</p><p class="verse-ref">1 Reis 19:7</p></div>
+    <p class="section-title">Reflexão</p>
+    <div class="reflexao-text">
+      <p>Depois de comer, Elias dormiu de novo. Uma vez não foi suficiente. E Deus sabia disso antes de Elias saber.</p>
+      <p>O anjo voltou, e não com cobrança, com cuidado: <em>“O caminho é longo demais para ti.”</em></p>
+      <p>Deus conhece o caminho que ainda está pela frente. Descansar de novo não é recuar. É se preparar para o que vem.</p>
+    </div>
+    <div class="pergunta-box"><p class="pergunta-label">Pergunta para hoje</p><p class="pergunta-text">O que te faz sentir culpa quando descansas? De onde veio essa crença?</p></div>
+    <div class="divider"></div>
+    <p class="section-title">Prática do dia</p>
+    <div class="pratica-box"><ul class="pratica-list">
+      <li><span class="pratica-num">1</span><span>Durma ou deite sem justificativa. Se a mente disser “devia estar fazendo X”, responda: <em>“O caminho é longo demais. Eu preciso descansar.”</em></span></li>
+      <li><span class="pratica-num">2</span><span>Identifique uma crença sobre descanso. Escreva e risque com uma linha.</span></li>
+      <li><span class="pratica-num">3</span><span>Escreva ao lado: <em>“Deus mandou Elias descansar duas vezes. Descanso é parte da vontade de Deus para mim.”</em></span></li>
+    </ul></div>
+    <p class="section-title">Oração guiada</p>
+    <div class="oracao-box"><div class="oracao-text">
+      <p>Senhor, eu carrego culpa quando paro. Mas hoje leio que o anjo voltou. Que uma vez não foi o bastante. E que Você sabia disso.</p>
+      <p>Me liberta da crença de que parar é falhar. Eu confio no Seu timing. Amém.</p>
+    </div></div>
+    <button class="complete-btn" id="complete-4" onclick="completeDay(4)">Concluir o Dia 4</button>
+    <button class="next-btn" id="next-4" onclick="goToDay(5)">Ir para o Dia 5 →</button>
+  </div>
+
+  <div class="day-panel" id="day-5">
+    <p class="day-eyebrow">Dia 5 de 7</p>
+    <h1 class="day-title">A Força do Alimento Certo</h1>
+    <p class="day-subtitle">Uma parada pode sustentar 40 dias</p>
+    <div class="verse-box"><p class="verse-label">Passagem de hoje</p><p class="verse-text">“Levantou-se, pois, e comeu e bebeu; e com a força daquele alimento andou quarenta dias e quarenta noites até Horebe, o monte de Deus.”</p><p class="verse-ref">1 Reis 19:8</p></div>
+    <p class="section-title">Reflexão</p>
+    <div class="reflexao-text">
+      <p>Uma refeição. Uma pausa. Dois momentos de descanso. E isso sustentou Elias por quarenta dias de caminhada.</p>
+      <p>O alimento certo, recebido no momento certo, pode sustentar um caminho muito mais longo do que parece possível.</p>
+      <p>O que tem alimentado a sua alma nos últimos meses? Não o que você tem dado, mas o que tem recebido?</p>
+    </div>
+    <div class="pergunta-box"><p class="pergunta-label">Pergunta para hoje</p><p class="pergunta-text">O que tem alimentado a sua alma ultimamente e o que tem apenas consumido?</p></div>
+    <div class="divider"></div>
+    <p class="section-title">Prática do dia</p>
+    <div class="pratica-box"><ul class="pratica-list">
+      <li><span class="pratica-num">1</span><span>Faça duas listas: <strong>O que alimenta minha alma</strong> e <strong>O que drena minha alma</strong>.</span></li>
+      <li><span class="pratica-num">2</span><span>Escolha uma coisa da primeira lista e faça hoje, mesmo que por 10 minutos.</span></li>
+      <li><span class="pratica-num">3</span><span>Identifique uma coisa da segunda lista para reduzir esta semana.</span></li>
+    </ul></div>
+    <p class="section-title">Oração guiada</p>
+    <div class="oracao-box"><div class="oracao-text">
+      <p>Senhor, eu quero ser alimentada por Você. Não pela distração, pelo entretenimento vazio, pela fuga que não renova.</p>
+      <p>Me ensina a distinguir o que alimenta do que apenas preenche. Amém.</p>
+    </div></div>
+    <button class="complete-btn" id="complete-5" onclick="completeDay(5)">Concluir o Dia 5</button>
+    <button class="next-btn" id="next-5" onclick="goToDay(6)">Ir para o Dia 6 →</button>
+  </div>
+
+  <div class="day-panel" id="day-6">
+    <p class="day-eyebrow">Dia 6 de 7</p>
+    <h1 class="day-title">A Pergunta de Deus</h1>
+    <p class="day-subtitle">“O que você está fazendo aqui?”</p>
+    <div class="verse-box"><p class="verse-label">Passagem de hoje</p><p class="verse-text">“E eis que ali lhe veio uma voz que dizia: Que fazes aqui, Elias?”</p><p class="verse-ref">1 Reis 19:9</p></div>
+    <p class="section-title">Reflexão</p>
+    <div class="reflexao-text">
+      <p>Depois do descanso, do alimento, da caminhada, Deus finalmente fala. E a primeira coisa que diz é uma pergunta. Não um julgamento. Uma pergunta.</p>
+      <p>Essa pergunta é sobre estado de alma. Deus abrindo espaço para Elias falar o que estava guardado dentro dele.</p>
+      <p>Elias respondeu. Despejou tudo: o cansaço, o isolamento, a sensação de ser o único. Deus não interrompeu. Ouviu.</p>
+    </div>
+    <div class="pergunta-box"><p class="pergunta-label">Pergunta para hoje</p><p class="pergunta-text">Se Deus te fizesse a mesma pergunta agora, “O que fazes aqui?”, o que você responderia com honestidade total?</p></div>
+    <div class="divider"></div>
+    <p class="section-title">Prática do dia</p>
+    <div class="pratica-box"><ul class="pratica-list">
+      <li><span class="pratica-num">1</span><span>Reserve 15 minutos e escreva livremente: <em>“O que faço aqui?”</em> Sem filtro. O que você carregou sozinha.</span></li>
+      <li><span class="pratica-num">2</span><span>Leia o que escreveu em voz alta, como se estivesse falando com Deus.</span></li>
+      <li><span class="pratica-num">3</span><span>Não tente resolver nada hoje. Apenas fale. Apenas seja ouvida.</span></li>
+    </ul></div>
+    <p class="section-title">Oração guiada</p>
+    <div class="oracao-box"><div class="oracao-text">
+      <p>Senhor, estou aqui porque me perdi. Porque fui dando sem perceber que estava ficando vazia.</p>
+      <p>Mas hoje paro. Hoje falo. E confio que Você está ouvindo cada palavra. Amém.</p>
+    </div></div>
+    <button class="complete-btn" id="complete-6" onclick="completeDay(6)">Concluir o Dia 6</button>
+    <button class="next-btn" id="next-6" onclick="goToDay(7)">Ir para o Dia 7 →</button>
+  </div>
+
+  <div class="day-panel" id="day-7">
+    <p class="day-eyebrow">Dia 7 de 7</p>
+    <h1 class="day-title">A Voz Mansa e Delicada</h1>
+    <p class="day-subtitle">Deus não estava no trovão. Estava no silêncio.</p>
+    <div class="verse-box"><p class="verse-label">Passagem de hoje</p><p class="verse-text">“Depois do fogo, uma voz mansa e delicada. E quando Elias a ouviu, cobriu o seu rosto com o seu manto e saiu, e pôs-se à entrada da caverna.”</p><p class="verse-ref">1 Reis 19:12-13</p></div>
+    <p class="section-title">Reflexão</p>
+    <div class="reflexao-text">
+      <p>Deus passou. Antes dele veio vento fortíssimo, terremoto, fogo. Em nenhum deles estava o Senhor.</p>
+      <p>E depois de tudo, veio uma voz mansa e delicada. E era ali que Deus estava.</p>
+      <p>A voz mansa só é ouvida no silêncio. E o silêncio só vem depois do descanso. Esses sete dias foram sobre criar o espaço que a voz de Deus precisa para ser ouvida.</p>
+    </div>
+    <div class="pergunta-box"><p class="pergunta-label">Pergunta de encerramento</p><p class="pergunta-text">Nos últimos sete dias, o que mudou na sua capacidade de ouvir? O que você percebeu sobre si mesma que não sabia antes?</p></div>
+    <div class="divider"></div>
+    <p class="section-title">Prática do dia</p>
+    <div class="pratica-box"><ul class="pratica-list">
+      <li><span class="pratica-num">1</span><span>Reserve 20 minutos em silêncio total. Sem música, sem oração de palavras, sem celular. Apenas esteja presente.</span></li>
+      <li><span class="pratica-num">2</span><span>Escreva o que você “ouviu”, mesmo que sutil. A voz mansa muitas vezes não é audível. Ela é sentida.</span></li>
+      <li><span class="pratica-num">3</span><span>Escreva como você vai proteger o silêncio daqui para frente. Uma prática pequena e sustentável.</span></li>
+    </ul></div>
+    <p class="section-title">Oração de encerramento</p>
+    <div class="oracao-box"><div class="oracao-text">
+      <p>Senhor, eu vim até o Horebe. Não com força própria, com o alimento que Você preparou e o descanso que Você ordenou.</p>
+      <p>Agora, no silêncio, eu escuto. Não peço trovão nem fogo. Peço apenas a voz mansa.</p>
+      <p>Obrigada por me encontrar onde eu estava. Eu saío daqui diferente, não porque me tornei mais forte, mas porque aprendi a descansar em Você. Amém.</p>
+    </div></div>
+    <div class="final-badge">
+      <div class="final-icon">🌿</div>
+      <p class="final-title">Você completou o Descanso Permitido</p>
+      <p class="final-text">Sete dias de prática honesta. O mesmo caminho que Deus usou com Elias. O Horëe não é o fim. É o início.</p>
+    </div>
+    <button class="complete-btn" id="complete-7" onclick="completeDay(7)">Concluir o Dia 7</button>
+    <button class="next-btn" id="next-7" style="display:none;"></button>
+  </div>
+
+</div>
+<div class="toast" id="toast"></div>
+<script>
+  const STORAGE_KEY = 'zimbreiro_progress';
+  function getProgress() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; } }
+  function saveProgress(p) { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); }
+  function updateProgressBar() {
+    const p = getProgress();
+    const count = Object.keys(p).filter(k => p[k]).length;
+    document.getElementById('progress-text').textContent = count + ' de 7 dias';
+    document.getElementById('progress-fill').style.width = (count / 7 * 100) + '%';
+  }
+  function updateButtons() {
+    const p = getProgress();
+    for (let i = 1; i <= 7; i++) {
+      const btn = document.getElementById('btn-' + i);
+      const cb = document.getElementById('complete-' + i);
+      const nb = document.getElementById('next-' + i);
+      if (p[i]) {
+        btn.classList.add('completed'); btn.classList.remove('active');
+        if (cb) { cb.disabled = true; cb.textContent = '✓ Dia ' + i + ' conclúído'; }
+        if (nb && i < 7) nb.classList.add('visible');
+      }
+    }
+  }
+  function goToDay(day) {
+    document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.day-btn').forEach(b => { b.classList.remove('active'); if (!b.classList.contains('completed')) b.style.borderColor = ''; });
+    document.getElementById('day-' + day).classList.add('active');
+    const btn = document.getElementById('btn-' + day);
+    if (!btn.classList.contains('completed')) btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function completeDay(day) {
+    const p = getProgress(); p[day] = true; saveProgress(p);
+    updateProgressBar(); updateButtons();
+    const msgs = { 1: 'Dia 1 conclúído.', 2: 'Dia 2 conclúído.', 3: 'Dia 3 conclúído.', 4: 'Dia 4 conclúído.', 5: 'Dia 5 conclúído.', 6: 'Dia 6 conclúído.', 7: 'Você chegou ao Horëe. 🌿' };
+    showToast(msgs[day] || 'Dia conclúído!');
+  }
+  function showToast(msg) {
+    const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+  updateProgressBar(); updateButtons();
+</script>
+</body>
+</html>

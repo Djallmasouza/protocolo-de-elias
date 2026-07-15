@@ -33,6 +33,23 @@
     gtag('config', 'G-DW808DQS8Q');
   </script>
 
+  <!-- CTA click tracking: single delegated listener, no per-button onclick.
+       Fires on any element with [data-track-cta]; beacon transport means it
+       never delays or blocks the navigation to checkout. -->
+  <script>
+    document.addEventListener('click', function (event) {
+      var el = event.target.closest('[data-track-cta]');
+      if (!el) return;
+      gtag('event', 'cta_click', {
+        cta_id: el.getAttribute('data-cta-id') || '',
+        cta_text: el.textContent.trim(),
+        cta_position: el.getAttribute('data-cta-position') || '',
+        destination_url: el.href || '',
+        transport_type: 'beacon'
+      });
+    });
+  </script>
+
   <!-- Microsoft Clarity -->
   <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
@@ -204,7 +221,7 @@
       <p class="hero-question">Por que Deus mandou Elias dormir antes de falar com ele?</p>
       <h1>Você ainda ama a Deus.<br>Mas está cansada até de fingir que está bem.</h1>
       <p class="hero-sub">Baseado no caminho que Deus usou para restaurar Elias quando ele já não tinha forças nem para continuar vivendo.</p>
-      <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7" class="btn-cta">QUERO DESCANSAR EM DEUS</a>
+      <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7" class="btn-cta" data-track-cta data-cta-id="cta-hero" data-cta-position="hero">QUERO DESCANSAR EM DEUS</a>
     </div>
   </section>
 
@@ -313,7 +330,7 @@
         <p class="offer-desc">O mesmo caminho que Deus usou com Elias antes de dar qualquer direção. Guia prático. Uma fase. Uma transformação. Aplicável em 7 dias, no seu ritmo, sem exigir mais do que você já tem para dar.</p>
         <p class="offer-price">R$47,90</p>
         <p class="offer-detail">Uma única vez. Acesso imediato.</p>
-        <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7" class="btn-cta">QUERO DESCANSAR EM DEUS</a>
+        <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7" class="btn-cta" data-track-cta data-cta-id="cta-oferta" data-cta-position="meio">QUERO DESCANSAR EM DEUS</a>
         <div class="seals">
           <span>&#128274; Pagamento seguro</span>
           <span>&#128241; Acesso pelo celular</span>
@@ -357,7 +374,7 @@
       <p>Cada dia que passa com o peso é mais um dia que Deus já tem a resposta esperando.</p>
       <p>Não porque Ele está distante. Porque o canal ainda está tampado.</p>
 
-      <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7" class="btn-cta">PARE DE ACORDAR COM ESSE PESO. COMECE AGORA.</a>
+      <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7" class="btn-cta" data-track-cta data-cta-id="cta-final" data-cta-position="final">PARE DE ACORDAR COM ESSE PESO. COMECE AGORA.</a>
 
       <div class="seals" style="color: #6A5840;">
         <span>&#128274; Pagamento seguro</span>

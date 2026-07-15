@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antes de Cair de Novo — 7 Passos | Pleno</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #FAF7F2;
+      --cream2: #F0E8D8;
+      --dark: #1C1208;
+      --dark2: #241A0C;
+      --gold: #C4973B;
+      --gold-light: #D4A94B;
+      --brown: #3A2810;
+      --muted: #8A7060;
+      --muted2: #6A5840;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--cream); min-height: 100vh; font-size: 16px; line-height: 1.7; }
+    .header { background: #100C06; border-bottom: 1px solid #2A1E10; padding: 16px 20px; text-align: center; position: sticky; top: 0; z-index: 100; }
+    .header-brand { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+    .header-title { font-family: 'Lora', serif; font-size: 15px; color: var(--cream); font-weight: 600; }
+    .progress-bar-wrap { background: #100C06; padding: 12px 20px 16px; border-bottom: 1px solid #2A1E10; }
+    .progress-label { font-size: 11px; color: var(--muted); margin-bottom: 8px; display: flex; justify-content: space-between; letter-spacing: 1px; text-transform: uppercase; }
+    .progress-bar { height: 3px; background: #2A1E10; border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.5s ease; }
+    .day-selector { background: #100C06; padding: 16px 20px; border-bottom: 1px solid #2A1E10; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+    .day-selector::-webkit-scrollbar { display: none; }
+    .day-btn { flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid #3A2810; background: transparent; color: var(--muted); font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; position: relative; }
+    .day-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(196,151,59,0.08); }
+    .day-btn.completed { border-color: var(--gold); background: var(--gold); color: var(--dark); }
+    .day-btn.completed::after { content: '✓'; position: absolute; font-size: 14px; }
+    .day-btn.completed span { display: none; }
+    .main { max-width: 640px; margin: 0 auto; padding: 32px 20px 80px; }
+    .day-panel { display: none; }
+    .day-panel.active { display: block; }
+    .day-eyebrow { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .day-title { font-family: 'Lora', serif; font-size: 28px; line-height: 1.25; color: var(--cream); margin-bottom: 6px; font-weight: 700; }
+    .day-subtitle { font-family: 'Lora', serif; font-style: italic; font-size: 15px; color: var(--muted); margin-bottom: 32px; }
+    .verse-box { background: #100C06; border: 1px solid #2A1E10; border-left: 3px solid var(--gold); border-radius: 6px; padding: 20px; margin-bottom: 28px; }
+    .verse-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; font-weight: 600; }
+    .verse-text { font-family: 'Lora', serif; font-style: italic; font-size: 18px; line-height: 1.75; color: #EDE0C8; }
+    .verse-ref { font-size: 12px; color: var(--muted); margin-top: 10px; }
+    .section-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; font-weight: 700; }
+    .reflexao-text { color: #E8DDD0; font-size: 17px; line-height: 1.85; margin-bottom: 28px; }
+    .reflexao-text p { margin-bottom: 14px; }
+    .reflexao-text p:last-child { margin-bottom: 0; }
+    .pergunta-box { background: rgba(196,151,59,0.06); border: 1px solid rgba(196,151,59,0.2); border-radius: 6px; padding: 18px 20px; margin-bottom: 28px; }
+    .pergunta-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; font-weight: 600; }
+    .pergunta-text { font-size: 16px; font-weight: 500; color: #F0E8D8; line-height: 1.65; }
+    .acao-box { background: #100C06; border: 1px solid #2A1E10; border-radius: 6px; padding: 22px 20px; margin-bottom: 28px; }
+    .acao-instrucao { color: #E8DDD0; font-size: 16px; line-height: 1.7; margin-bottom: 16px; }
+    .acao-input { width: 100%; min-height: 90px; background: #1C1208; border: 1px solid #3A2810; border-radius: 6px; padding: 14px; color: var(--cream2); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.6; resize: vertical; }
+    .acao-input:focus { outline: none; border-color: var(--gold); }
+    .acao-saved { font-size: 11px; color: var(--muted); margin-top: 8px; opacity: 0; transition: opacity 0.3s; }
+    .acao-saved.show { opacity: 1; }
+    .oracao-box { background: linear-gradient(135deg, #1C1208 0%, #241A0C 100%); border: 1px solid #3A2810; border-radius: 8px; padding: 24px 20px; margin-bottom: 24px; }
+    .oracao-text { font-size: 16px; line-height: 1.85; color: #EDE0C8; }
+    .progresso-box { background: var(--gold); color: var(--dark); border-radius: 6px; padding: 14px 18px; margin-bottom: 24px; font-weight: 700; font-size: 15px; text-align: center; }
+    .complete-btn { width: 100%; padding: 18px; background: var(--gold); color: var(--dark); border: none; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; margin-bottom: 12px; }
+    .complete-btn:hover { background: var(--gold-light); }
+    .complete-btn:disabled { background: #3A2810; color: var(--muted); cursor: default; }
+    .next-btn { width: 100%; padding: 14px; background: transparent; color: var(--gold); border: 1px solid var(--gold); border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: none; }
+    .next-btn:hover { background: rgba(196,151,59,0.08); }
+    .next-btn.visible { display: block; }
+    .divider { width: 40px; height: 2px; background: var(--gold); margin: 28px 0; opacity: 0.5; }
+    .final-badge { text-align: center; padding: 32px 20px; background: #100C06; border: 1px solid #3A2810; border-radius: 8px; margin-bottom: 28px; }
+    .final-icon { font-size: 48px; margin-bottom: 16px; }
+    .final-title { font-family: 'Lora', serif; font-size: 22px; color: var(--gold); margin-bottom: 10px; }
+    .final-text { color: var(--muted); font-size: 14px; line-height: 1.7; }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--gold); color: var(--dark); padding: 12px 24px; border-radius: 40px; font-size: 13px; font-weight: 700; transition: transform 0.3s ease; z-index: 200; white-space: nowrap; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    @media (max-width: 480px) { .day-title { font-size: 24px; } .verse-text { font-size: 15px; } }
+  </style>
+</head>
+<body>
+<div class="header">
+  <p class="header-brand">Pleno</p>
+  <p class="header-title">Antes de Cair de Novo — 7 Passos</p>
+</div>
+<div class="progress-bar-wrap">
+  <div class="progress-label"><span>Seu progresso</span><span id="progress-text">0 de 7 etapas</span></div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+</div>
+<div class="day-selector">
+  <button class="day-btn active" onclick="goToDay(1)" id="btn-1"><span>1</span></button>
+  <button class="day-btn" onclick="goToDay(2)" id="btn-2"><span>2</span></button>
+  <button class="day-btn" onclick="goToDay(3)" id="btn-3"><span>3</span></button>
+  <button class="day-btn" onclick="goToDay(4)" id="btn-4"><span>4</span></button>
+  <button class="day-btn" onclick="goToDay(5)" id="btn-5"><span>5</span></button>
+  <button class="day-btn" onclick="goToDay(6)" id="btn-6"><span>6</span></button>
+  <button class="day-btn" onclick="goToDay(7)" id="btn-7"><span>7</span></button>
+</div>
+<div class="main">
+
+  <div class="day-panel active" id="day-1">
+    <p class="day-eyebrow">Etapa 1 de 7</p>
+    <h1 class="day-title">Levanta-te e come</h1>
+    <p class="day-subtitle">O descanso não é o destino, é o combustível</p>
+    <div class="verse-box"><p class="verse-label">Passagem de hoje</p><p class="verse-text">“Levanta-te e come, porque o caminho é longo demais para ti.”</p><p class="verse-ref">1 Reis 19:7</p></div>
+    <p class="section-title">Reflexão</p>
+    <div class="reflexao-text">
+      <p>Você já comeu, já dormiu, já parou de se cobrar por um momento. Mas descansar não é o fim da história, é o começo dela.</p>
+      <p>Deus não tocou Elias duas vezes pra ele ficar deitado pro resto da vida. Tocou pra ele ter forças de andar.</p>
+    </div>
+    <div class="pergunta-box"><p class="pergunta-label">O que isso significa pra mim hoje?</p><p class="pergunta-text">Você achou que a paz de ontem já bastava. Ela não é o destino, é o combustível pro próximo passo.</p></div>
+    <div class="divider"></div>
+    <p class="section-title">Sua ação</p>
+    <div class="acao-box">
+      <p class="acao-instrucao">Termine a frase: <em>"Se eu tivesse forças agora, o primeiro passo que eu daria seria..."</em></p>
+      <textarea class="acao-input" id="acao-1" placeholder="Escreva aqui..." onblur="saveAcao(1)"></textarea>
+      <p class="acao-saved" id="saved-1">Salvo.</p>
+    </div>
+    <p class="section-title">Oração curta</p>
+    <div class="oracao-box"><div class="oracao-text">
+      <p>Senhor, obrigada pelo descanso que recebi. Agora me dá forças pra sair do lugar onde parei.</p>
+    </div></div>
+    <div class="progresso-box">Hoje você deixou a sombra do zimbreiro.</div>
+    <button class="complete-btn" id="complete-1" onclick="completeDay(1)">Concluir a Etapa 1</button>
+    <button class="next-btn" id="next-1" onclick="goToDay(2)">Ir para a Etapa 2 →</button>
+  </div>
+
+  <div class="day-panel" id="day-2">
+    <p class="day-eyebrow">Etapa 2 de 7</p>
+    <h1 class="day-title">O caminho começa</h1>
+    <p class="day-subtitle">Você não precisa ver o fim pra dar o primeiro passo</p>
+    <div class="verse-box"><p class="verse-label">Passagem de hoje</p><p class="verse-text">“E, levantando-se, comeu e bebeu, e, com a força daquela comida, caminhou quarenta dias e quarenta noites, até Horebe, o monte de Deus.”</p><p class="verse-ref">1 Reis 19:8</p></div>
+    <p class="section-title">Reflexão</p>
+    <div class="reflexao-text">
+      <p>Elias não sabia o que ia encontrar em Horebe. Só sabia que precisava andar.</p>
+      <p>Você não precisa ter os quarenta dias resolvidos, precisa dar o passo de hoje.</p>
+    </div>
+    <div class="pergunta-box"><p class="pergunta-label">O que isso significa pra mim hoje?</p><p class="pergunta-text">Você pede clareza total antes de agir. Elias andou sem ela.</p></div>
+    <div class="divider"></div>
+    <p class="section-title">Sua ação</p>
+    <div class="acao-box">
+      <p class="acao-instrucao">Escolha algo pequeno que você vem adiando por não saber "o que vem depois". Escreva o que é, e faça hoje mesmo, sem o resto do caminho traçado.</p>
+      <textarea class="acao-input" id="acao-2" placeholder="Escreva aqui..." onblur="saveAcao(2)"></textarea>
+      <p class="acao-saved" id="saved-2">Salvo.</p>
+    </div>
+    <p class="section-title">Oração curta</p>
+    <div class="oracao-box"><div class="oracao-text">
+      <p>Senhor, eu não preciso ver o fim do caminho. Preciso da força de hoje.</p>
+    </div></div>
+    <div class="progresso-box">Hoje você deu o primeiro passo.</div>
+    <button class="complete-btn" id="complete-2" onclick="completeDay(2)">Concluir a Etapa 2</button>
+    <button class="next-btn" id="next-2" onclick="goToDay(3)">Ir para a Etapa 3 →</button>
+  </div>
+
+  <div class="day-panel" id="day-3">
+    <p class="day-eyebrow">Etapa 3 de 7</p>
+    <h1 class="day-title">A caverna</h1>
+    <p class="day-subtitle">Reconhecer onde o medo te leva a se esconder</p>
+    <div class="verse-box"><p class="verse-label">Passagem de hoje</p><p class="verse-text">“E chegou ali a uma caverna, e passou ali a noite.”</p><p class="verse-ref">1 Reis 19:9</p></div>
+    <p class="section-title">Reflexão</p>
+    <div class="reflexao-text">
+      <p>Elias chegou ao monte de Deus e continuou entrando em lugares fechados, escondido. Chegar perto de Deus não apaga na hora o hábito de se esconder.</p>
+      <p>Essa é exatamente a porta pela qual o ciclo antigo tenta voltar: o medo aperta, e você corre pro mesmo canto de sempre.</p>
+    </div>
+    <div class="pergunta-box"><p class="pergunta-label">O que isso significa pra mim hoje?</p><p class="pergunta-text">Qual é a sua caverna, o canto que você entra quando o medo aperta, mesmo já tendo recebido descanso e direção?</p></div>
+    <div class="divider"></div>
+    <p class="section-title">Sua ação</p>
+    <div class="acao-box">
+      <p class="acao-instrucao">Nomeie sua caverna. Escreva aqui, e depois conte pra uma pessoa de confiança em voz alta, não só no papel.</p>
+      <textarea class="acao-input" id="acao-3" placeholder="Escreva aqui..." onblur="saveAcao(3)"></textarea>
+      <p class="acao-saved" id="saved-3">Salvo.</p>
+    </div>
+    <p class="section-title">Oração curta</p>
+    <div class="oracao-box"><div class="oracao-text">
+      <p>Senhor, me mostra pra onde eu corro quando tenho medo, e me tira de lá.</p>
+    </div></div>
+    <div class="progresso-box">Hoje você reconheceu sua caverna.</div>
+    <button class="complete-btn" id="complete-3" onclick="completeDay(3)">Concluir a Etapa 3</button>
+    <button class="next-btn" id="next-3" onclick="goToDay(4)">Ir para a Etapa 4 →</button>
+  </div>
+
+  <div class="day-panel" id="day-4">
+    <p class="day-eyebrow">Etapa 4 de 7</p>
+    <h1 class="day-title">Nem sempre Deus fala no barulho</h1>
+    <p class="day-subtitle">A mudança real acontece baixinho</p>
+    <div class="verse-box"><p class="verse-label">Passagem de hoje</p><p class="verse-text">“Não estava o Senhor no vento... não estava o Senhor no terremoto... não estava o Senhor no fogo.”</p><p class="verse-ref">1 Reis 19:11-12</p></div>
+    <p class="section-title">Reflexão</p>
+    <div class="reflexao-text">
+      <p>Você espera que a mudança chegue com barulho, uma virada grande, um milagre visível. Deus deixou o vento, o terremoto e o fogo passarem sem estar neles.</p>
+      <p>Se você identificar isso cedo, o ciclo perde força: ele se alimenta da sua espera por um sinal gigante que talvez nunca venha do jeito que você imaginou.</p>
+    </div>
+    <div class="pergunta-box"><p class="pergunta-label">O que isso significa pra mim hoje?</p><p class="pergunta-text">Que sinal grande você espera pra acreditar que mudou, quando a mudança real pode já estar acontecendo baixinho?</p></div>
+    <div class="divider"></div>
+    <p class="section-title">Sua ação</p>
+    <div class="acao-box">
+      <p class="acao-instrucao">Releia o que você escreveu na Etapa 1. O que já mudou em você de lá pra cá, mesmo pequeno? Escreva abaixo.</p>
+      <textarea class="acao-input" id="acao-4" placeholder="Escreva aqui..." onblur="saveAcao(4)"></textarea>
+      <p class="acao-saved" id="saved-4">Salvo.</p>
+    </div>
+    <p class="section-title">Oração curta</p>
+    <div class="oracao-box"><div class="oracao-text">
+      <p>Senhor, me ajuda a reconhecer sua voz mesmo quando ela não vem em milagre.</p>
+    </div></div>
+    <div class="progresso-box">Hoje você deixou de procurar Deus só no extraordinário.</div>
+    <button class="complete-btn" id="complete-4" onclick="completeDay(4)">Concluir a Etapa 4</button>
+    <button class="next-btn" id="next-4" onclick="goToDay(5)">Ir para a Etapa 5 →</button>
+  </div>
+
+  <div class="day-panel" id="day-5">
+    <p class="day-eyebrow">Etapa 5 de 7</p>
+    <h1 class="day-title">A voz mansa</h1>
+    <p class="day-subtitle">A resposta chega em sussurro, não em milagre</p>
+    <div class="verse-box"><p class="verse-label">Passagem de hoje</p><p class="verse-text">“E depois do fogo, uma voz mansa e delicada.”</p><p class="verse-ref">1 Reis 19:12</p></div>
+    <p class="section-title">Reflexão</p>
+    <div class="reflexao-text">
+      <p>A resposta de Deus pra Elias não veio gritando. Veio num sussurro.</p>
+      <p>Se você espera uma certeza gigante pra seguir em frente, pode estar perdendo a voz mansa que já fala com você todos os dias.</p>
+    </div>
+    <div class="pergunta-box"><p class="pergunta-label">O que isso significa pra mim hoje?</p><p class="pergunta-text">Qual pensamento quieto, recorrente, você vem ignorando por parecer pequeno demais pra ser resposta de Deus?</p></div>
+    <div class="divider"></div>
+    <p class="section-title">Sua ação</p>
+    <div class="acao-box">
+      <p class="acao-instrucao">Fique 2 minutos sem pedir nada, só escutando. Depois, anote o que veio.</p>
+      <textarea class="acao-input" id="acao-5" placeholder="Escreva aqui..." onblur="saveAcao(5)"></textarea>
+      <p class="acao-saved" id="saved-5">Salvo.</p>
+    </div>
+    <p class="section-title">Oração curta</p>
+    <div class="oracao-box"><div class="oracao-text">
+      <p>Senhor, faz silêncio em mim pra eu escutar o que já estás dizendo.</p>
+    </div></div>
+    <div class="progresso-box">Hoje você escutou a voz mansa.</div>
+    <button class="complete-btn" id="complete-5" onclick="completeDay(5)">Concluir a Etapa 5</button>
+    <button class="next-btn" id="next-5" onclick="goToDay(6)">Ir para a Etapa 6 →</button>
+  </div>
+
+  <div class="day-panel" id="day-6">
+    <p class="day-eyebrow">Etapa 6 de 7</p>
+    <h1 class="day-title">Você nunca esteve sozinha</h1>
+    <p class="day-subtitle">Sete mil também estão caminhando</p>
+    <div class="verse-box"><p class="verse-label">Passagem de hoje</p><p class="verse-text">“Mas eu deixei ficar em Israel sete mil: todos os joelhos que não se dobraram a Baal.”</p><p class="verse-ref">1 Reis 19:18</p></div>
+    <p class="section-title">Reflexão</p>
+    <div class="reflexao-text">
+      <p>Elias tinha certeza de que estava sozinho. "Só eu restei", disse a Deus. Deus corrigiu: existiam sete mil.</p>
+      <p>É aqui que muita gente desiste e volta ao ponto inicial, na certeza de que ninguém mais entende o que ela sente. Sua sensação de estar sozinha é real pra você, mas não é verdade sobre o mundo.</p>
+    </div>
+    <div class="pergunta-box"><p class="pergunta-label">O que isso significa pra mim hoje?</p><p class="pergunta-text">Onde você tem falado "só eu" quando existem outras exatamente na mesma caminhada?</p></div>
+    <div class="divider"></div>
+    <p class="section-title">Sua ação</p>
+    <div class="acao-box">
+      <p class="acao-instrucao">Escreva uma mensagem curta pra uma pessoa, contando que você está tentando caminhar de novo. Pode rascunhar aqui antes de enviar.</p>
+      <textarea class="acao-input" id="acao-6" placeholder="Escreva aqui..." onblur="saveAcao(6)"></textarea>
+      <p class="acao-saved" id="saved-6">Salvo.</p>
+    </div>
+    <p class="section-title">Oração curta</p>
+    <div class="oracao-box"><div class="oracao-text">
+      <p>Senhor, obrigada por não me deixar sozinha, mesmo quando eu sinto que estou.</p>
+    </div></div>
+    <div class="progresso-box">Hoje você deixou de estar sozinha nisso.</div>
+    <button class="complete-btn" id="complete-6" onclick="completeDay(6)">Concluir a Etapa 6</button>
+    <button class="next-btn" id="next-6" onclick="goToDay(7)">Ir para a Etapa 7 →</button>
+  </div>
+
+  <div class="day-panel" id="day-7">
+    <p class="day-eyebrow">Etapa 7 de 7</p>
+    <h1 class="day-title">Volta pelo teu caminho</h1>
+    <p class="day-subtitle">O descanso existia pra te dar direção</p>
+    <div class="verse-box"><p class="verse-label">Passagem de hoje</p><p class="verse-text">“Vai, volta pelo teu caminho.”</p><p class="verse-ref">1 Reis 19:15</p></div>
+    <p class="section-title">Reflexão</p>
+    <div class="reflexao-text">
+      <p>Deus não deixou Elias parado em Horebe recebendo consolo pra sempre. Deu instruções concretas: pra onde ir, quem ungir, o que fazer a seguir.</p>
+      <p>O descanso e a voz mansa existiram pra levar a isso, um próximo passo real, não um sentimento bom que passa em uma semana. É aqui que se decide a diferença entre voltar ao ciclo antigo e seguir de fato.</p>
+    </div>
+    <div class="pergunta-box"><p class="pergunta-label">Pergunta de encerramento</p><p class="pergunta-text">Qual é o seu "volta pelo teu caminho"? Qual ação concreta, não só emocional, essa semana toda deveria te levar a tomar?</p></div>
+    <div class="divider"></div>
+    <p class="section-title">Sua ação</p>
+    <div class="acao-box">
+      <p class="acao-instrucao">Escreva uma única frase de próximo passo prático, algo que você vai fazer nos próximos 7 dias, fora do campo dos sentimentos.</p>
+      <textarea class="acao-input" id="acao-7" placeholder="Escreva aqui..." onblur="saveAcao(7)"></textarea>
+      <p class="acao-saved" id="saved-7">Salvo.</p>
+    </div>
+    <p class="section-title">Oração de encerramento</p>
+    <div class="oracao-box"><div class="oracao-text">
+      <p>Senhor, me dá clareza do meu próximo passo, e coragem pra dá-lo.</p>
+    </div></div>
+    <div class="final-badge">
+      <div class="final-icon">🌿</div>
+      <p class="final-title">Hoje você voltou pro caminho</p>
+      <p class="final-text">Sete etapas de prática honesta. O mesmo caminho que Deus usou com Elias, do descanso à direção. Antes de cair de novo, você deu o próximo passo.</p>
+    </div>
+    <button class="complete-btn" id="complete-7" onclick="completeDay(7)">Concluir a Etapa 7</button>
+    <button class="next-btn" id="next-7" style="display:none;"></button>
+  </div>
+
+</div>
+<div class="toast" id="toast"></div>
+<script>
+  const STORAGE_KEY = 'antes_cair_progress';
+  const ACAO_KEY = 'antes_cair_respostas';
+  function getProgress() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; } }
+  function saveProgress(p) { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); }
+  function getRespostas() { try { return JSON.parse(localStorage.getItem(ACAO_KEY)) || {}; } catch { return {}; } }
+  function saveRespostas(r) { localStorage.setItem(ACAO_KEY, JSON.stringify(r)); }
+  function saveAcao(day) {
+    const val = document.getElementById('acao-' + day).value;
+    const r = getRespostas(); r[day] = val; saveRespostas(r);
+    const saved = document.getElementById('saved-' + day);
+    saved.classList.add('show');
+    setTimeout(() => saved.classList.remove('show'), 2000);
+  }
+  function loadRespostas() {
+    const r = getRespostas();
+    for (let i = 1; i <= 7; i++) {
+      if (r[i]) document.getElementById('acao-' + i).value = r[i];
+    }
+  }
+  function updateProgressBar() {
+    const p = getProgress();
+    const count = Object.keys(p).filter(k => p[k]).length;
+    document.getElementById('progress-text').textContent = count + ' de 7 etapas';
+    document.getElementById('progress-fill').style.width = (count / 7 * 100) + '%';
+  }
+  function updateButtons() {
+    const p = getProgress();
+    for (let i = 1; i <= 7; i++) {
+      const btn = document.getElementById('btn-' + i);
+      const cb = document.getElementById('complete-' + i);
+      const nb = document.getElementById('next-' + i);
+      if (p[i]) {
+        btn.classList.add('completed'); btn.classList.remove('active');
+        if (cb) { cb.disabled = true; cb.textContent = '✓ Etapa ' + i + ' concluída'; }
+        if (nb && i < 7) nb.classList.add('visible');
+      }
+    }
+  }
+  function goToDay(day) {
+    document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.day-btn').forEach(b => { b.classList.remove('active'); if (!b.classList.contains('completed')) b.style.borderColor = ''; });
+    document.getElementById('day-' + day).classList.add('active');
+    const btn = document.getElementById('btn-' + day);
+    if (!btn.classList.contains('completed')) btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function completeDay(day) {
+    const p = getProgress(); p[day] = true; saveProgress(p);
+    updateProgressBar(); updateButtons();
+    const msgs = { 1: 'Etapa 1 concluída.', 2: 'Etapa 2 concluída.', 3: 'Etapa 3 concluída.', 4: 'Etapa 4 concluída.', 5: 'Etapa 5 concluída.', 6: 'Etapa 6 concluída.', 7: 'Você voltou pro caminho. 🌿' };
+    showToast(msgs[day] || 'Etapa concluída!');
+  }
+  function showToast(msg) {
+    const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+  updateProgressBar(); updateButtons(); loadRespostas();
+</script>
+</body>
+</html>

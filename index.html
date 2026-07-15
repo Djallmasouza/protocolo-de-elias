@@ -6,6 +6,20 @@
   <title>Método do Zimbreiro | Pleno</title>
   <meta name="description" content="Aprenda a parar sem sentir que está falhando, seguindo o caminho bíblico de restauração em 7 dias.">
 
+  <!-- Variant assignment: runs synchronously before paint, before variant-specific
+       blocks below (.only-a / .only-b) get their display resolved by CSS.
+       Sticky per-visitor via localStorage so repeat views stay consistent. -->
+  <script>
+    (function () {
+      var v = localStorage.getItem('zimbreiro_variant');
+      if (v !== 'a' && v !== 'b') {
+        v = Math.random() < 0.5 ? 'a' : 'b';
+        localStorage.setItem('zimbreiro_variant', v);
+      }
+      document.documentElement.className += ' variant-' + v;
+    })();
+  </script>
+
   <!-- Meta Pixel Code -->
   <script>
   !function(f,b,e,v,n,t,s)
@@ -33,21 +47,107 @@
     gtag('config', 'G-DW808DQS8Q');
   </script>
 
-  <!-- CTA click tracking: single delegated listener, no per-button onclick.
-       Fires on any element with [data-track-cta]; beacon transport means it
-       never delays or blocks the navigation to checkout. -->
+  <!-- Tracking: CTA clicks, section arrivals, scroll milestones, offer dwell time, FAQ expand.
+       All events carry `variant` (a/b) so GA4/Clarity data can be split by test arm. -->
   <script>
+    function currentVariant() {
+      var m = document.documentElement.className.match(/variant-(a|b)/);
+      return m ? m[1] : 'unknown';
+    }
+
+    // CTA clicks: single delegated listener, no per-button onclick. Fires the
+    // generic cta_click (kept for /ga4-diagnostic compatibility) AND a
+    // position-named event (hero_cta_click / meio_cta_click / final_cta_click).
+    // Beacon transport never delays or blocks navigation to checkout.
     document.addEventListener('click', function (event) {
       var el = event.target.closest('[data-track-cta]');
       if (!el) return;
-      gtag('event', 'cta_click', {
+      var payload = {
         cta_id: el.getAttribute('data-cta-id') || '',
         cta_text: el.textContent.trim(),
         cta_position: el.getAttribute('data-cta-position') || '',
         destination_url: el.href || '',
+        variant: currentVariant(),
+        transport_type: 'beacon'
+      };
+      gtag('event', 'cta_click', payload);
+      gtag('event', (el.getAttribute('data-cta-position') || 'unknown') + '_cta_click', payload);
+    });
+
+    // FAQ expand tracking
+    document.addEventListener('click', function (event) {
+      var el = event.target.closest('[data-faq-toggle]');
+      if (!el) return;
+      gtag('event', 'faq_expand', {
+        faq_question: el.textContent.trim(),
+        variant: currentVariant(),
         transport_type: 'beacon'
       });
     });
+
+    // Section view tracking: fires once per section per pageview, first time
+    // it crosses 50% visibility.
+    (function () {
+      if (!('IntersectionObserver' in window)) return;
+      var seen = {};
+      var sectionObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var name = entry.target.getAttribute('data-track-section');
+          if (name && !seen[name]) {
+            seen[name] = true;
+            gtag('event', name + '_view', { variant: currentVariant(), transport_type: 'beacon' });
+          }
+        });
+      }, { threshold: 0.5 });
+      document.querySelectorAll('[data-track-section]').forEach(function (el) {
+        sectionObserver.observe(el);
+      });
+    })();
+
+    // Offer dwell-time tracking: distinguishes "scrolled past the offer" from
+    // "actually stayed on it". Timers start when the offer box enters
+    // viewport and clear if it leaves before a threshold, so a fast scroll-by
+    // doesn't falsely fire offer_visible_8s/15s.
+    (function () {
+      if (!('IntersectionObserver' in window)) return;
+      var fired = { 3: false, 8: false, 15: false };
+      var timers = [];
+      function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+      var offerObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            [3, 8, 15].forEach(function (sec) {
+              if (fired[sec]) return;
+              timers.push(setTimeout(function () {
+                fired[sec] = true;
+                gtag('event', 'offer_visible_' + sec + 's', { variant: currentVariant(), transport_type: 'beacon' });
+              }, sec * 1000));
+            });
+          } else {
+            clearTimers();
+          }
+        });
+      }, { threshold: 0.5 });
+      document.querySelectorAll('[data-track-offer-visibility]').forEach(function (el) {
+        offerObserver.observe(el);
+      });
+    })();
+
+    // Scroll depth milestones (25/50/75/90%), fired once each per pageview.
+    (function () {
+      var fired = {};
+      window.addEventListener('scroll', function () {
+        var doc = document.documentElement;
+        var pct = ((window.scrollY + window.innerHeight) / doc.scrollHeight) * 100;
+        [25, 50, 75, 90].forEach(function (milestone) {
+          if (pct >= milestone && !fired[milestone]) {
+            fired[milestone] = true;
+            gtag('event', 'scroll_' + milestone, { variant: currentVariant(), transport_type: 'beacon' });
+          }
+        });
+      }, { passive: true });
+    })();
   </script>
 
   <!-- Microsoft Clarity -->
@@ -79,6 +179,12 @@
       font-family: 'Lora', serif;
       font-weight: 700;
     }
+
+    /* A/B variant visibility: resolved by the class the head script adds to
+       <html> before paint, so there's no flash of both variants. */
+    .only-a, .only-b { display: none; }
+    html.variant-a .only-a { display: block; }
+    html.variant-b .only-b { display: block; }
 
     /* HERO */
     .hero { background: #1C1208; color: #FAF7F2; padding: 52px 20px 44px; text-align: center; }
@@ -122,6 +228,19 @@
       font-family: 'Lora', serif;
     }
 
+    .open-loop {
+      background: #241A0C; color: #F0E8D8; border-radius: 8px;
+      padding: 28px 22px; margin: 28px 0; text-align: center;
+    }
+    .open-loop p { color: #E4D4B0; }
+    .open-loop p:last-child { margin-bottom: 0; color: #C4973B; font-weight: 700; font-family: 'Lora', serif; font-size: 19px; }
+
+    .bounce-back {
+      font-family: 'Lora', serif; font-style: italic;
+      color: #7A5A20; font-size: 18px;
+      margin: 20px 0; padding-left: 16px; border-left: 3px solid #C4973B;
+    }
+
     .phase-block {
       background: #FFFFFF; border-radius: 6px; padding: 22px 20px;
       margin-bottom: 14px; border-left: 4px solid #C4973B;
@@ -132,6 +251,11 @@
     .phase-num { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #C4973B; margin-bottom: 6px; font-family: 'Inter', sans-serif; font-weight: 700; }
     .phase-block.locked .phase-num { color: #9A8060; }
     .phase-note { font-size: 14px; color: #7A6040; margin-top: 12px; text-align: center; }
+    .phase-highlight {
+      font-family: 'Lora', serif; font-style: italic; font-size: 19px;
+      color: #1C1208; background: #F0E0BE; border-radius: 4px;
+      padding: 10px 14px; margin: 10px 0; display: inline-block;
+    }
 
     .qual-list { list-style: none; padding: 0; }
     .qual-list li {
@@ -143,6 +267,18 @@
     .warning-text {
       font-size: 14px; color: #5A4030;
       margin-top: 16px; padding: 14px 16px; background: #F7F0E4; border-radius: 4px;
+    }
+
+    .receive-list { list-style: none; padding: 0; margin: 20px 0; }
+    .receive-list li {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 10px 0; font-size: 16px; text-align: left;
+    }
+    .receive-check { color: #C4973B; font-size: 18px; flex-shrink: 0; }
+
+    .offer-transition {
+      font-family: 'Lora', serif; font-size: 19px; text-align: center;
+      color: #3A2810; padding: 0 10px; margin-bottom: 8px;
     }
 
     .offer-box {
@@ -181,6 +317,18 @@
     .guarantee-icon { font-size: 40px; margin-bottom: 12px; }
     .guarantee-title { font-size: 22px; font-weight: 700; margin-bottom: 14px; }
 
+    .faq-item { border-bottom: 1px solid #E0D4C0; padding: 16px 0; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-question {
+      font-family: 'Lora', serif; font-size: 18px; font-weight: 700;
+      cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+      list-style: none;
+    }
+    .faq-question::-webkit-details-marker { display: none; }
+    .faq-question::after { content: '+'; color: #C4973B; font-size: 22px; }
+    details[open] .faq-question::after { content: '−'; }
+    .faq-answer { font-size: 15px; color: #5A4030; margin-top: 10px; }
+
     .bullet-list { list-style: none; padding: 0; }
     .bullet-list li {
       padding: 14px 0 14px 24px; border-bottom: 1px solid rgba(200,180,140,0.2);
@@ -214,8 +362,8 @@
 </head>
 <body>
 
-  <!-- BLOCO 1: HERO -->
-  <section class="hero">
+  <!-- BLOCO 1: HERO (mesmo pras 2 variantes, per acordo de não mexer) -->
+  <section class="hero" data-track-section="hero">
     <div class="container">
       <p class="hero-eyebrow">Pleno</p>
       <p class="hero-question">Por que Deus mandou Elias dormir antes de falar com ele?</p>
@@ -225,103 +373,222 @@
     </div>
   </section>
 
-  <!-- BLOCO 2: PROBLEMA -->
-  <section class="section section-cream">
+  <!-- ===================== VARIANTE A (controle, estrutura atual) ===================== -->
+  <div class="only-a">
+    <!-- BLOCO 2: PROBLEMA -->
+    <section class="section section-cream" data-track-section="dor">
+      <div class="container">
+        <p class="label">O que está acontecendo</p>
+        <h2>A voz não sumiu.<br>O canal está tampado pelo cansaço.</h2>
+
+        <p>Ela serve a Deus com tudo que tem.</p>
+        <p>A família. A igreja. O marido. Os filhos.</p>
+        <p>Mas existe algo que ela não conta pra ninguém: por dentro, está vazia.</p>
+
+        <div class="divider"></div>
+
+        <p>Você termina o culto.</p>
+        <p>Abraça todo mundo.</p>
+        <p>Diz que está tudo bem.</p>
+        <p>Entra no carro.</p>
+        <p>E chora sozinha antes de ligar o motor.</p>
+
+        <div class="divider"></div>
+
+        <p>Não é fraqueza.</p>
+        <p>É o peso de carregar o dia inteiro sem que ninguém perceba.</p>
+        <p>Você perdeu as forças de fingir que está bem.</p>
+
+        <div class="pull-quote">
+          Talvez o problema não seja falta de fé.<br>
+          Talvez Deus não esteja pedindo mais esforço agora.
+        </div>
+
+        <p>Porque quando Elias chegou ao limite, Deus não exigiu mais oração. Exigiu que ele parasse.</p>
+        <p>Muitos dizem que descansar é falta de fé.</p>
+        <p>Para Elias, foi a única forma de Deus entregar a direção que ele tanto buscava.</p>
+        <p>Chegou com comida. E deixou ele dormir.</p>
+
+        <div class="divider"></div>
+
+        <p>Deus não restaurou Elias porque ele era forte.</p>
+        <p>Restaurou porque ele já não conseguia continuar sozinho.</p>
+      </div>
+    </section>
+
+    <!-- BLOCO 3: MECANISMO -->
+    <section class="section section-warm" data-track-section="metodo">
+      <div class="container">
+        <p class="label">O método</p>
+        <h2>O Protocolo de Elias segue 3 fases.<br>As mesmas que Deus usou em 1 Reis 19.</h2>
+        <p style="margin-bottom: 28px;">Não pedem esforço. Pedem que você pare de resistir.</p>
+
+        <div class="phase-block">
+          <p class="phase-num">Fase 1</p>
+          <h3>Método do Zimbreiro</h3>
+          <p>Antes de falar, Deus deixou Elias dormir. Não como recompensa. Como pré-requisito.</p>
+          <p style="margin-bottom: 0;">Você vai aprender a parar sem sentir que está falhando.</p>
+        </div>
+
+        <div class="phase-block locked">
+          <p class="phase-num">Fase 2</p>
+          <h3>Alimento Certo</h3>
+          <p style="margin-bottom: 0;">Elias não recebeu uma missão. Recebeu comida. Deus sabia que corpo esgotado não sustenta revelação.</p>
+        </div>
+
+        <div class="phase-block locked">
+          <p class="phase-num">Fase 3</p>
+          <h3>Voz Mansa</h3>
+          <p style="margin-bottom: 0;">Elias não ouviu Deus no trovão nem no terremoto. Ouviu no silêncio, depois de descansar.</p>
+        </div>
+
+        <p class="phase-note">As Fases 2 e 3 existem. A restauração começa pela Fase 1.</p>
+      </div>
+    </section>
+
+    <!-- BLOCO 4: QUALIFICAÇÃO -->
+    <section class="section section-cream" data-track-section="qualificacao">
+      <div class="container">
+        <p class="label">Isso é pra você?</p>
+        <h2>Você se reconhece aqui?</h2>
+
+        <ul class="qual-list">
+          <li><span class="qual-arrow">&#8250;</span><span>Você serve, lidera ou cuida de pessoas, mas por dentro está esgotada.</span></li>
+          <li><span class="qual-arrow">&#8250;</span><span>Faz tempo que você não sente Deus perto, mesmo orando.</span></li>
+          <li><span class="qual-arrow">&#8250;</span><span>Você sente culpa toda vez que tenta descansar.</span></li>
+          <li><span class="qual-arrow">&#8250;</span><span>Você já pediu mais fé, já orou mais. E o cansaço continua.</span></li>
+        </ul>
+
+        <div class="divider"></div>
+
+        <p>Se você se identificou com pelo menos 2, o Método do Zimbreiro foi criado pra você.</p>
+        <div class="warning-text">Este protocolo não é para quem busca resultado sem aplicação. São 7 dias de prática honesta. Nada mais.</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===================== VARIANTE B (narrativa nova) ===================== -->
+  <div class="only-b">
+    <!-- DOR CONDENSADA + QUALIFICAÇÃO EMBUTIDA -->
+    <section class="section section-cream" data-track-section="dor">
+      <div class="container">
+        <p class="label">O que está acontecendo</p>
+        <h2>A voz não sumiu.<br>O canal está tampado pelo cansaço.</h2>
+
+        <p>Você serve a Deus com tudo que tem. A família. A igreja. O marido. Os filhos. Mas por dentro, está vazia.</p>
+
+        <p>Termina o culto, abraça todo mundo, diz que está tudo bem. Entra no carro. E chora sozinha antes de ligar o motor.</p>
+
+        <p>Não é fraqueza. É o peso de carregar o dia inteiro sem que ninguém perceba.</p>
+
+        <div class="divider"></div>
+
+        <p style="font-weight: 700;">Você se reconhece em pelo menos duas dessas frases?</p>
+        <ul class="qual-list" data-track-section="qualificacao">
+          <li><span class="qual-arrow">&#8250;</span><span>Serve, lidera ou cuida de gente, mas por dentro está esgotada.</span></li>
+          <li><span class="qual-arrow">&#8250;</span><span>Faz tempo que não sente Deus perto, mesmo orando.</span></li>
+          <li><span class="qual-arrow">&#8250;</span><span>Sente culpa toda vez que tenta descansar.</span></li>
+        </ul>
+
+        <p style="margin-top: 16px;">Se sim, o que vem agora muda a forma como você entende esse cansaço.</p>
+      </div>
+    </section>
+
+    <!-- OPEN LOOP -->
+    <section class="section section-warm" data-track-section="open_loop">
+      <div class="container open-loop">
+        <p>Existe um detalhe em 1 Reis 19 que quase ninguém percebe.</p>
+        <p>A maioria lembra do momento em que Deus falou com Elias.</p>
+        <p>Mas quase ninguém presta atenção no que aconteceu antes.</p>
+        <p>Esse detalhe muda completamente a forma de entender o cansaço espiritual.</p>
+      </div>
+    </section>
+
+    <!-- HISTÓRIA DE ELIAS + PONTE PRO MÉTODO -->
+    <section class="section section-cream" data-track-section="metodo">
+      <div class="container">
+        <p>Antes de qualquer palavra.<br>Antes de qualquer direção.<br>Antes de qualquer missão.</p>
+        <p>Deus fez uma coisa inesperada.</p>
+        <p>Antes de pedir qualquer coisa a Elias, Deus cuidou do cansaço dele.</p>
+
+        <p class="bounce-back">Talvez seja exatamente isso que esteja faltando para você hoje.</p>
+
+        <p>Um anjo tocou nele e disse: levanta e come. Elias comeu, e dormiu de novo.</p>
+        <p>Só então, Deus falou.</p>
+
+        <div class="pull-quote">
+          Deus não esperou Elias melhorar para cuidar dele.<br>
+          Primeiro veio o descanso. Depois veio a direção.
+        </div>
+
+        <p class="bounce-back">
+          Talvez você esteja tentando ouvir Deus enquanto carrega um cansaço que Ele nunca quis que você carregasse.<br><br>
+          Talvez o problema nunca tenha sido falta de fé.<br><br>
+          Talvez você só esteja tentando caminhar quando Deus está chamando você para parar primeiro.
+        </p>
+
+        <div class="divider"></div>
+
+        <p style="font-weight: 700;">Esse é o princípio que inspira o Método do Zimbreiro.</p>
+        <p>Foi observando essa sequência que ele nasceu.</p>
+
+        <p class="label" style="margin-top: 28px;">O método</p>
+        <h2>O Protocolo de Elias segue 3 fases.<br>As mesmas que Deus usou em 1 Reis 19.</h2>
+        <p style="margin-bottom: 28px;">Não pedem esforço. Pedem que você pare de resistir.</p>
+
+        <div class="phase-block">
+          <p class="phase-num">Fase 1</p>
+          <h3>Método do Zimbreiro</h3>
+          <p class="phase-highlight">Não como recompensa. Como pré-requisito.</p>
+          <p style="margin-bottom: 0;">Você vai aprender a parar sem sentir que está falhando.</p>
+        </div>
+
+        <div class="phase-block locked">
+          <p class="phase-num">Fase 2</p>
+          <h3>Alimento Certo</h3>
+          <p style="margin-bottom: 0;">Elias não recebeu uma missão. Recebeu comida. Deus sabia que corpo esgotado não sustenta revelação.</p>
+        </div>
+
+        <div class="phase-block locked">
+          <p class="phase-num">Fase 3</p>
+          <h3>Voz Mansa</h3>
+          <p style="margin-bottom: 0;">Elias não ouviu Deus no trovão nem no terremoto. Ouviu no silêncio, depois de descansar.</p>
+        </div>
+
+        <p class="phase-note">As Fases 2 e 3 existem. A restauração começa pela Fase 1.</p>
+      </div>
+    </section>
+
+    <!-- MINI-RESUMO (benefício, não checklist) -->
+    <section class="section section-warm" data-track-section="beneficios">
+      <div class="container">
+        <p class="label">O que muda em 7 dias</p>
+        <h2>Em apenas 7 dias você será conduzida por:</h2>
+        <ul class="receive-list">
+          <li><span class="receive-check">&#10003;</span><span>A primeira fase completa do Protocolo de Elias.</span></li>
+          <li><span class="receive-check">&#10003;</span><span>Reflexões que ajudam a diminuir o peso da culpa.</span></li>
+          <li><span class="receive-check">&#10003;</span><span>Exercícios simples para desacelerar sem sentir que está falhando.</span></li>
+          <li><span class="receive-check">&#10003;</span><span>Orações guiadas para quando você já não consegue encontrar palavras.</span></li>
+          <li><span class="receive-check">&#10003;</span><span>Acesso imediato pelo celular.</span></li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <!-- BLOCO 5: OFERTA — mesmo conteúdo/preço nas 2 variantes, só B ganha transição antes -->
+  <section class="section section-warm" data-track-section="oferta">
     <div class="container">
-      <p class="label">O que está acontecendo</p>
-      <h2>A voz não sumiu.<br>O canal está tampado pelo cansaço.</h2>
-
-      <p>Ela serve a Deus com tudo que tem.</p>
-      <p>A família. A igreja. O marido. Os filhos.</p>
-      <p>Mas existe algo que ela não conta pra ninguém: por dentro, está vazia.</p>
-
-      <div class="divider"></div>
-
-      <p>Você termina o culto.</p>
-      <p>Abraça todo mundo.</p>
-      <p>Diz que está tudo bem.</p>
-      <p>Entra no carro.</p>
-      <p>E chora sozinha antes de ligar o motor.</p>
-
-      <div class="divider"></div>
-
-      <p>Não é fraqueza.</p>
-      <p>É o peso de carregar o dia inteiro sem que ninguém perceba.</p>
-      <p>Você perdeu as forças de fingir que está bem.</p>
-
-      <div class="pull-quote">
-        Talvez o problema não seja falta de fé.<br>
-        Talvez Deus não esteja pedindo mais esforço agora.
+      <div class="only-b">
+        <p class="offer-transition">
+          Se esse princípio falou com você...<br>
+          Se você percebeu que talvez Deus nunca tenha pedido que você carregasse tudo sozinha...<br>
+          Então este protocolo foi criado exatamente para acompanhar você durante os próximos sete dias.
+        </p>
       </div>
 
-      <p>Porque quando Elias chegou ao limite, Deus não exigiu mais oração. Exigiu que ele parasse.</p>
-      <p>Muitos dizem que descansar é falta de fé.</p>
-      <p>Para Elias, foi a única forma de Deus entregar a direção que ele tanto buscava.</p>
-      <p>Chegou com comida. E deixou ele dormir.</p>
-
-      <div class="divider"></div>
-
-      <p>Deus não restaurou Elias porque ele era forte.</p>
-      <p>Restaurou porque ele já não conseguia continuar sozinho.</p>
-    </div>
-  </section>
-
-  <!-- BLOCO 3: MECANISMO -->
-  <section class="section section-warm">
-    <div class="container">
-      <p class="label">O método</p>
-      <h2>O Protocolo de Elias segue 3 fases.<br>As mesmas que Deus usou em 1 Reis 19.</h2>
-      <p style="margin-bottom: 28px;">Não pedem esforço. Pedem que você pare de resistir.</p>
-
-      <div class="phase-block">
-        <p class="phase-num">Fase 1</p>
-        <h3>Método do Zimbreiro</h3>
-        <p>Antes de falar, Deus deixou Elias dormir. Não como recompensa. Como pré-requisito.</p>
-        <p style="margin-bottom: 0;">Você vai aprender a parar sem sentir que está falhando.</p>
-      </div>
-
-      <div class="phase-block locked">
-        <p class="phase-num">Fase 2</p>
-        <h3>Alimento Certo</h3>
-        <p style="margin-bottom: 0;">Elias não recebeu uma missão. Recebeu comida. Deus sabia que corpo esgotado não sustenta revelação.</p>
-      </div>
-
-      <div class="phase-block locked">
-        <p class="phase-num">Fase 3</p>
-        <h3>Voz Mansa</h3>
-        <p style="margin-bottom: 0;">Elias não ouviu Deus no trovão nem no terremoto. Ouviu no silêncio, depois de descansar.</p>
-      </div>
-
-      <p class="phase-note">As Fases 2 e 3 existem. A restauração começa pela Fase 1.</p>
-    </div>
-  </section>
-
-  <!-- BLOCO 4: QUALIFICAÇÃO -->
-  <section class="section section-cream">
-    <div class="container">
-      <p class="label">Isso é pra você?</p>
-      <h2>Você se reconhece aqui?</h2>
-
-      <ul class="qual-list">
-        <li><span class="qual-arrow">&#8250;</span><span>Você serve, lidera ou cuida de pessoas, mas por dentro está esgotada.</span></li>
-        <li><span class="qual-arrow">&#8250;</span><span>Faz tempo que você não sente Deus perto, mesmo orando.</span></li>
-        <li><span class="qual-arrow">&#8250;</span><span>Você sente culpa toda vez que tenta descansar.</span></li>
-        <li><span class="qual-arrow">&#8250;</span><span>Você já pediu mais fé, já orou mais. E o cansaço continua.</span></li>
-      </ul>
-
-      <div class="divider"></div>
-
-      <p>Se você se identificou com pelo menos 2, o Método do Zimbreiro foi criado pra você.</p>
-      <div class="warning-text">Este protocolo não é para quem busca resultado sem aplicação. São 7 dias de prática honesta. Nada mais.</div>
-    </div>
-  </section>
-
-  <!-- BLOCO 5: OFERTA -->
-  <section class="section section-warm">
-    <div class="container">
       <p class="label">O que você recebe hoje</p>
 
-      <div class="offer-box">
+      <div class="offer-box" data-track-offer-visibility>
         <p class="offer-phase">Pleno | Fase 1 do Protocolo</p>
         <p class="offer-name">Método do Zimbreiro</p>
         <div class="offer-mockup">
@@ -338,11 +605,13 @@
         </div>
         <p class="offer-gap">As Fases 2 e 3 existem. A restauração começa aqui.</p>
       </div>
+
+      <div class="warning-text">Este protocolo não é para quem busca resultado sem aplicação. São 7 dias de prática honesta. Nada mais.</div>
     </div>
   </section>
 
   <!-- BLOCO 6: GARANTIA -->
-  <section class="section section-cream">
+  <section class="section section-cream" data-track-section="garantia">
     <div class="container">
       <div class="guarantee-box">
         <div class="guarantee-icon">&#128737;</div>
@@ -354,8 +623,29 @@
     </div>
   </section>
 
+  <!-- FAQ — só na variante B -->
+  <section class="section section-warm only-b" data-track-section="faq">
+    <div class="container">
+      <p class="label">Dúvidas comuns</p>
+      <h2>Perguntas antes de você decidir</h2>
+
+      <details class="faq-item">
+        <summary class="faq-question" data-faq-toggle>E se eu estiver cansada até para fazer o protocolo?</summary>
+        <p class="faq-answer">Foi pensado exatamente pra isso. Não exige energia, exige só 10 minutos e disposição de parar.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question" data-faq-toggle>E se eu já tentei descansar e continuo igual?</summary>
+        <p class="faq-answer">Descansar sem direção cansa de novo. Esse protocolo segue uma ordem específica, a mesma que Deus usou com Elias, não é descanso qualquer.</p>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-question" data-faq-toggle>E se eu sentir culpa por parar?</summary>
+        <p class="faq-answer">A culpa é exatamente o que esse protocolo trabalha primeiro. Ela não desaparece sozinha, mas os 7 dias foram construídos pra te mostrar que descansar não é desobediência.</p>
+      </details>
+    </div>
+  </section>
+
   <!-- BLOCO 7: BULLETS + CTA FINAL -->
-  <section class="section section-dark">
+  <section class="section section-dark" data-track-section="cta_final">
     <div class="container">
       <p class="label">O que você vai descobrir</p>
       <h2>O que muda quando você aplica o Método do Zimbreiro</h2>
@@ -385,7 +675,7 @@
   </section>
 
   <!-- FOOTER -->
-  <footer>
+  <footer data-track-section="footer">
     <p>Pleno | Acesso Pleno Digital</p>
     <p>CNPJ: 41.379.584/0001-35</p>
     <p>

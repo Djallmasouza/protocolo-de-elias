@@ -243,8 +243,10 @@
     .btn:active { transform: scale(0.97); }
     @media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
     .btn-wide { display: block; max-width: 380px; margin: 28px auto 0; text-align: center; }
-    .btn-discreet { display: inline-block; background: transparent; color: var(--gold-soft); border: 1px solid var(--gold-soft); font-weight: 600; font-size: 14px; padding: 14px 28px; border-radius: 8px; text-decoration: none; transition: background 160ms ease, border-color 160ms ease; }
-    .btn-discreet:hover { background: rgba(216,201,168,0.08); border-color: var(--gold); }
+    .btn-discreet { display: inline-block; background: rgba(196,151,59,0.1); color: var(--gold); border: 1.5px solid var(--gold); font-weight: 700; font-size: 14px; padding: 14px 28px; border-radius: 8px; text-decoration: none; transition: background 160ms ease, transform 160ms var(--ease-out); }
+    .btn-discreet:hover { background: rgba(196,151,59,0.18); }
+    .btn-discreet:active { transform: scale(0.97); }
+    @media (prefers-reduced-motion: reduce) { .btn-discreet { transition: none; } }
 
     /* ===== SECTIONS ===== */
     .section { padding: 96px 24px; }

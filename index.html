@@ -6,16 +6,14 @@
   <title>Método do Zimbreiro | Pleno</title>
   <meta name="description" content="Aprenda a parar sem sentir que está falhando, seguindo o caminho bíblico de restauração em 7 dias.">
 
-  <!-- Variant assignment: runs synchronously before paint, before variant-specific
-       blocks below (.only-a / .only-b) get their display resolved by CSS.
-       Sticky per-visitor via localStorage so repeat views stay consistent. -->
+  <!-- Teste A/B encerrado em 18/07/2026 (LLM Council): 88% do tráfego morria no
+       hero compartilhado antes do ponto onde A e B divergem, então o teste nunca
+       teve volume pra significância. Variante B preserva o open loop do anúncio
+       por mais tempo (mesmo princípio validado no fix do hero); A o contraria. -->
   <script>
     (function () {
-      var v = localStorage.getItem('zimbreiro_variant');
-      if (v !== 'a' && v !== 'b') {
-        v = Math.random() < 0.5 ? 'a' : 'b';
-        localStorage.setItem('zimbreiro_variant', v);
-      }
+      var v = 'b';
+      localStorage.setItem('zimbreiro_variant', v);
       document.documentElement.className += ' variant-' + v;
     })();
   </script>

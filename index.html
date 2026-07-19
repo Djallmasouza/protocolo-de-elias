@@ -317,9 +317,10 @@
 
     .seals { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin-top: 20px; font-size: 12px; color: #8A7060; }
     .seals span { display: flex; align-items: center; gap: 4px; }
+    .seal-icon { width: 14px; height: 14px; flex-shrink: 0; }
 
     .guarantee { background: var(--warm); border-radius: 12px; padding: 32px 26px; text-align: center; }
-    .guarantee-icon { font-size: 36px; margin-bottom: 14px; }
+    .guarantee-icon { width: 36px; height: 36px; margin: 0 auto 14px; color: var(--gold); }
 
     /* FAQ */
     details { border-top: 1px solid rgba(28,18,8,0.12); padding: 18px 0; }
@@ -551,7 +552,7 @@
       <div class="container authority-block">
         <p class="label">Por que a Pleno criou isso</p>
         <p>A Pleno existe pra levar fé prática pra quem carrega peso demais em silêncio, sem espaço pra fingir que está tudo bem.</p>
-        <p>O Método do Zimbreiro nasceu de uma pergunta simples: por que quase ninguém fala sobre a pausa que Deus deu a Elias antes de qualquer missão? Esse protocolo é a resposta prática pra essa pergunta — não mais um sermão, um primeiro passo.</p>
+        <p>O Método do Zimbreiro nasceu de uma pergunta simples: por que quase ninguém fala sobre a pausa que Deus deu a Elias antes de qualquer missão? Esse protocolo é a resposta prática pra essa pergunta: não mais um sermão, um primeiro passo.</p>
       </div>
     </section>
   </div>
@@ -569,7 +570,7 @@
         <p class="offer-eyebrow">Pleno | Fase 1 do Protocolo</p>
         <p class="offer-name">Método do Zimbreiro</p>
         <div class="offer-mockup">
-          <img src="/assets/img/Card%20-%201600x1200_20260712_183951_0000.webp" alt="Método do Zimbreiro — protocolo digital de 7 dias acessado pelo celular" loading="lazy" decoding="async">
+          <img src="/assets/img/Card%20-%201600x1200_20260712_183951_0000.webp" alt="Método do Zimbreiro: protocolo digital de 7 dias acessado pelo celular" loading="lazy" decoding="async">
         </div>
         <p class="offer-desc">O mesmo caminho que Deus usou com Elias antes de dar qualquer direção. Guia prático. Uma fase. Uma transformação. Aplicável em 7 dias, no seu ritmo, sem exigir mais do que você já tem para dar.</p>
         <p class="offer-price-anchor">R$47,90</p>
@@ -577,9 +578,9 @@
         <p class="offer-detail">Uma única vez. Acesso imediato.</p>
         <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7" class="btn btn-wide" ontouchstart="" data-track-cta data-cta-id="cta-oferta" data-cta-position="meio">QUERO DESCANSAR EM DEUS</a>
         <div class="seals">
-          <span>&#128274; Pagamento seguro</span>
-          <span>&#128241; Acesso pelo celular</span>
-          <span>&#9889; Entrega imediata</span>
+          <span><svg class="seal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M7.5 11V7.5a4.5 4.5 0 019 0V11"/></svg>Pagamento seguro</span>
+          <span><svg class="seal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg>Acesso pelo celular</span>
+          <span><svg class="seal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 2 4 13h7l-1 9 9-13h-7l1-9z"/></svg>Entrega imediata</span>
         </div>
         <p class="offer-gap">As Fases 2 e 3 existem. A restauração começa aqui.</p>
       </div>
@@ -592,7 +593,10 @@
   <section class="section section-tight section-cream reveal" data-track-section="garantia">
     <div class="container center">
       <div class="guarantee">
-        <div class="guarantee-icon">&#128737;</div>
+        <svg class="guarantee-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+          <path d="M12 21c4-1.5 7-5 7-10V5l-7-3-7 3v6c0 5 3 8.5 7 10z"/>
+          <path d="M9 12l2.2 2.2L15 10"/>
+        </svg>
         <h2>7 dias de segurança total</h2>
         <p>Aplique o protocolo. Se em 7 dias você não sentir nenhum alívio, devolvo cada centavo. Sem pergunta. Sem burocracia. Sem constrangimento.</p>
         <p style="margin-bottom: 0; font-weight: 700;">O risco é todo meu.</p>
@@ -608,7 +612,7 @@
 
       <details>
         <summary data-faq-toggle>Por que só R$17,90?</summary>
-        <p>Porque a Fase 1 é intencionalmente pequena — não é o programa completo, é o primeiro passo. O preço reflete o tamanho real do que você recebe agora, não o valor da transformação.</p>
+        <p>Porque a Fase 1 é intencionalmente pequena: não é o programa completo, é o primeiro passo. O preço reflete o tamanho real do que você recebe agora, não o valor da transformação.</p>
       </details>
       <details>
         <summary data-faq-toggle>E se eu estiver cansada até para fazer o protocolo?</summary>
@@ -645,9 +649,9 @@
       <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7" class="btn" style="margin-top: 24px;" ontouchstart="" data-track-cta data-cta-id="cta-final" data-cta-position="final">PARE DE ACORDAR COM ESSE PESO. COMECE AGORA.</a>
 
       <div class="seals" style="color: #6A5840;">
-        <span>&#128274; Pagamento seguro</span>
-        <span>&#128737; Garantia de 7 dias</span>
-        <span>&#9889; Acesso imediato</span>
+        <span><svg class="seal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M7.5 11V7.5a4.5 4.5 0 019 0V11"/></svg>Pagamento seguro</span>
+        <span><svg class="seal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 21c4-1.5 7-5 7-10V5l-7-3-7 3v6c0 5 3 8.5 7 10z"/><path d="M9 12l2.2 2.2L15 10"/></svg>Garantia de 7 dias</span>
+        <span><svg class="seal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 2 4 13h7l-1 9 9-13h-7l1-9z"/></svg>Acesso imediato</span>
       </div>
     </div>
   </section>
@@ -661,7 +665,7 @@
       &nbsp;|&nbsp;
       <a href="/termos">Termos de Uso</a>
     </p>
-    <p class="footer-disclaimer">Este produto é de natureza educacional e espiritual. Não substitui acompanhamento médico, psicológico ou pastoral profissional. Os resultados apresentados são individuais e não representam garantia de resultados iguais para todos os usuários. Resultados dependem do engajamento e de fatores individuais de cada pessoa. © 2026 Acesso Pleno Digital — CNPJ: 41.379.584/0001-35.</p>
+    <p class="footer-disclaimer">Este produto é de natureza educacional e espiritual. Não substitui acompanhamento médico, psicológico ou pastoral profissional. Os resultados apresentados são individuais e não representam garantia de resultados iguais para todos os usuários. Resultados dependem do engajamento e de fatores individuais de cada pessoa. © 2026 Acesso Pleno Digital, CNPJ: 41.379.584/0001-35.</p>
   </footer>
 
 </body>

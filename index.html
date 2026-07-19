@@ -305,8 +305,10 @@
     .offer-panel { background: var(--dark); color: var(--warm); border-radius: 12px; padding: 40px 26px; text-align: center; }
     .offer-eyebrow { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 12px; margin-left: auto; margin-right: auto; }
     .offer-name { font-family: 'Lora', serif; font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 20px; }
-    .offer-mockup { margin: 0 -14px 24px; max-width: 520px; }
-    .offer-mockup img { display: block; width: 100%; height: auto; border-radius: 10px; }
+    /* Mockup com leve inclinação 3D + sombra (CSS puro, sem WebGL) — mesma técnica
+       de "aumentar valor percebido" de mockup builders, adaptada sem lib externa. */
+    .offer-mockup { margin: 0 auto 28px; max-width: 300px; perspective: 1200px; }
+    .offer-mockup img { display: block; width: 100%; height: auto; border-radius: 14px; transform: rotateY(-8deg) rotateX(4deg) scale(0.97); box-shadow: 18px 26px 48px rgba(0,0,0,0.5); }
     .offer-desc { font-size: 15px; color: var(--gold-muted); margin-bottom: 8px; line-height: 1.65; margin-left: auto; margin-right: auto; }
     .offer-price-anchor { font-size: 18px; color: var(--gold-muted); text-decoration: line-through; opacity: 0.75; margin: 16px 0 -6px; }
     .offer-price { font-size: 44px; font-weight: 800; color: var(--gold); line-height: 1; margin: 20px 0 4px; }

@@ -10,6 +10,11 @@
        hero compartilhado antes do ponto onde A e B divergem, então o teste nunca
        teve volume pra significância. Variante B preserva o open loop do anúncio
        por mais tempo (mesmo princípio validado no fix do hero); A o contraria. -->
+  <!-- 20/07/2026 (CRO + Clarity real: rolar.csv/atenção.csv/toque.csv): abismo de
+       70% de abandono entre 5% e 15% de scroll, ou seja, saindo do hero. O loop
+       aberto no whisper do hero ("existe um detalhe que quase ninguém percebe")
+       não era pago pela seção seguinte (dor genérica) — só lá na frente. Fix:
+       open_loop passa a vir logo após o hero, dor/qualificação depois dele. -->
   <script>
     (function () {
       var v = 'b';
@@ -446,6 +451,15 @@
 
   <!-- ===================== VARIANTE B (narrativa nova) ===================== -->
   <div class="only-b">
+    <!-- OPEN LOOP — logo após o hero, para pagar a curiosidade aberta no whisper
+         antes que a pessoa decida sair (fix 20/07/2026, ver comentário no head) -->
+    <section class="moment section-dark reveal" data-track-section="open_loop">
+      <div>
+        <p>Existe um detalhe em 1 Reis 19 que quase ninguém percebe.</p>
+        <p class="moment-sub">A maioria lembra do momento em que Deus falou com Elias. Mas quase ninguém presta atenção no que aconteceu antes. Esse detalhe muda completamente a forma de entender o cansaço espiritual.</p>
+      </div>
+    </section>
+
     <!-- DOR CONDENSADA + QUALIFICAÇÃO EMBUTIDA -->
     <section class="section section-cream reveal" data-track-section="dor">
       <div class="container">
@@ -466,14 +480,6 @@
         </ul>
 
         <p style="margin-top: 20px;">Se sim, o que vem agora muda a forma como você entende esse cansaço.</p>
-      </div>
-    </section>
-
-    <!-- OPEN LOOP -->
-    <section class="moment section-dark reveal" data-track-section="open_loop">
-      <div>
-        <p>Existe um detalhe em 1 Reis 19 que quase ninguém percebe.</p>
-        <p class="moment-sub">A maioria lembra do momento em que Deus falou com Elias. Mas quase ninguém presta atenção no que aconteceu antes. Esse detalhe muda completamente a forma de entender o cansaço espiritual.</p>
       </div>
     </section>
 

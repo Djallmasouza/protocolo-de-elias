@@ -21,6 +21,13 @@
        Reancoragem da dor/hero na Big Idea "chefe vs Pai, empregada vs filha
        adotada" — mesmo mecanismo já validado em A Tábua Esquecida — aplicado
        aqui pela primeira vez ao Zimbreiro. -->
+  <!-- 21/07/2026 (skill marketing-cro + inspeção real via Playwright, viewport
+       mobile 390x844): botão do CTA final tinha tamanho/contraste corretos,
+       mas ficava no fim de uma seção com ~1,6 tela de altura, depois dos
+       bullets E de um parágrafo de fechamento — cliques reais (Clarity,
+       segmento scroll>=75%) caíam no container/bullets, não no botão. Fix
+       isolado: botão movido pra logo após os bullets, parágrafo de fechamento
+       passa a vir depois do botão. Nenhuma outra mudança nesta seção. -->
   <script>
     (function () {
       var v = 'b';
@@ -661,9 +668,9 @@
         <li>O que acontece com a mulher que finalmente para de correr e deixa Deus trabalhar</li>
       </ul>
 
-      <p style="margin-top: 28px; color: var(--gold-soft);">Cada dia que passa com o peso é mais um dia que Deus já tem a resposta esperando. Não porque Ele está distante. Porque o canal ainda está tampado.</p>
+      <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7" class="btn" style="margin-top: 28px;" ontouchstart="" data-track-cta data-cta-id="cta-final" data-cta-position="final">PARE DE ACORDAR COM ESSE PESO. COMECE AGORA.</a>
 
-      <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7" class="btn" style="margin-top: 24px;" ontouchstart="" data-track-cta data-cta-id="cta-final" data-cta-position="final">PARE DE ACORDAR COM ESSE PESO. COMECE AGORA.</a>
+      <p style="margin-top: 24px; color: var(--gold-soft);">Cada dia que passa com o peso é mais um dia que Deus já tem a resposta esperando. Não porque Ele está distante. Porque o canal ainda está tampado.</p>
 
       <div class="seals" style="color: #6A5840;">
         <span><svg class="seal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M7.5 11V7.5a4.5 4.5 0 019 0V11"/></svg>Pagamento seguro</span>

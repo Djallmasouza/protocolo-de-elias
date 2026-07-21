@@ -28,6 +28,10 @@
        segmento scroll>=75%) caíam no container/bullets, não no botão. Fix
        isolado: botão movido pra logo após os bullets, parágrafo de fechamento
        passa a vir depois do botão. Nenhuma outra mudança nesta seção. -->
+  <!-- 21/07/2026 (suporte Payt, Giovanne): ?payment=pix na URL do checkout
+       pré-seleciona Pix no lugar de Cartão. Aplicado nos dois links de
+       checkout (oferta e CTA final). reCAPTCHA de imagem antes do Pix segue
+       sem resposta definitiva — pergunta de acompanhamento enviada. -->
   <script>
     (function () {
       var v = 'b';
@@ -600,7 +604,7 @@
         <p class="offer-price-anchor">R$47,90</p>
         <p class="offer-price">R$17,90</p>
         <p class="offer-detail">Uma única vez. Acesso imediato.</p>
-        <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7" class="btn btn-wide" ontouchstart="" data-track-cta data-cta-id="cta-oferta" data-cta-position="meio">QUERO DESCANSAR EM DEUS</a>
+        <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7?payment=pix" class="btn btn-wide" ontouchstart="" data-track-cta data-cta-id="cta-oferta" data-cta-position="meio">QUERO DESCANSAR EM DEUS</a>
         <div class="seals">
           <span><svg class="seal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M7.5 11V7.5a4.5 4.5 0 019 0V11"/></svg>Pagamento seguro</span>
           <span><svg class="seal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg>Acesso pelo celular</span>
@@ -668,7 +672,7 @@
         <li>O que acontece com a mulher que finalmente para de correr e deixa Deus trabalhar</li>
       </ul>
 
-      <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7" class="btn" style="margin-top: 28px;" ontouchstart="" data-track-cta data-cta-id="cta-final" data-cta-position="final">PARE DE ACORDAR COM ESSE PESO. COMECE AGORA.</a>
+      <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7?payment=pix" class="btn" style="margin-top: 28px;" ontouchstart="" data-track-cta data-cta-id="cta-final" data-cta-position="final">PARE DE ACORDAR COM ESSE PESO. COMECE AGORA.</a>
 
       <p style="margin-top: 24px; color: var(--gold-soft);">Cada dia que passa com o peso é mais um dia que Deus já tem a resposta esperando. Não porque Ele está distante. Porque o canal ainda está tampado.</p>
 

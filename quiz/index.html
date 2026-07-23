@@ -27,10 +27,10 @@
      nunca se priorizar). Fonte: pasta Marketing/base-marketing/copy
      (frameworks de Evaldo Albuquerque, Stefan Georgi, Chris Haddad, Fábio
      Cavalcante).
-     23/07/2026 (mesma data, decisão do usuário): promovido de /quiz/ pra
-     raiz do domínio — passa a ser a página que recebe o tráfego pago em
-     vez da LP de venda direta. LP direta arquivada em /lp-direta/, e este
-     mesmo quiz segue também acessível em /quiz/ (arquivo duplicado, não
+     23/07/2026 (decisão do usuário): promovido de /quiz/ pra raiz do
+     domínio — passa a ser a página que recebe o tráfego pago em vez da
+     LP de venda direta. LP direta arquivada em /lp-direta/, e este mesmo
+     quiz segue também acessível em /quiz/ (arquivo duplicado, não
      redirect, pra manter os dois paths funcionando).
      23/07/2026 (4ª rodada, achado em avatar-crista-pesquisa.md — comentários
      reais de pregadores cristãos no YouTube): "caverna" é vocabulário real
@@ -38,7 +38,15 @@
      caverna em 1 Reis 19:9, onde ouve a voz mansa e delicada — a ponte do
      resultado citava só o descanso debaixo do zimbreiro (1 Reis 19:5-7),
      ficando biblicamente incompleta. Estendida pra incluir a caverna/voz
-     mansa, sem nomear a Fase 3 (mantém o princípio do quadradinho). -->
+     mansa, sem nomear a Fase 3 (mantém o princípio do quadradinho).
+     23/07/2026 (5ª rodada, checklist de project-quiz-referencias.md — síntese
+     de Levesque/Priestley/Carlson/Haynam/Zak/Nee já adotada pelo negócio):
+     a "prescription page" (Priestley/Carlson, Haynam) pede 5 blocos - o que
+     significa, por que acontece, o que fazer agora, prova, oferta. O
+     resultado pulava direto de "por que acontece" pra oferta paga, sem
+     passo gratuito antes (o que separa prescrição de mini sales page nos
+     cases citados: Priestley 66%, Makhosi 60-70%). Adicionado um passo
+     prático gratuito por perfil, antes da ponte pro produto pago. -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -289,7 +297,9 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       <p id="resultPD3"></p>
     </div>
 
-    <p class="bridge">O Método do Zimbreiro existe exatamente pra isso: aprender a parar sem sentir que está falhando com Deus. O mesmo caminho que Ele usou com Elias: primeiro o descanso debaixo do zimbreiro, depois a caverna onde ele finalmente ouviu a voz mansa, em 1 Reis 19.</p>
+    <p class="result-highlight" id="resultNextStep" style="margin-bottom: 24px;"></p>
+
+    <p class="bridge">Isso já é um começo. Mas pra sustentar essa pausa além de hoje, o Método do Zimbreiro existe exatamente pra isso: aprender a parar sem sentir que está falhando com Deus. O mesmo caminho que Ele usou com Elias: primeiro o descanso debaixo do zimbreiro, depois a caverna onde ele finalmente ouviu a voz mansa, em 1 Reis 19.</p>
 
     <p class="result-highlight" id="resultAltruism" style="margin-bottom: 24px;"></p>
 
@@ -386,7 +396,8 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       pd1: 'Você chega em casa depois do culto e não sobra nada pra você mesma, só pro que os outros precisam.',
       pd2: 'O domingo que devia ser descanso virou mais um turno. E ninguém perguntou se você aguenta.',
       pd3: 'A culpa de parar é maior que o cansaço de continuar. Por isso você nunca para.',
-      altruism: 'Parar não é abandonar quem você ama. É a única forma de continuar servindo sem se esvaziar até não sobrar nada pra dar.'
+      altruism: 'Parar não é abandonar quem você ama. É a única forma de continuar servindo sem se esvaziar até não sobrar nada pra dar.',
+      nextStep: 'Passo de hoje: antes de dormir, escreve uma frase só. "Hoje eu servi. Amanhã, alguém pode segurar o piano no meu lugar." Não precisa mais que isso agora.'
     },
     'esposa-de-lider': {
       tag: 'A ESPOSA QUE SUSTENTA POR TRÁS',
@@ -397,7 +408,8 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       pd1: 'Você sorri no culto enquanto segura por dentro o que ninguém sabe que está acontecendo em casa.',
       pd2: 'Todo mundo pergunta como seu marido está. Quase ninguém pergunta como você está.',
       pd3: 'Você tem medo de que descansar pareça fraqueza. Porque, se você cai, parece que o ministério inteiro cai junto.',
-      altruism: 'Descansar não enfraquece o ministério do seu marido. Uma esposa inteira sustenta muito mais do que uma esposa exaurida.'
+      altruism: 'Descansar não enfraquece o ministério do seu marido. Uma esposa inteira sustenta muito mais do que uma esposa exaurida.',
+      nextStep: 'Passo de hoje: da próxima vez que alguém perguntar como seu marido está, responde também como você está. Só isso.'
     },
     'lidera-cansada': {
       tag: 'A LÍDER QUE JÁ NÃO SABE PARAR',
@@ -408,7 +420,8 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       pd1: 'Você organiza a escala de todo mundo, menos a sua própria pausa.',
       pd2: 'Se você falha uma vez, tem medo de que ninguém mais segure o que você segurava.',
       pd3: 'Ninguém pediu pra você ser insubstituível. Foi você que aprendeu a viver como se fosse.',
-      altruism: 'Quem você lidera aprende com o seu exemplo. Se você nunca para, é isso que você está ensinando pra eles também.'
+      altruism: 'Quem você lidera aprende com o seu exemplo. Se você nunca para, é isso que você está ensinando pra eles também.',
+      nextStep: 'Passo de hoje: escolhe uma coisa da sua escala de amanhã pra delegar de verdade, sem checar depois se foi feito do seu jeito.'
     }
   };
 
@@ -424,6 +437,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     document.getElementById('resultPD2').textContent = p.pd2;
     document.getElementById('resultPD3').textContent = p.pd3;
     document.getElementById('resultAltruism').textContent = p.altruism;
+    document.getElementById('resultNextStep').textContent = p.nextStep;
 
     // Passthrough de fbclid/UTM + perfil pro checkout, mesma lógica da LP principal
     var link = document.getElementById('ctaResultado');

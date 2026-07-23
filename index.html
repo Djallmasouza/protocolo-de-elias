@@ -46,7 +46,17 @@
      resultado pulava direto de "por que acontece" pra oferta paga, sem
      passo gratuito antes (o que separa prescrição de mini sales page nos
      cases citados: Priestley 66%, Makhosi 60-70%). Adicionado um passo
-     prático gratuito por perfil, antes da ponte pro produto pago. -->
+     prático gratuito por perfil, antes da ponte pro produto pago.
+     23/07/2026 (6ª rodada, achado de Arthur Oliveira — transcrição
+     "Quiz escala mais"): o nível mais alto de personalização de quiz não é
+     só o resultado final variar, é a REDAÇÃO das perguntas seguintes mudar
+     conforme resposta anterior ("nível de profundidade 3" no exemplo dele:
+     casado com filhos recebe pergunta diferente de divorciado com filhos).
+     Até aqui o quiz só personalizava o resultado (via Q3/papel), as
+     perguntas 4-6 eram estáticas pra qualquer perfil. Reescritas em 3
+     variantes (uma por perfil), trocadas dinamicamente assim que Q3 é
+     respondida — Q1-Q3 seguem genéricas de propósito (aquecimento +
+     pergunta que define o perfil, antes de saber qual variante mostrar). -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -230,13 +240,13 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 <section class="screen" data-screen="q4">
   <div class="container">
     <p class="q-label">Pergunta 4 de 6</p>
-    <h2 class="q-title">Quando esse peso mais aparece?</h2>
-    <p class="q-micro">Cada pessoa sente isso num momento diferente.</p>
+    <h2 class="q-title" id="q4Title"></h2>
+    <p class="q-micro" id="q4Micro"></p>
     <div class="q-options">
-      <button class="q-option" onclick="answer(4,'A')">Domingo de manhã, antes de sair de casa</button>
-      <button class="q-option" onclick="answer(4,'B')">Quando alguém pede mais uma coisa e eu não consigo dizer não</button>
-      <button class="q-option" onclick="answer(4,'C')">À noite, sozinha, depois que todo mundo dorme</button>
-      <button class="q-option" onclick="answer(4,'D')">Quando vejo outras mulheres parecendo dar conta de tudo</button>
+      <button class="q-option" id="q4OptA" onclick="answer(4,'A')"></button>
+      <button class="q-option" id="q4OptB" onclick="answer(4,'B')"></button>
+      <button class="q-option" id="q4OptC" onclick="answer(4,'C')"></button>
+      <button class="q-option" id="q4OptD" onclick="answer(4,'D')"></button>
     </div>
   </div>
 </section>
@@ -244,13 +254,13 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 <section class="screen" data-screen="q5">
   <div class="container">
     <p class="q-label">Pergunta 5 de 6</p>
-    <h2 class="q-title">O que você já tentou pra lidar com isso?</h2>
-    <p class="q-micro">Sem julgamento. Ninguém está lendo.</p>
+    <h2 class="q-title" id="q5Title"></h2>
+    <p class="q-micro" id="q5Micro"></p>
     <div class="q-options">
-      <button class="q-option" onclick="answer(5,'A')">Orar mais e pedir mais força</button>
-      <button class="q-option" onclick="answer(5,'B')">Tirar uma pausa e sentir culpa depois</button>
-      <button class="q-option" onclick="answer(5,'C')">Conversar com alguém da liderança</button>
-      <button class="q-option" onclick="answer(5,'D')">Nada. Só continuar aguentando</button>
+      <button class="q-option" id="q5OptA" onclick="answer(5,'A')"></button>
+      <button class="q-option" id="q5OptB" onclick="answer(5,'B')"></button>
+      <button class="q-option" id="q5OptC" onclick="answer(5,'C')"></button>
+      <button class="q-option" id="q5OptD" onclick="answer(5,'D')"></button>
     </div>
   </div>
 </section>
@@ -258,13 +268,13 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 <section class="screen" data-screen="q6">
   <div class="container">
     <p class="q-label">Pergunta 6 de 6</p>
-    <h2 class="q-title">Se você tivesse que nomear o que sente, qual seria?</h2>
-    <p class="q-micro">Esta última resposta vai calibrar sua leitura final.</p>
+    <h2 class="q-title" id="q6Title"></h2>
+    <p class="q-micro" id="q6Micro"></p>
     <div class="q-options">
-      <button class="q-option" onclick="answer(6,'A')">Medo de decepcionar quem conta comigo</button>
-      <button class="q-option" onclick="answer(6,'B')">Um cansaço que já não tem mais nome</button>
-      <button class="q-option" onclick="answer(6,'C')">Culpa de descansar</button>
-      <button class="q-option" onclick="answer(6,'D')">Medo de ser substituída se eu parar</button>
+      <button class="q-option" id="q6OptA" onclick="answer(6,'A')"></button>
+      <button class="q-option" id="q6OptB" onclick="answer(6,'B')"></button>
+      <button class="q-option" id="q6OptC" onclick="answer(6,'C')"></button>
+      <button class="q-option" id="q6OptD" onclick="answer(6,'D')"></button>
     </div>
   </div>
 </section>
@@ -355,6 +365,10 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     answers['q' + qNum] = opt;
     trackEvent('QuizAnswer', { q: qNum, r: opt });
 
+    if (qNum === 3) {
+      personalizeQuestions(getPerfil());
+    }
+
     if (qNum < 6) {
       showScreen('q' + (qNum + 1));
       updateProgress(qNum + 1);
@@ -384,6 +398,118 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     if (q3 === 'A') return 'lidera-cansada';
     if (q3 === 'B') return 'esposa-de-lider';
     return 'carrega-o-piano'; // C ou D
+  }
+
+  // Perguntas 4-6 mudam de redação conforme o perfil (Q3), não só o
+  // resultado final — achado de Arthur Oliveira (nível de profundidade 3).
+  var Q_VARIANTS = {
+    4: {
+      'carrega-o-piano': {
+        title: 'Quando esse peso mais pesa em você?',
+        micro: 'Cada pessoa sente isso num momento diferente.',
+        options: {
+          A: 'Quando alguém te chama de última hora pra resolver o que não era sua função',
+          B: 'Quando você percebe que fez de novo o que ninguém pediu, só porque sempre faz',
+          C: 'À noite, sozinha, ainda arrumando o que os outros deixaram pra trás',
+          D: 'Quando alguém agradece outra pessoa pelo trabalho que você fez'
+        }
+      },
+      'esposa-de-lider': {
+        title: 'Quando esse peso mais aparece pra você?',
+        micro: 'Cada esposa de líder sente isso num momento diferente.',
+        options: {
+          A: 'Quando perguntam do seu marido antes de perguntar de você',
+          B: 'Quando você sorri no culto segurando algo pesado em casa',
+          C: 'Quando seu marido está exausto e alguém precisa continuar de pé',
+          D: 'Quando você vê outra esposa de líder parecendo dar conta de tudo sozinha'
+        }
+      },
+      'lidera-cansada': {
+        title: 'Quando esse peso mais aparece pra você?',
+        micro: 'Cada líder sente isso num momento diferente.',
+        options: {
+          A: 'Quando alguém da sua equipe falha e a responsabilidade cai em você de novo',
+          B: 'Quando você organiza a escala de todo mundo e esquece de se colocar nela',
+          C: 'À noite, revisando tudo que ainda falta, mesmo depois de liderar o dia inteiro',
+          D: 'Quando pensa em delegar, mas tem medo de que não saia do jeito certo'
+        }
+      }
+    },
+    5: {
+      'carrega-o-piano': {
+        title: 'O que você já tentou pra lidar com isso?',
+        micro: 'Sem julgamento. Ninguém está lendo.',
+        options: {
+          A: 'Orar mais e pedir mais força',
+          B: 'Dizer não uma vez, e passar a semana com culpa',
+          C: 'Conversar com alguém da igreja sobre a sobrecarga',
+          D: 'Nada. Só continuar aguentando e fazendo'
+        }
+      },
+      'esposa-de-lider': {
+        title: 'O que você já tentou pra lidar com isso?',
+        micro: 'Sem julgamento. Ninguém está lendo.',
+        options: {
+          A: 'Orar mais e pedir mais força pra sustentar o ministério do seu marido',
+          B: 'Conversar com seu marido sobre como você está, e sentir que não era hora',
+          C: 'Conversar com outra esposa de líder que entende essa realidade',
+          D: 'Nada. Só continuar sustentando por dentro'
+        }
+      },
+      'lidera-cansada': {
+        title: 'O que você já tentou pra lidar com isso?',
+        micro: 'Sem julgamento. Ninguém está lendo.',
+        options: {
+          A: 'Orar mais e pedir mais força pra continuar liderando',
+          B: 'Tentar delegar, e assumir de volta porque não saiu do seu jeito',
+          C: 'Conversar com outro líder sobre esse cansaço',
+          D: 'Nada. Só continuar segurando tudo sozinha'
+        }
+      }
+    },
+    6: {
+      'carrega-o-piano': {
+        title: 'Se você tivesse que nomear o que sente, qual seria?',
+        micro: 'Esta última resposta vai calibrar sua leitura final.',
+        options: {
+          A: 'Medo de decepcionar quem conta com você',
+          B: 'Um cansaço que já não tem mais nome',
+          C: 'Culpa de parar, mesmo por um dia',
+          D: 'Medo de ser substituída se parar de fazer tudo'
+        }
+      },
+      'esposa-de-lider': {
+        title: 'Se você tivesse que nomear o que sente, qual seria?',
+        micro: 'Esta última resposta vai calibrar sua leitura final.',
+        options: {
+          A: 'Medo de que, se você falhar, o ministério do seu marido pague o preço',
+          B: 'Um cansaço que já não tem mais nome',
+          C: 'Culpa de precisar de cuidado quando todos olham pro seu marido',
+          D: 'Medo de que descansar pareça fraqueza'
+        }
+      },
+      'lidera-cansada': {
+        title: 'Se você tivesse que nomear o que sente, qual seria?',
+        micro: 'Esta última resposta vai calibrar sua leitura final.',
+        options: {
+          A: 'Medo de que ninguém segure o que você segurava se você parar',
+          B: 'Um cansaço que já não tem mais nome',
+          C: 'Culpa de parar quando tantas pessoas dependem de você',
+          D: 'Medo de que parar pareça abandonar quem você lidera'
+        }
+      }
+    }
+  };
+
+  function personalizeQuestions(perfil) {
+    [4, 5, 6].forEach(function (qNum) {
+      var v = Q_VARIANTS[qNum][perfil];
+      document.getElementById('q' + qNum + 'Title').textContent = v.title;
+      document.getElementById('q' + qNum + 'Micro').textContent = v.micro;
+      ['A', 'B', 'C', 'D'].forEach(function (letter) {
+        document.getElementById('q' + qNum + 'Opt' + letter).textContent = v.options[letter];
+      });
+    });
   }
 
   var PERFIS = {

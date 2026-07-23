@@ -56,7 +56,16 @@
      perguntas 4-6 eram estáticas pra qualquer perfil. Reescritas em 3
      variantes (uma por perfil), trocadas dinamicamente assim que Q3 é
      respondida — Q1-Q3 seguem genéricas de propósito (aquecimento +
-     pergunta que define o perfil, antes de saber qual variante mostrar). -->
+     pergunta que define o perfil, antes de saber qual variante mostrar).
+     23/07/2026 (7ª rodada, pedido explícito do usuário): contador real de
+     15 minutos no preço da oferta, inspirado na gamificação de urgência da
+     Shein que o Arthur estuda, mas sem violar a regra de urgência real (ver
+     feedback-diretrizes-copywriting) — nada de estoque/vagas falsas. O
+     usuário criou de verdade um segundo checkout na Payt com o preço cheio
+     (R$47,90, ticket "Método do Zimbreiro - Preço Cheio"). Quando o contador
+     chega a zero, o preço exibido e o link do CTA trocam de fato pro
+     checkout cheio — não é cosmético, o preço que a pessoa veria depois do
+     prazo é exatamente esse. -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -173,6 +182,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   .offer-name { font-family: 'Lora', serif; font-size: 22px; font-weight: 700; margin-bottom: 16px; }
   .offer-price-anchor { font-size: 16px; color: var(--ink-soft); text-decoration: line-through; opacity: 0.7; margin-bottom: -4px; }
   .offer-price { font-size: 38px; font-weight: 800; color: var(--ink); margin: 14px 0 4px; }
+  .offer-countdown { font-size: 13px; font-weight: 700; color: #A8461E; margin-bottom: 18px; }
   .offer-detail { font-size: 13px; color: var(--ink-soft); margin-bottom: 22px; }
   .guarantee-note { font-size: 13px; color: var(--gold-muted); text-align: center; margin-top: 18px; }
   .seals { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 18px; font-size: 11.5px; color: var(--ink-soft); opacity: 0.75; }
@@ -316,8 +326,9 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     <div class="offer-panel">
       <p class="offer-eyebrow">Pleno | Fase 1 do Protocolo</p>
       <p class="offer-name">Método do Zimbreiro</p>
-      <p class="offer-price-anchor">R$47,90</p>
-      <p class="offer-price">R$17,90</p>
+      <p class="offer-price-anchor" id="offerPriceAnchor">R$47,90</p>
+      <p class="offer-price" id="offerPrice">R$17,90</p>
+      <p class="offer-countdown" id="offerCountdown">Esse valor vale por mais <span id="countdownTimer">15:00</span></p>
       <p class="offer-detail">Guia digital + áudios de 7 dias. Acesso imediato. Uma única vez.</p>
       <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7?payment=pix" class="btn" id="ctaResultado" data-track="quiz-cta-result">QUERO DESCANSAR EM DEUS</a>
       <div class="seals">
@@ -551,6 +562,58 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     }
   };
 
+  // Passthrough de fbclid/UTM, reaproveitado tanto no link inicial (R$17,90)
+  // quanto na troca real quando o contador expira (R$47,90).
+  function withPassthrough(baseUrl) {
+    var url = new URL(baseUrl);
+    var params = new URLSearchParams(window.location.search);
+    ['fbclid','utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(key){
+      var val = params.get(key);
+      if (val) url.searchParams.set(key, val);
+    });
+    return url.toString();
+  }
+
+  var DISCOUNT_CHECKOUT_URL = 'https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7?payment=pix';
+  var FULL_PRICE_CHECKOUT_URL = 'https://checkout.payt.com.br/9a8a6e0246a672d7b49c372278dfe755?payment=pix';
+  var COUNTDOWN_SECONDS = 15 * 60;
+
+  // Contador real: quando chega a zero, o preço e o link do CTA trocam de
+  // fato pro checkout de R$47,90 (ticket separado criado na Payt). Não é
+  // cosmético — se a pessoa não decidir dentro do tempo, o preço mostrado
+  // aqui vira o mesmo que ela veria clicando depois do prazo. Sem alegar
+  // estoque ou vagas limitadas (que não existem) — só o preço, que é real.
+  function startCountdown(perfil) {
+    var deadline = Date.now() + COUNTDOWN_SECONDS * 1000;
+    var timerEl = document.getElementById('countdownTimer');
+    var wrapEl = document.getElementById('offerCountdown');
+    var anchorEl = document.getElementById('offerPriceAnchor');
+    var priceEl = document.getElementById('offerPrice');
+    var linkEl = document.getElementById('ctaResultado');
+    var expired = false;
+    var interval;
+
+    function tick() {
+      var remaining = Math.max(0, Math.round((deadline - Date.now()) / 1000));
+      var m = Math.floor(remaining / 60);
+      var s = remaining % 60;
+      timerEl.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+
+      if (remaining <= 0 && !expired) {
+        expired = true;
+        clearInterval(interval);
+        wrapEl.textContent = 'Esse valor expirou.';
+        anchorEl.style.display = 'none';
+        priceEl.textContent = 'R$47,90';
+        linkEl.href = withPassthrough(FULL_PRICE_CHECKOUT_URL);
+        trackEvent('OfferExpired', { perfil: perfil });
+      }
+    }
+
+    tick();
+    interval = setInterval(tick, 1000);
+  }
+
   function renderResult() {
     var perfil = getPerfil();
     var p = PERFIS[perfil];
@@ -567,16 +630,12 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 
     // Passthrough de fbclid/UTM + perfil pro checkout, mesma lógica da LP principal
     var link = document.getElementById('ctaResultado');
-    var params = new URLSearchParams(window.location.search);
-    var url = new URL(link.href);
-    ['fbclid','utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(key){
-      var val = params.get(key);
-      if (val) url.searchParams.set(key, val);
-    });
-    link.href = url.toString();
+    link.href = withPassthrough(DISCOUNT_CHECKOUT_URL);
     link.addEventListener('click', function () {
       trackEvent('CTAResultClick', { perfil: perfil });
     });
+
+    startCountdown(perfil);
   }
 </script>
 

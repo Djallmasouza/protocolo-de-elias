@@ -54,7 +54,13 @@
        event.preventDefault() + gtag event_callback, com um setTimeout de
        250ms como rede de segurança caso o callback nunca dispare (bloqueador
        de anúncio, script lento, etc.) — padrão recomendado pelo próprio
-       Google pra tracking de cliques em links de saída. -->
+       Google pra tracking de cliques em links de saída. Verificado ao vivo:
+       primeira versão deixava a navegação disparar assim que QUALQUER um dos
+       dois eventos (cta_click genérico ou o nomeado por posição) retornasse
+       — o genérico saiu, mas o nomeado por posição (que é o marcado como
+       evento-chave no GA4) podia perder a corrida. Fix: navegação passa a
+       esperar especificamente o evento nomeado por posição, o genérico fica
+       best-effort sem bloquear nada. -->
   <script>
     (function () {
       var v = 'b';
@@ -132,17 +138,19 @@
     // generic cta_click (kept for /ga4-diagnostic compatibility) AND a
     // position-named event (hero_cta_click / meio_cta_click / final_cta_click).
     // For same-page anchors (the hero CTA, href="#oferta") there's no
-    // navigation race, so the event fires normally. For outbound links (the
+    // navigation race, so both events fire normally. For outbound links (the
     // checkout CTAs), the browser starts navigating the instant this handler
     // returns, which can outrace gtag's beacon dispatch (found 23/07/2026 via
     // Clarity-vs-GA4 cross-check: a real confirmed click produced no GA4
-    // event). Fix: hold navigation with event_callback + a 250ms timeout
-    // fallback so a blocked/slow tag never traps the visitor on the page.
+    // event). cta_click fires best-effort (no wait); the position-named event
+    // is the one marked as GA4 key event, so navigation gates specifically on
+    // IT via event_callback, with a 250ms timeout fallback so a blocked/slow
+    // tag never traps the visitor on the page.
     document.addEventListener('click', function (event) {
       var el = event.target.closest('[data-track-cta]');
       if (!el) return;
       var ctaPosition = el.getAttribute('data-cta-position') || 'unknown';
-      var payload = {
+      var basePayload = {
         cta_id: el.getAttribute('data-cta-id') || '',
         cta_text: el.textContent.trim(),
         cta_position: ctaPosition,
@@ -153,8 +161,8 @@
       var rawHref = el.getAttribute('href') || '';
 
       if (rawHref.charAt(0) === '#') {
-        gtag('event', 'cta_click', payload);
-        gtag('event', ctaPosition + '_cta_click', payload);
+        gtag('event', 'cta_click', basePayload);
+        gtag('event', ctaPosition + '_cta_click', basePayload);
         return;
       }
 
@@ -166,9 +174,16 @@
         navigated = true;
         window.location.href = destination;
       }
-      payload.event_callback = proceed;
-      gtag('event', 'cta_click', payload);
-      gtag('event', ctaPosition + '_cta_click', payload);
+      gtag('event', 'cta_click', basePayload);
+      gtag('event', ctaPosition + '_cta_click', {
+        cta_id: basePayload.cta_id,
+        cta_text: basePayload.cta_text,
+        cta_position: basePayload.cta_position,
+        destination_url: basePayload.destination_url,
+        variant: basePayload.variant,
+        transport_type: 'beacon',
+        event_callback: proceed
+      });
       setTimeout(proceed, 250);
     });
 

@@ -47,20 +47,16 @@
        correspondente apareceu no GA4 no mesmo dia. Causa: o link de checkout
        é um <a> comum, sem preventDefault — o navegador começa a navegar pro
        Payt assim que o handler retorna, e isso pode vencer a corrida contra o
-       gtag disparando o beacon (mesmo com transport_type: 'beacon'), porque o
-       script real do GA4 carrega async e processa a fila do dataLayer fora do
-       mesmo tick. Fix: para os CTAs que navegam pra fora da página (oferta e
-       final, não o do hero que só rola a página), segura a navegação com
-       event.preventDefault() + gtag event_callback, com um setTimeout de
-       250ms como rede de segurança caso o callback nunca dispare (bloqueador
-       de anúncio, script lento, etc.) — padrão recomendado pelo próprio
-       Google pra tracking de cliques em links de saída. Verificado ao vivo:
-       primeira versão deixava a navegação disparar assim que QUALQUER um dos
-       dois eventos (cta_click genérico ou o nomeado por posição) retornasse
-       — o genérico saiu, mas o nomeado por posição (que é o marcado como
-       evento-chave no GA4) podia perder a corrida. Fix: navegação passa a
-       esperar especificamente o evento nomeado por posição, o genérico fica
-       best-effort sem bloquear nada. -->
+       gtag disparando o beacon, porque o script real do GA4 carrega async e
+       processa a fila do dataLayer fora do mesmo tick. Fix: para os CTAs que
+       navegam pra fora da página (oferta e final, não o do hero que só rola
+       a página), segura a navegação com um delay fixo de 150ms, dando tempo
+       dos dois beacons saírem antes da página ser desmontada. Testado ao
+       vivo: uma primeira versão usava event.preventDefault() + gtag
+       event_callback anexado só no evento nomeado por posição (o marcado
+       como evento-chave no GA4) — isso fez justo esse evento nunca sair
+       (confirmado via network requests reais), enquanto o evento genérico
+       sem callback sempre saiu. Delay fixo, sem callback, resolveu os dois. -->
   <script>
     (function () {
       var v = 'b';
@@ -142,15 +138,17 @@
     // checkout CTAs), the browser starts navigating the instant this handler
     // returns, which can outrace gtag's beacon dispatch (found 23/07/2026 via
     // Clarity-vs-GA4 cross-check: a real confirmed click produced no GA4
-    // event). cta_click fires best-effort (no wait); the position-named event
-    // is the one marked as GA4 key event, so navigation gates specifically on
-    // IT via event_callback, with a 250ms timeout fallback so a blocked/slow
-    // tag never traps the visitor on the page.
+    // event). Fix: hold navigation with a flat 150ms delay so both beacon
+    // hits actually flush. An earlier version attached gtag's event_callback
+    // to only the position-named call and gated navigation on it — verified
+    // live that this made THAT specific call unreliable (it never reached
+    // the network), while the plain callback-less cta_click always went out
+    // fine. Both calls now get identical, callback-free treatment.
     document.addEventListener('click', function (event) {
       var el = event.target.closest('[data-track-cta]');
       if (!el) return;
       var ctaPosition = el.getAttribute('data-cta-position') || 'unknown';
-      var basePayload = {
+      var payload = {
         cta_id: el.getAttribute('data-cta-id') || '',
         cta_text: el.textContent.trim(),
         cta_position: ctaPosition,
@@ -161,30 +159,18 @@
       var rawHref = el.getAttribute('href') || '';
 
       if (rawHref.charAt(0) === '#') {
-        gtag('event', 'cta_click', basePayload);
-        gtag('event', ctaPosition + '_cta_click', basePayload);
+        gtag('event', 'cta_click', payload);
+        gtag('event', ctaPosition + '_cta_click', payload);
         return;
       }
 
       event.preventDefault();
       var destination = el.href;
-      var navigated = false;
-      function proceed() {
-        if (navigated) return;
-        navigated = true;
+      gtag('event', 'cta_click', payload);
+      gtag('event', ctaPosition + '_cta_click', payload);
+      setTimeout(function () {
         window.location.href = destination;
-      }
-      gtag('event', 'cta_click', basePayload);
-      gtag('event', ctaPosition + '_cta_click', {
-        cta_id: basePayload.cta_id,
-        cta_text: basePayload.cta_text,
-        cta_position: basePayload.cta_position,
-        destination_url: basePayload.destination_url,
-        variant: basePayload.variant,
-        transport_type: 'beacon',
-        event_callback: proceed
-      });
-      setTimeout(proceed, 250);
+      }, 150);
     });
 
     // FAQ expand tracking
@@ -293,7 +279,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600,0,700;1,400;1,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {

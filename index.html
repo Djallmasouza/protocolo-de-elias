@@ -78,7 +78,17 @@
      prazo real do contador a cada resposta; ao recarregar, retoma na
      próxima pergunta não respondida (ou direto no resultado, com o MESMO
      prazo do contador, se já tinha terminado) — não reseta o tempo real só
-     porque a pessoa saiu e voltou. -->
+     porque a pessoa saiu e voltou.
+     23/07/2026 (10ª rodada, pedido explícito do usuário): sistema de back
+     redirect (Arthur Oliveira, arquivo quiz-e-back-redirect.md, nunca
+     aplicado antes hoje). Intercepta o botão VOLTAR do navegador só na tela
+     de resultado (via History API — fechar aba/digitar outra URL só
+     permite o aviso genérico do navegador, não dá pra mostrar oferta
+     customizada nesses casos). 4 camadas adaptadas ao Zimbreiro: urgência
+     real (reforça o mesmo contador, não um novo), garantia, reforço da
+     promessa central, e bônus grátis via WhatsApp (número informado pelo
+     usuário) como último recurso antes de deixar a pessoa sair de verdade.
+     Sem prova social fabricada em nenhuma camada. -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -210,6 +220,15 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   .seals { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 18px; font-size: 11.5px; color: var(--ink-soft); opacity: 0.75; }
 
   .footer-note { font-size: 11px; color: rgba(250,247,242,0.35); text-align: center; margin-top: 28px; line-height: 1.6; }
+
+  /* Back redirect: overlay mostrado quando a pessoa tenta voltar/sair da
+     tela de resultado (ver comentário no head). */
+  .br-overlay { display: none; position: fixed; inset: 0; background: rgba(16,12,6,0.92); z-index: 200; align-items: center; justify-content: center; padding: 24px; }
+  .br-overlay.show { display: flex; }
+  .br-box { background: var(--warm); color: var(--ink); border-radius: 12px; padding: 32px 26px; max-width: 380px; width: 100%; text-align: center; }
+  .br-title { font-family: 'Lora', serif; font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+  .br-body { font-size: 15px; color: var(--ink-soft); margin-bottom: 22px; line-height: 1.6; }
+  .br-dismiss { display: block; margin-top: 16px; font-size: 13px; color: var(--ink-soft); text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -372,6 +391,17 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   </div>
 </section>
 
+<!-- BACK REDIRECT: aparece só quando a pessoa tenta voltar pelo botão do
+     navegador estando na tela de resultado. Ver comentário no head. -->
+<div class="br-overlay" id="backRedirectOverlay">
+  <div class="br-box">
+    <p class="br-title" id="brTitle"></p>
+    <p class="br-body" id="brBody"></p>
+    <button class="btn" id="brPrimary"></button>
+    <a href="#" class="br-dismiss" id="brDismiss">Sair mesmo assim</a>
+  </div>
+</div>
+
 <script>
   var TOTAL_SCREENS = 8; // intro + 6 perguntas + loading (resultado fora da barra)
   var answers = {};
@@ -429,6 +459,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       showScreen('result');
       var perfil = getPerfil();
       trackEvent('QuizComplete', { perfil: perfil });
+      armBackRedirect();
     }, 2200);
   }
 
@@ -650,6 +681,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       if (answers.q3) personalizeQuestions(getPerfil());
       renderResult();
       showScreen('result');
+      armBackRedirect();
       return;
     }
 
@@ -727,6 +759,89 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 
     startCountdown(perfil);
   }
+
+  // Back redirect: 4 camadas mostradas quando a pessoa aperta VOLTAR
+  // estando na tela de resultado, em vez de deixá-la sair direto. Cada
+  // camada reoferece de um ângulo diferente; a última troca a venda por
+  // um bônus grátis via WhatsApp (captura o contato mesmo sem compra).
+  // Só funciona pro botão voltar (History API) — fechar aba ou digitar
+  // outra URL não permite UI customizada, só o aviso nativo do navegador.
+  var WHATSAPP_NUMBER = '5511911207295';
+  var BACK_REDIRECT_LAYERS = [
+    {
+      title: 'Espera um instante',
+      body: 'Seu preço de R$17,90 ainda está valendo. Depois que o tempo do contador acabar, volta pro valor cheio de R$47,90.',
+      primary: 'Quero garantir o meu',
+      action: 'close'
+    },
+    {
+      title: 'Ainda em dúvida?',
+      body: 'Você tem 7 dias de garantia incondicional. Se não sentir nenhum alívio, devolvemos cada centavo, sem pergunta.',
+      primary: 'Ver oferta de novo',
+      action: 'close'
+    },
+    {
+      title: 'Antes de você ir',
+      body: 'Você já saiu daqui sabendo nomear o peso que carrega. O Método do Zimbreiro é só o próximo passo, no seu tempo, sem pressa.',
+      primary: 'Quero continuar',
+      action: 'close'
+    },
+    {
+      title: 'Tudo bem, sem pressão',
+      body: 'Se agora não é a hora, tudo bem. Antes de você ir, um presente sem custo: uma oração curta de descanso, direto no seu WhatsApp.',
+      primary: 'Quero receber no WhatsApp',
+      action: 'whatsapp'
+    }
+  ];
+  var backRedirectLayerIndex = 0;
+  var backRedirectArmed = false;
+
+  function armBackRedirect() {
+    if (backRedirectArmed) return;
+    backRedirectArmed = true;
+    history.pushState({ zbr: true }, '', location.href);
+    window.addEventListener('popstate', handleBackAttempt);
+  }
+
+  function handleBackAttempt() {
+    if (backRedirectLayerIndex >= BACK_REDIRECT_LAYERS.length) {
+      window.removeEventListener('popstate', handleBackAttempt);
+      trackEvent('BackRedirectExit', {});
+      history.back();
+      return;
+    }
+    showBackRedirectLayer(backRedirectLayerIndex);
+    trackEvent('BackRedirectShown', { layer: backRedirectLayerIndex + 1 });
+    backRedirectLayerIndex++;
+    history.pushState({ zbr: true }, '', location.href);
+  }
+
+  function showBackRedirectLayer(index) {
+    var layer = BACK_REDIRECT_LAYERS[index];
+    document.getElementById('brTitle').textContent = layer.title;
+    document.getElementById('brBody').textContent = layer.body;
+    var primaryBtn = document.getElementById('brPrimary');
+    primaryBtn.textContent = layer.primary;
+    primaryBtn.onclick = function () {
+      trackEvent('BackRedirectPrimaryClick', { layer: index + 1 });
+      if (layer.action === 'whatsapp') {
+        var msg = encodeURIComponent('Oi! Vim do teste do Método do Zimbreiro e queria receber a oração curta de descanso.');
+        window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + msg, '_blank');
+      }
+      closeBackRedirectOverlay();
+    };
+    document.getElementById('backRedirectOverlay').classList.add('show');
+  }
+
+  function closeBackRedirectOverlay() {
+    document.getElementById('backRedirectOverlay').classList.remove('show');
+  }
+
+  document.getElementById('brDismiss').addEventListener('click', function (e) {
+    e.preventDefault();
+    trackEvent('BackRedirectDismiss', { layer: backRedirectLayerIndex });
+    closeBackRedirectOverlay();
+  });
 
   resumeFromSavedState();
 </script>

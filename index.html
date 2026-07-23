@@ -57,6 +57,16 @@
        como evento-chave no GA4) — isso fez justo esse evento nunca sair
        (confirmado via network requests reais), enquanto o evento genérico
        sem callback sempre saiu. Delay fixo, sem callback, resolveu os dois. -->
+  <!-- 23/07/2026 (Clarity, achado real: 2 dead clicks documentados em sessões
+       reais, exatamente nos pontos onde o funil do GA4 mais cai) — itens de
+       lista na qualificação (marcador "›", lido como indicador de navegação/
+       expansão) e nos bullets finais (cartão com borda e fundo, lido como
+       botão) levavam visitantes a tentar clicar em texto estático. Fix:
+       marcador da qualificação trocado por um ponto neutro (•); bullets
+       finais deixam de ser cartões e viram lista simples com marcador,
+       sem nenhuma pista visual de clicável. Mudança de UX/interação, não de
+       copy ou oferta — autorizada como exceção pontual ao "não mexer na LP"
+       do teste de orçamento em andamento (fecha 27/07/2026). -->
   <script>
     (function () {
       var v = 'b';
@@ -428,9 +438,13 @@
     details[open] summary::after { transform: rotate(45deg); }
     details p { font-size: 15px; color: var(--ink-soft); margin-top: 10px; line-height: 1.6; }
 
-    /* Bullets finais como blocos distintos */
-    .bullet-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
-    .bullet-list li { padding: 18px 20px; font-size: 15px; line-height: 1.5; background: rgba(240,232,216,0.06); border: 1px solid rgba(240,232,216,0.14); border-radius: 10px; }
+    /* Bullets finais: lista simples com marcador, sem aparência de cartão/
+       botão (fix 23/07/2026 — Clarity mostrou dead click real aqui; o visual
+       de cartão sugeria uma interatividade que não existia). */
+    .bullet-list { list-style: none; margin-top: 8px; }
+    .bullet-list li { display: flex; gap: 12px; align-items: flex-start; padding: 14px 0; font-size: 15px; line-height: 1.5; border-bottom: 1px solid rgba(240,232,216,0.14); }
+    .bullet-list li:last-child { border-bottom: none; }
+    .bullet-list li::before { content: '\2022'; color: var(--gold); flex-shrink: 0; font-size: 20px; line-height: 1.3; }
 
     footer { background: var(--dark-deep); color: #6A5840; padding: 40px 24px; text-align: center; font-size: 12px; line-height: 2; }
     footer p { margin-left: auto; margin-right: auto; }
@@ -529,10 +543,10 @@
         <h2>Você se reconhece aqui?</h2>
 
         <ul class="qual-list">
-          <li><span class="qual-arrow">&#8250;</span><span>Você serve, lidera ou cuida de pessoas, mas por dentro está esgotada.</span></li>
-          <li><span class="qual-arrow">&#8250;</span><span>Faz tempo que você não sente Deus perto, mesmo orando.</span></li>
-          <li><span class="qual-arrow">&#8250;</span><span>Você sente culpa toda vez que tenta descansar.</span></li>
-          <li><span class="qual-arrow">&#8250;</span><span>Você já pediu mais fé, já orou mais. E o cansaço continua.</span></li>
+          <li><span class="qual-arrow">&#8226;</span><span>Você serve, lidera ou cuida de pessoas, mas por dentro está esgotada.</span></li>
+          <li><span class="qual-arrow">&#8226;</span><span>Faz tempo que você não sente Deus perto, mesmo orando.</span></li>
+          <li><span class="qual-arrow">&#8226;</span><span>Você sente culpa toda vez que tenta descansar.</span></li>
+          <li><span class="qual-arrow">&#8226;</span><span>Você já pediu mais fé, já orou mais. E o cansaço continua.</span></li>
         </ul>
 
         <p style="margin-top: 20px;">Se você se identificou com pelo menos 2, o Método do Zimbreiro foi criado pra você.</p>
@@ -566,9 +580,9 @@
 
         <p style="font-weight: 700; margin-bottom: 12px;">Você se reconhece em pelo menos duas dessas frases?</p>
         <ul class="qual-list" data-track-section="qualificacao">
-          <li><span class="qual-arrow">&#8250;</span><span>Serve, lidera ou cuida de gente, mas por dentro está esgotada.</span></li>
-          <li><span class="qual-arrow">&#8250;</span><span>Sente que, se parasse de verdade, alguém ia notar a falta e te cobrar.</span></li>
-          <li><span class="qual-arrow">&#8250;</span><span>Sente culpa toda vez que tenta descansar.</span></li>
+          <li><span class="qual-arrow">&#8226;</span><span>Serve, lidera ou cuida de gente, mas por dentro está esgotada.</span></li>
+          <li><span class="qual-arrow">&#8226;</span><span>Sente que, se parasse de verdade, alguém ia notar a falta e te cobrar.</span></li>
+          <li><span class="qual-arrow">&#8226;</span><span>Sente culpa toda vez que tenta descansar.</span></li>
         </ul>
 
         <p style="margin-top: 20px;">Se sim, o que vem agora muda a forma como você entende esse cansaço. Porque Deus nunca te contratou. Ele te adotou.</p>

@@ -67,6 +67,15 @@
        sem nenhuma pista visual de clicável. Mudança de UX/interação, não de
        copy ou oferta — autorizada como exceção pontual ao "não mexer na LP"
        do teste de orçamento em andamento (fecha 27/07/2026). -->
+  <!-- 23/07/2026 (Fase 1 do plano de recuperação pós-checkpoint antecipado:
+       CPA real R$57,29 vs ticket R$17,90 forçou reconsiderar esperar até
+       27/07 sem tocar nos 2 gaps já documentados). Novo bloco logo após o
+       hero: caixa "o que é" (formato/duração/pra quem) + segunda aparição da
+       imagem do produto na página (antes só existia 1, na oferta) — achado
+       de CRO (clareza tarde demais) + conteúdo externo sobre tangibilidade
+       visual em low ticket, mesmo dia. Prova social real (depoimentos dos 4
+       compradores confirmados) entra assim que as respostas chegarem — não
+       fabricada, não neste push. -->
   <script>
     (function () {
       var v = 'b';
@@ -389,6 +398,19 @@
     .phase-highlight { font-family: 'Lora', serif; font-style: italic; font-size: 18px; color: var(--ink); background: rgba(196,151,59,0.14); border-radius: 4px; padding: 8px 12px; margin: 8px 0; display: inline-block; }
     .phase-note { font-size: 14px; color: var(--ink-soft); margin-top: 16px; opacity: 0.75; }
 
+    /* Product clarity + tangibilidade visual (fix 23/07/2026) — logo após o
+       hero, mesmo bloco pras 2 variantes. Segunda imagem real do produto na
+       página (antes só existia 1, na oferta). */
+    .clarity-panel { background: var(--warm); border-radius: 12px; padding: 32px 24px; }
+    .clarity-eyebrow { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 16px; text-align: center; }
+    .clarity-mockup { margin: 0 auto 24px; max-width: 220px; perspective: 1200px; }
+    .clarity-mockup img { display: block; width: 100%; height: auto; border-radius: 12px; transform: rotateY(-6deg) rotateX(3deg) scale(0.98); box-shadow: 14px 20px 36px rgba(28,18,8,0.22); }
+    .clarity-list { list-style: none; }
+    .clarity-list li { padding: 10px 0 10px 24px; border-bottom: 1px solid rgba(28,18,8,0.1); font-size: 15px; position: relative; }
+    .clarity-list li:last-child { border-bottom: none; }
+    .clarity-list li strong { color: var(--ink); }
+    .clarity-list li::before { content: '\2022'; color: var(--gold); position: absolute; left: 0; font-size: 20px; line-height: 1.3; }
+
     /* Qualification */
     .qual-list { list-style: none; }
     .qual-list li { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid rgba(28,18,8,0.1); font-size: 16px; }
@@ -473,6 +495,25 @@
         <h1>Você serve a Deus há anos.<br>Mas vive com medo de ser dispensada se parar.</h1>
         <p class="hero-sub">Baseado no momento em que Deus tratou Elias como filho exausto, não como funcionário que ainda tinha tarefas a cumprir.</p>
         <a href="#oferta" class="btn btn-discreet" data-track-cta data-cta-id="cta-hero" data-cta-position="hero">Quero descansar em Deus</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOX DE CLAREZA DO PRODUTO + TANGIBILIDADE VISUAL — logo após o hero,
+       mesmo pras 2 variantes (fix 23/07/2026, ver comentário no head). -->
+  <section class="section-tight section-cream reveal" data-track-section="produto_clareza">
+    <div class="container">
+      <div class="clarity-panel">
+        <p class="clarity-eyebrow">O que é o Método do Zimbreiro</p>
+        <div class="clarity-mockup">
+          <img src="/assets/img/Card%20-%201600x1200_20260712_183951_0000.webp" alt="Método do Zimbreiro: guia digital e áudios do protocolo de 7 dias, acessados pelo celular" loading="lazy" decoding="async">
+        </div>
+        <ul class="clarity-list">
+          <li><strong>Formato:</strong> guia digital + áudios guiados de 10 minutos por dia.</li>
+          <li><strong>Duração:</strong> 7 dias, 10 a 15 minutos por dia.</li>
+          <li><strong>Para quem é:</strong> mulheres que amam a Deus, mas não aguentam mais o peso do esgotamento e da culpa ao tentar descansar.</li>
+          <li><strong>Acesso:</strong> imediato, direto no celular.</li>
+        </ul>
       </div>
     </div>
   </section>

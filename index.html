@@ -32,6 +32,16 @@
        pré-seleciona Pix no lugar de Cartão. Aplicado nos dois links de
        checkout (oferta e CTA final). reCAPTCHA de imagem antes do Pix segue
        sem resposta definitiva — pergunta de acompanhamento enviada. -->
+  <!-- 23/07/2026 (auditoria de atribuição, achado real): o checkout fica em
+       payt.com.br, domínio diferente do da LP (acessopleno.com), então
+       fbclid/UTM do clique do anúncio não atravessava sozinho pro Payt — o
+       Purchase disparava mas não casava de volta com a campanha/criativo no
+       Meta. Fix: passthrough de fbclid/UTM pros links de checkout, dentro do
+       mesmo bloco de DOMContentLoaded que já existia (script solto no head
+       rodaria antes do body existir e não acharia nenhum link). Preserva o
+       ?payment=pix já presente via URLSearchParams.set. Requer também a opção
+       "permitir pixel facebook via parâmetro de url" habilitada no painel do
+       Payt (feito pelo usuário em 23/07). -->
   <script>
     (function () {
       var v = 'b';
@@ -78,6 +88,32 @@
       var m = document.documentElement.className.match(/variant-(a|b)/);
       return m ? m[1] : 'unknown';
     }
+
+    // fbclid/UTM passthrough: checkout lives on a different domain
+    // (payt.com.br) than the LP (acessopleno.com), so click-attribution
+    // params don't cross domains on their own. Without this, Payt's Purchase
+    // event can't be matched back to the Meta ad/campaign that drove the
+    // click (found 23/07/2026, real sales were landing unattributed).
+    // Runs inside the same DOMContentLoaded block as the rest of this script
+    // (not a standalone head script) for the same reason noted above.
+    // URLSearchParams.set preserves the ?payment=pix already on these links.
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var passthroughKeys = ['fbclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+      var found = [];
+      passthroughKeys.forEach(function (key) {
+        var val = params.get(key);
+        if (val) found.push([key, val]);
+      });
+      if (found.length === 0) return;
+      document.querySelectorAll('a[data-track-cta]').forEach(function (link) {
+        var url = new URL(link.href);
+        found.forEach(function (pair) {
+          url.searchParams.set(pair[0], pair[1]);
+        });
+        link.href = url.toString();
+      });
+    })();
 
     // CTA clicks: single delegated listener, no per-button onclick. Fires the
     // generic cta_click (kept for /ga4-diagnostic compatibility) AND a

@@ -71,7 +71,14 @@
      (referência: visual da Shein). Reconstruído como bloco vermelho com
      dígitos em caixas separadas (MM : SS) e pulso sutil (respeita
      prefers-reduced-motion), estado de expirado com bloco cinza. Mecanismo
-     por trás não mudou, só a apresentação. -->
+     por trás não mudou, só a apresentação.
+     23/07/2026 (9ª rodada, pedido explícito do usuário): persistência de
+     estado via localStorage. Sair no meio do quiz (fechar aba, perder wifi)
+     e voltar do zero passaria péssima impressão. Agora salva respostas +
+     prazo real do contador a cada resposta; ao recarregar, retoma na
+     próxima pergunta não respondida (ou direto no resultado, com o MESMO
+     prazo do contador, se já tinha terminado) — não reseta o tempo real só
+     porque a pessoa saiu e voltou. -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -396,6 +403,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 
   function answer(qNum, opt) {
     answers['q' + qNum] = opt;
+    saveState();
     trackEvent('QuizAnswer', { q: qNum, r: opt });
 
     if (qNum === 3) {
@@ -599,6 +607,57 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   var DISCOUNT_CHECKOUT_URL = 'https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7?payment=pix';
   var FULL_PRICE_CHECKOUT_URL = 'https://checkout.payt.com.br/9a8a6e0246a672d7b49c372278dfe755?payment=pix';
   var COUNTDOWN_SECONDS = 15 * 60;
+  var offerDeadline = null;
+
+  // Persistência: se a pessoa sair (fecha a aba, perde o wifi, troca de app)
+  // e voltar, ela retoma de onde parou em vez de reiniciar do zero — sair no
+  // meio e ter que recomeçar passa péssima impressão. Guarda só o essencial
+  // (respostas + prazo real da oferta) via localStorage, nada sensível.
+  var STORAGE_KEY = 'zimbreiro_quiz_state_v1';
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        answers: answers,
+        offerDeadline: offerDeadline
+      }));
+    } catch (e) {}
+  }
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Retoma o quiz do ponto salvo. Se já tinha terminado, vai direto pro
+  // resultado com o MESMO prazo do contador (não reseta o tempo real só
+  // porque a pessoa saiu e voltou). Se parou no meio, volta pra próxima
+  // pergunta não respondida, já personalizada se Q3 já tinha sido respondida.
+  function resumeFromSavedState() {
+    var saved = loadState();
+    if (!saved || !saved.answers) return;
+    answers = saved.answers;
+    if (saved.offerDeadline) offerDeadline = saved.offerDeadline;
+
+    var answeredCount = Object.keys(answers).length;
+    if (answeredCount === 0) return;
+
+    if (answeredCount >= 6) {
+      if (answers.q3) personalizeQuestions(getPerfil());
+      renderResult();
+      showScreen('result');
+      return;
+    }
+
+    if (answers.q3) personalizeQuestions(getPerfil());
+    var nextQ = answeredCount + 1;
+    updateProgress(nextQ);
+    showScreen('q' + nextQ);
+  }
 
   // Contador real: quando chega a zero, o preço e o link do CTA trocam de
   // fato pro checkout de R$47,90 (ticket separado criado na Payt). Não é
@@ -606,7 +665,11 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   // aqui vira o mesmo que ela veria clicando depois do prazo. Sem alegar
   // estoque ou vagas limitadas (que não existem) — só o preço, que é real.
   function startCountdown(perfil) {
-    var deadline = Date.now() + COUNTDOWN_SECONDS * 1000;
+    if (!offerDeadline) {
+      offerDeadline = Date.now() + COUNTDOWN_SECONDS * 1000;
+      saveState();
+    }
+    var deadline = offerDeadline;
     var minEl = document.getElementById('cdMin');
     var secEl = document.getElementById('cdSec');
     var wrapEl = document.getElementById('offerCountdown');
@@ -664,6 +727,8 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 
     startCountdown(perfil);
   }
+
+  resumeFromSavedState();
 </script>
 
 </body>

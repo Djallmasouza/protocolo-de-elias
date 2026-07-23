@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>O que está por trás do seu cansaço tem nome | Pleno</title>
+<title>Você não desistiu de servir. Só esqueceu como parar. | Pleno</title>
 <meta name="description" content="Um teste rápido de 6 perguntas pra você nomear o que está por trás do seu esgotamento em servir.">
 
 <!-- 23/07/2026 (construído em paralelo ao teste de orçamento em andamento, não
@@ -17,11 +17,16 @@
      citação de pessoa real. Segmentação por papel (Q3) é a variável que
      estava em aberto e nunca foi testada com dado real — este quiz é o
      veículo pra medir isso, não uma resposta assumida como certa.
-     Atualização (mesma data): headline trocado de "Descubra..." (padrão
-     saturado, achado na inteligência de mercado do nicho de espiritualidade)
-     pra algo mais direto; selos de segurança + rodapé institucional (CNPJ)
-     adicionados na tela de resultado, ausentes na primeira versão — achado
-     do Pandacast #203 sobre comprador brasileiro ser evitativo/desconfiado. -->
+     Atualização (mesma data, 3ª rodada): headline trocado usando padrão
+     validado de Big Idea (Fábio Cavalcante/ADC07, exemplo real citado:
+     "Você não parou de orar. Só esqueceu como recomeçar."), adaptado pro
+     ângulo de descanso. Inserido "a culpa não é sua" (gatilho de Inimigo
+     Comum, Fábio Cavalcante/ADC09) em cada perfil — ausente na versão
+     anterior. Adicionado reframe altruísta antes da oferta (framework P.I.G.
+     profundo: compra não pode parecer egoísmo pra esse público treinado a
+     nunca se priorizar). Fonte: pasta Marketing/base-marketing/copy
+     (frameworks de Evaldo Albuquerque, Stefan Georgi, Chris Haddad, Fábio
+     Cavalcante). -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -153,7 +158,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 <section class="screen active intro" data-screen="intro">
   <div class="container">
     <p class="intro-eyebrow">Pleno</p>
-    <h1>O que está realmente por trás do seu cansaço de servir tem nome</h1>
+    <h1>Você não desistiu de servir. Só esqueceu como parar.</h1>
     <p>Um teste rápido, de 1 minuto, pra você nomear o peso que carrega e ver o que fazer com ele.</p>
     <button class="btn" onclick="startQuiz()" data-track="quiz-start">Começar meu teste</button>
   </div>
@@ -274,6 +279,8 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 
     <p class="bridge">O Método do Zimbreiro existe exatamente pra isso: aprender a parar sem sentir que está falhando com Deus. O mesmo caminho que Ele usou com Elias antes de qualquer missão nova, debaixo do zimbreiro, em 1 Reis 19.</p>
 
+    <p class="result-highlight" id="resultAltruism" style="margin-bottom: 24px;"></p>
+
     <div class="offer-panel">
       <p class="offer-eyebrow">Pleno | Fase 1 do Protocolo</p>
       <p class="offer-name">Método do Zimbreiro</p>
@@ -362,31 +369,34 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       tag: 'A QUE CARREGA O PIANO',
       headline: 'Você é sempre a que sobra pra fazer o que ninguém mais quer.',
       p1: 'Suas respostas mostram um padrão: você é a peça que segura o ministério, mesmo quando ninguém percebe o preço que isso cobra de você.',
-      p2: 'Isso tem nome: é a heresia das obras, a crença silenciosa de que seu valor diante de Deus se mede pelo que você entrega. Ninguém te ensinou isso com essas palavras, mas você aprendeu a viver como se fosse verdade.',
+      p2: 'Isso tem nome: é a heresia das obras, a crença silenciosa de que seu valor diante de Deus se mede pelo que você entrega. A culpa não é sua. Ninguém te ensinou a diferença entre servir por amor e servir por medo.',
       p3: 'Quando você entende que Deus nunca pediu isso de você, o piano para de pesar sozinho. Você continua servindo, mas por escolha, não por medo.',
       pd1: 'Você chega em casa depois do culto e não sobra nada pra você mesma, só pro que os outros precisam.',
       pd2: 'O domingo que devia ser descanso virou mais um turno. E ninguém perguntou se você aguenta.',
-      pd3: 'A culpa de parar é maior que o cansaço de continuar. Por isso você nunca para.'
+      pd3: 'A culpa de parar é maior que o cansaço de continuar. Por isso você nunca para.',
+      altruism: 'Parar não é abandonar quem você ama. É a única forma de continuar servindo sem se esvaziar até não sobrar nada pra dar.'
     },
     'esposa-de-lider': {
       tag: 'A ESPOSA QUE SUSTENTA POR TRÁS',
       headline: 'Você cuida de quem cuida de todo mundo. Ninguém cuida de você.',
       p1: 'Suas respostas mostram um padrão comum entre esposas de líderes: a cobrança dupla, da igreja e de casa, sem ninguém perguntar como você está.',
-      p2: 'Isso também é a heresia das obras, só que com um peso a mais: o medo de que, se você falhar, o ministério do seu marido é quem paga o preço.',
+      p2: 'Isso também é a heresia das obras, só que com um peso a mais: o medo de que, se você falhar, o ministério do seu marido é quem paga o preço. A culpa não é sua. Ninguém te ensinou que sustentar o ministério não é a mesma coisa que se esgotar por ele.',
       p3: 'Quando você entende que Deus te adotou como filha, não te contratou como sustentação invisível do ministério, o papel de esposa de líder deixa de ser um fardo silencioso.',
       pd1: 'Você sorri no culto enquanto segura por dentro o que ninguém sabe que está acontecendo em casa.',
       pd2: 'Todo mundo pergunta como seu marido está. Quase ninguém pergunta como você está.',
-      pd3: 'Você tem medo de que descansar pareça fraqueza. Porque, se você cai, parece que o ministério inteiro cai junto.'
+      pd3: 'Você tem medo de que descansar pareça fraqueza. Porque, se você cai, parece que o ministério inteiro cai junto.',
+      altruism: 'Descansar não enfraquece o ministério do seu marido. Uma esposa inteira sustenta muito mais do que uma esposa exaurida.'
     },
     'lidera-cansada': {
       tag: 'A LÍDER QUE JÁ NÃO SABE PARAR',
       headline: 'Você lidera outras pessoas. Mas quem lidera o seu descanso?',
       p1: 'Suas respostas mostram alguém que segura um ministério inteiro nas costas e sente que parar seria decepcionar todo mundo que depende dela.',
-      p2: 'É a heresia das obras na sua versão mais silenciosa: liderar bem virou sinônimo de nunca parar.',
+      p2: 'É a heresia das obras na sua versão mais silenciosa: liderar bem virou sinônimo de nunca parar. A culpa não é sua. Ninguém te ensinou que descansar também é liderar.',
       p3: 'Quando você entende que Deus mandou Elias parar antes de qualquer missão nova, liderar deixa de significar se esgotar primeiro.',
       pd1: 'Você organiza a escala de todo mundo, menos a sua própria pausa.',
       pd2: 'Se você falha uma vez, tem medo de que ninguém mais segure o que você segurava.',
-      pd3: 'Ninguém pediu pra você ser insubstituível. Foi você que aprendeu a viver como se fosse.'
+      pd3: 'Ninguém pediu pra você ser insubstituível. Foi você que aprendeu a viver como se fosse.',
+      altruism: 'Quem você lidera aprende com o seu exemplo. Se você nunca para, é isso que você está ensinando pra eles também.'
     }
   };
 
@@ -401,6 +411,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     document.getElementById('resultPD1').textContent = p.pd1;
     document.getElementById('resultPD2').textContent = p.pd2;
     document.getElementById('resultPD3').textContent = p.pd3;
+    document.getElementById('resultAltruism').textContent = p.altruism;
 
     // Passthrough de fbclid/UTM + perfil pro checkout, mesma lógica da LP principal
     var link = document.getElementById('ctaResultado');

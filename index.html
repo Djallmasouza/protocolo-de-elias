@@ -42,6 +42,19 @@
        ?payment=pix já presente via URLSearchParams.set. Requer também a opção
        "permitir pixel facebook via parâmetro de url" habilitada no painel do
        Payt (feito pelo usuário em 23/07). -->
+  <!-- 23/07/2026 (cruzamento Clarity x GA4, achado real): uma sessão real
+       (Clarity) mostrou clique confirmado no CTA final, mas nenhum evento
+       correspondente apareceu no GA4 no mesmo dia. Causa: o link de checkout
+       é um <a> comum, sem preventDefault — o navegador começa a navegar pro
+       Payt assim que o handler retorna, e isso pode vencer a corrida contra o
+       gtag disparando o beacon (mesmo com transport_type: 'beacon'), porque o
+       script real do GA4 carrega async e processa a fila do dataLayer fora do
+       mesmo tick. Fix: para os CTAs que navegam pra fora da página (oferta e
+       final, não o do hero que só rola a página), segura a navegação com
+       event.preventDefault() + gtag event_callback, com um setTimeout de
+       250ms como rede de segurança caso o callback nunca dispare (bloqueador
+       de anúncio, script lento, etc.) — padrão recomendado pelo próprio
+       Google pra tracking de cliques em links de saída. -->
   <script>
     (function () {
       var v = 'b';
@@ -118,20 +131,45 @@
     // CTA clicks: single delegated listener, no per-button onclick. Fires the
     // generic cta_click (kept for /ga4-diagnostic compatibility) AND a
     // position-named event (hero_cta_click / meio_cta_click / final_cta_click).
-    // Beacon transport never delays or blocks navigation to checkout.
+    // For same-page anchors (the hero CTA, href="#oferta") there's no
+    // navigation race, so the event fires normally. For outbound links (the
+    // checkout CTAs), the browser starts navigating the instant this handler
+    // returns, which can outrace gtag's beacon dispatch (found 23/07/2026 via
+    // Clarity-vs-GA4 cross-check: a real confirmed click produced no GA4
+    // event). Fix: hold navigation with event_callback + a 250ms timeout
+    // fallback so a blocked/slow tag never traps the visitor on the page.
     document.addEventListener('click', function (event) {
       var el = event.target.closest('[data-track-cta]');
       if (!el) return;
+      var ctaPosition = el.getAttribute('data-cta-position') || 'unknown';
       var payload = {
         cta_id: el.getAttribute('data-cta-id') || '',
         cta_text: el.textContent.trim(),
-        cta_position: el.getAttribute('data-cta-position') || '',
+        cta_position: ctaPosition,
         destination_url: el.href || '',
         variant: currentVariant(),
         transport_type: 'beacon'
       };
+      var rawHref = el.getAttribute('href') || '';
+
+      if (rawHref.charAt(0) === '#') {
+        gtag('event', 'cta_click', payload);
+        gtag('event', ctaPosition + '_cta_click', payload);
+        return;
+      }
+
+      event.preventDefault();
+      var destination = el.href;
+      var navigated = false;
+      function proceed() {
+        if (navigated) return;
+        navigated = true;
+        window.location.href = destination;
+      }
+      payload.event_callback = proceed;
       gtag('event', 'cta_click', payload);
-      gtag('event', (el.getAttribute('data-cta-position') || 'unknown') + '_cta_click', payload);
+      gtag('event', ctaPosition + '_cta_click', payload);
+      setTimeout(proceed, 250);
     });
 
     // FAQ expand tracking

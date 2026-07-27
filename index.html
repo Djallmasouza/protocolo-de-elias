@@ -191,7 +191,23 @@
      não é possível forçar isso, a plataforma bloqueia link em legenda e
      comentário — por isso o site fica escrito na própria imagem gerada, é
      o que sobrevive ao repost. Testado em viewport mobile (390px) antes de
-     publicar, sem estouro horizontal. -->
+     publicar, sem estouro horizontal.
+     27/07/2026 (18ª rodada, feedback do usuário via prints reais do celular):
+     a 17ª rodada empilhou muitas seções novas (linha de compromisso, painel
+     de eixos, dossiê) sem espaço suficiente entre elas — usuário relatou
+     "leitura muito pesada visualmente", fonte pequena, texto da raspadinha
+     apertado no meio de espaço vazio, e a imagem de compartilhar "não chama
+     atenção". Corrigido: (a) aumentado line-height e font-size em todos os
+     blocos de texto do resultado (result-block, pain-deepening, bridge,
+     commitment-line) e mais margem entre seções (18-34px em vez de 14-28px);
+     (b) raspadinha ganhou composição de 4 linhas (emoji + 2 linhas de texto
+     + legenda) em vez de 2 linhas soltas no meio de espaço vazio; (c) imagem
+     de compartilhar reconstruída com faixa dourada sólida no topo (contraste
+     forte visível em miniatura de feed/story), regra decorativa antes do
+     headline, e selo/pill dourado com o site no rodapé em vez de texto cinza
+     pequeno. Testado em viewport mobile (412px, tamanho real do aparelho do
+     usuário) antes de publicar, sem estouro horizontal — inclusive lendo a
+     imagem de compartilhar gerada de verdade pra conferir visualmente. -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -292,16 +308,16 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   .loading-step.show { opacity: 1; }
 
   /* Resultado */
-  .result-tag { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 700; text-align: center; margin-bottom: 14px; }
-  .result h2 { font-size: clamp(22px, 6vw, 28px); line-height: 1.3; text-align: center; margin-bottom: 24px; color: #fff; }
-  .result-block { background: var(--dark2); border-radius: 12px; padding: 26px 22px; margin-bottom: 20px; }
-  .result-block p { font-size: 15.5px; color: var(--gold-soft); margin-bottom: 14px; }
+  .result-tag { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 700; text-align: center; margin-bottom: 16px; }
+  .result h2 { font-size: clamp(22px, 6vw, 28px); line-height: 1.35; text-align: center; margin-bottom: 28px; color: #fff; }
+  .result-block { background: var(--dark2); border-radius: 12px; padding: 28px 24px; margin-bottom: 28px; }
+  .result-block p { font-size: 16px; line-height: 1.65; color: var(--gold-soft); margin-bottom: 18px; }
   .result-block p:last-child { margin-bottom: 0; }
-  .result-highlight { font-family: 'Lora', serif; font-style: italic; font-size: 17px; color: var(--ink); background: rgba(196,151,59,0.16); border-radius: 8px; padding: 14px 16px; }
-  .pain-deepening { padding: 4px 4px 4px 16px; border-left: 2px solid rgba(196,151,59,0.3); margin-bottom: 24px; }
-  .pain-deepening p { font-size: 14.5px; color: rgba(250,247,242,0.6); margin-bottom: 14px; }
+  .result-highlight { font-family: 'Lora', serif; font-style: italic; font-size: 17.5px; line-height: 1.55; color: var(--ink); background: rgba(196,151,59,0.16); border-radius: 8px; padding: 18px 18px; }
+  .pain-deepening { padding: 4px 4px 4px 18px; border-left: 2px solid rgba(196,151,59,0.3); margin-bottom: 30px; }
+  .pain-deepening p { font-size: 15.5px; line-height: 1.6; color: rgba(250,247,242,0.72); margin-bottom: 18px; }
   .pain-deepening p:last-child { margin-bottom: 0; }
-  .bridge { font-family: 'Lora', serif; font-style: italic; font-size: 16.5px; line-height: 1.6; color: var(--gold-soft); text-align: center; max-width: 38ch; margin: 0 auto 28px; }
+  .bridge { font-family: 'Lora', serif; font-style: italic; font-size: 16.5px; line-height: 1.65; color: var(--gold-soft); text-align: center; max-width: 38ch; margin: 0 auto 32px; }
 
   .offer-panel { background: var(--warm); color: var(--ink); border-radius: 12px; padding: 32px 24px; text-align: center; }
   .offer-eyebrow { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
@@ -328,36 +344,36 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 
   /* Linha de compromisso/coerência (rodada 17) */
   .commitment-line {
-    font-family: 'Lora', serif; font-style: italic; font-size: 14.5px; color: var(--gold-soft);
-    text-align: center; max-width: 34ch; margin: 0 auto 28px; opacity: 0;
+    font-family: 'Lora', serif; font-style: italic; font-size: 15.5px; line-height: 1.6; color: var(--gold-soft);
+    text-align: center; max-width: 34ch; margin: 0 auto 32px; opacity: 0;
     animation: fadeUp 500ms var(--ease-out) forwards;
   }
 
   /* Indicador de identificação em 3 sub-eixos, calculados das respostas reais (rodada 17) */
-  .id-panel { background: var(--dark2); border-radius: 12px; padding: 20px 22px; margin-bottom: 28px; opacity: 0; animation: fadeUp 500ms var(--ease-out) 150ms forwards; }
-  .id-panel-title { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 16px; }
-  .id-axis { margin-bottom: 16px; }
+  .id-panel { background: var(--dark2); border-radius: 12px; padding: 26px 24px; margin-bottom: 34px; opacity: 0; animation: fadeUp 500ms var(--ease-out) 150ms forwards; }
+  .id-panel-title { font-size: 12.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 20px; }
+  .id-axis { margin-bottom: 20px; }
   .id-axis:last-child { margin-bottom: 0; }
-  .id-axis-label { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; color: var(--cream); margin-bottom: 7px; }
-  .id-axis-value { font-family: 'Lora', serif; font-size: 15px; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; }
-  .id-axis-track { height: 7px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+  .id-axis-label { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; color: var(--cream); margin-bottom: 9px; }
+  .id-axis-value { font-family: 'Lora', serif; font-size: 16px; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; }
+  .id-axis-track { height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
   .id-axis-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold-muted), var(--gold)); border-radius: 4px; transition: width 1000ms var(--ease-out); }
-  .id-panel-note { font-size: 12px; color: rgba(250,247,242,0.45); margin-top: 14px; }
+  .id-panel-note { font-size: 12.5px; line-height: 1.5; color: rgba(250,247,242,0.5); margin-top: 18px; }
 
   /* Dossiê de entrega revelado em sequência (rodada 17) */
-  .dossier-title { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); text-align: center; margin-bottom: 8px; font-weight: 700; }
-  .dossier-count { text-align: center; font-size: 13.5px; color: var(--gold-soft); margin-bottom: 18px; opacity: 0; animation: fadeUp 400ms var(--ease-out) 350ms forwards; }
+  .dossier-title { font-size: 12.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); text-align: center; margin-bottom: 10px; font-weight: 700; }
+  .dossier-count { text-align: center; font-size: 14px; color: var(--gold-soft); margin-bottom: 22px; opacity: 0; animation: fadeUp 400ms var(--ease-out) 350ms forwards; }
   .dossier-count strong { color: var(--gold); font-weight: 700; }
-  .dossier-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
-  .dossier-card { display: flex; align-items: center; gap: 14px; background: var(--dark2); border: 1px solid rgba(196,151,59,0.18); border-radius: 10px; padding: 14px 16px; opacity: 0; transform: translateY(10px); animation: cardIn 520ms var(--ease-out) forwards; }
+  .dossier-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .dossier-card { display: flex; align-items: center; gap: 16px; background: var(--dark2); border: 1px solid rgba(196,151,59,0.18); border-radius: 10px; padding: 18px 20px; opacity: 0; transform: translateY(10px); animation: cardIn 520ms var(--ease-out) forwards; }
   .dossier-card:nth-child(1) { animation-delay: 500ms; }
   .dossier-card:nth-child(2) { animation-delay: 900ms; }
   .dossier-card:nth-child(3) { animation-delay: 1300ms; }
   .dossier-card:nth-child(4) { animation-delay: 1700ms; }
-  .dossier-icon { flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%; background: rgba(196,151,59,0.14); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .dossier-icon { flex-shrink: 0; width: 42px; height: 42px; border-radius: 50%; background: rgba(196,151,59,0.14); display: flex; align-items: center; justify-content: center; font-size: 20px; }
   .dossier-text { flex: 1; }
-  .dossier-name { font-size: 14.5px; font-weight: 600; color: var(--cream); margin-bottom: 2px; }
-  .dossier-desc { font-size: 12.5px; color: var(--gold-muted); }
+  .dossier-name { font-size: 15.5px; font-weight: 600; color: var(--cream); margin-bottom: 4px; }
+  .dossier-desc { font-size: 13.5px; line-height: 1.4; color: var(--gold-muted); }
   .dossier-badge { flex-shrink: 0; font-size: 10.5px; font-weight: 700; letter-spacing: 0.5px; color: #1C1208; background: var(--gold); padding: 4px 9px; border-radius: 20px; opacity: 0; animation: badgePop 400ms var(--ease-out) forwards; }
   .dossier-card:nth-child(1) .dossier-badge { animation-delay: 850ms; }
   .dossier-card:nth-child(2) .dossier-badge { animation-delay: 1250ms; }
@@ -1082,10 +1098,14 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       ctx.fillStyle = '#FAF7F2';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.font = '700 15px Inter, sans-serif';
-      ctx.fillText('Raspe aqui e revele seu desconto real', w / 2, h / 2 - 10);
-      ctx.font = '600 12px Inter, sans-serif';
-      ctx.fillText('(ou toque para abrir)', w / 2, h / 2 + 14);
+      ctx.font = '26px sans-serif';
+      ctx.fillText('🎁', w / 2, h / 2 - 42);
+      ctx.font = '700 17px Inter, sans-serif';
+      ctx.fillText('Raspe aqui e revele', w / 2, h / 2 - 6);
+      ctx.fillText('seu desconto real', w / 2, h / 2 + 20);
+      ctx.font = '600 13px Inter, sans-serif';
+      ctx.fillStyle = 'rgba(250,247,242,0.8)';
+      ctx.fillText('(ou toque para abrir)', w / 2, h / 2 + 52);
     }
     paintCoating();
 
@@ -1325,56 +1345,83 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     canvas.width = W; canvas.height = H;
     var ctx = canvas.getContext('2d');
 
+    // Fundo escuro
     var bg = ctx.createLinearGradient(0, 0, 0, H);
     bg.addColorStop(0, '#1C1208');
     bg.addColorStop(1, '#241A0C');
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, W, H);
 
-    ctx.strokeStyle = 'rgba(196,151,59,0.5)';
-    ctx.lineWidth = 3;
-    ctx.strokeRect(40, 40, W - 80, H - 80);
-
-    ctx.textAlign = 'center';
+    // Faixa dourada sólida no topo — dá contraste forte, visível em miniatura
+    // no feed/story, resolve a queixa de "não chama atenção" da versão anterior.
     ctx.fillStyle = '#C4973B';
-    ctx.font = '700 26px Lora, Georgia, serif';
-    ctx.fillText('PLENO  ·  MÉTODO DO ZIMBREIRO', W / 2, 150);
+    ctx.fillRect(0, 0, W, 210);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#1C1208';
+    ctx.font = '700 26px Inter, Arial, sans-serif';
+    ctx.fillText('PLENO', W / 2, 78);
+    ctx.font = '700 34px Lora, Georgia, serif';
+    ctx.fillText('MÉTODO DO ZIMBREIRO', W / 2, 138);
+
+    ctx.strokeStyle = 'rgba(196,151,59,0.6)';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(22, 22, W - 44, H - 44);
 
     ctx.fillStyle = '#D8C9A8';
-    ctx.font = '700 22px Inter, Arial, sans-serif';
-    ctx.fillText(p.tag, W / 2, 230);
+    ctx.font = '700 24px Inter, Arial, sans-serif';
+    ctx.fillText(p.tag, W / 2, 290);
+
+    // Regra decorativa antes do headline
+    ctx.strokeStyle = 'rgba(196,151,59,0.6)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(W / 2 - 50, 325);
+    ctx.lineTo(W / 2 + 50, 325);
+    ctx.stroke();
 
     ctx.fillStyle = '#FAF7F2';
-    ctx.font = '700 44px Lora, Georgia, serif';
-    var used = wrapText(ctx, p.headline, W / 2, 330, W - 200, 56);
+    ctx.font = '700 48px Lora, Georgia, serif';
+    var used = wrapText(ctx, p.headline, W / 2, 400, W - 180, 60);
 
     var axisNames = ['Peso de servir sem pausa', 'Culpa ao pensar em descansar', 'Prontidão para o Método'];
-    var startY = 330 + used + 70;
+    var startY = 400 + used + 60;
     ctx.textAlign = 'left';
     for (var i = 0; i < 3; i++) {
-      var y = startY + i * 90;
+      var y = startY + i * 92;
       ctx.fillStyle = '#FAF7F2';
       ctx.font = '600 24px Inter, Arial, sans-serif';
-      ctx.fillText(axisNames[i], 100, y);
+      ctx.fillText(axisNames[i], 90, y);
       ctx.fillStyle = '#C4973B';
-      ctx.font = '700 24px Lora, Georgia, serif';
+      ctx.font = '700 26px Lora, Georgia, serif';
       ctx.textAlign = 'right';
-      ctx.fillText(axes[i] + '%', W - 100, y);
+      ctx.fillText(axes[i] + '%', W - 90, y);
       ctx.textAlign = 'left';
 
-      ctx.fillStyle = 'rgba(255,255,255,0.1)';
-      ctx.fillRect(100, y + 14, W - 200, 10);
-      var barGrad = ctx.createLinearGradient(100, 0, W - 100, 0);
+      ctx.fillStyle = 'rgba(255,255,255,0.12)';
+      ctx.fillRect(90, y + 16, W - 180, 12);
+      var barGrad = ctx.createLinearGradient(90, 0, W - 90, 0);
       barGrad.addColorStop(0, '#C0B090');
       barGrad.addColorStop(1, '#C4973B');
       ctx.fillStyle = barGrad;
-      ctx.fillRect(100, y + 14, (W - 200) * (axes[i] / 100), 10);
+      ctx.fillRect(90, y + 16, (W - 180) * (axes[i] / 100), 12);
     }
 
+    // Selo/CTA no rodapé com o site — mais visível que texto cinza pequeno
+    var pillY = H - 130;
+    var pillW = 620, pillH = 76;
+    var pillX = (W - pillW) / 2;
+    ctx.fillStyle = '#C4973B';
+    if (ctx.roundRect) {
+      ctx.beginPath();
+      ctx.roundRect(pillX, pillY, pillW, pillH, 38);
+      ctx.fill();
+    } else {
+      ctx.fillRect(pillX, pillY, pillW, pillH);
+    }
+    ctx.fillStyle = '#1C1208';
     ctx.textAlign = 'center';
-    ctx.fillStyle = 'rgba(250,247,242,0.5)';
-    ctx.font = '600 15px Inter, Arial, sans-serif';
-    ctx.fillText('zimbreiro.acessopleno.com', W / 2, H - 70);
+    ctx.font = '700 26px Inter, Arial, sans-serif';
+    ctx.fillText('zimbreiro.acessopleno.com', W / 2, pillY + pillH / 2 + 1);
 
     canvas.toBlob(async function (blob) {
       btn.disabled = false;

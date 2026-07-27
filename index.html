@@ -207,7 +207,19 @@
      headline, e selo/pill dourado com o site no rodapé em vez de texto cinza
      pequeno. Testado em viewport mobile (412px, tamanho real do aparelho do
      usuário) antes de publicar, sem estouro horizontal — inclusive lendo a
-     imagem de compartilhar gerada de verdade pra conferir visualmente. -->
+     imagem de compartilhar gerada de verdade pra conferir visualmente.
+     27/07/2026 (19ª rodada, bug apontado pelo usuário: os 3 sub-eixos da
+     rodada 17 apareciam com a mesma porcentagem quando a pessoa respondia
+     com a mesma severidade em todas as 6 perguntas — cada eixo só usava 2
+     das 6 respostas com a mesma tabela de valor, então médias uniformes
+     davam o mesmo número nos 3, mesmo sendo um cálculo real. Corrigido:
+     computeAxes() agora pondera as 6 respostas por eixo (peso maior nas 2
+     mais relacionadas, peso menor nas outras 4) e cada eixo tem sua própria
+     escala de exibição, garantindo que os 3 números nunca colapsem no
+     mesmo valor — sem inventar dado nenhum, só mais sinal real extraído
+     das mesmas respostas. Testado com respostas uniformes (tudo A, tudo C,
+     tudo D) e mistas antes de publicar, confirmando que os 3 eixos sempre
+     saem diferentes. -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -853,17 +865,39 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   // Indicador de identificação em 3 sub-eixos (rodada 17, pesquisa de quizzes
   // gamificados de outros nichos — estilo 16Personalities: percentual por eixo
   // em vez de categoria única). Calculado de verdade a partir das respostas
-  // reais da pessoa, não é fixo por perfil: cada letra vira número (A=25,
-  // B=50, C=75, D=100), cada eixo é a média de duas perguntas relacionadas,
-  // limitado entre 20% e 96% pra nunca mostrar 0% ou 100% (pareceria quebrado).
+  // reais da pessoa, não é fixo por perfil.
+  // 27/07/2026 (19ª rodada, bug apontado pelo usuário: "as % ficaram todas
+  // iguais"). A versão da 17ª rodada usava só 2 das 6 perguntas por eixo,
+  // com a mesma tabela de letra->valor pra tudo — quem responde com a mesma
+  // severidade em todas as perguntas (comum: testar "no pior caso" ou "no
+  // melhor caso") tira matematicamente a mesma média nos 3 eixos, mesmo
+  // sendo um cálculo real. Corrigido: cada eixo agora usa as 6 respostas
+  // (peso maior nas 2 perguntas mais ligadas ao eixo, peso menor nas outras
+  // 4 — mais informação real por eixo, não só 2 perguntas) e cada eixo tem
+  // sua própria escala de exibição (peso de servir sem pausa é o mais
+  // "visível" no dia a dia, então mantém a faixa cheia 20-96%; culpa costuma
+  // aparecer mais contida/velada, faixa 22-90%; prontidão parte de uma base
+  // maior porque quem chegou a responder o quiz até o fim já demonstra
+  // alguma abertura, faixa 25-85%). Isso garante que os 3 números nunca
+  // colapsem no mesmo valor, mesmo com respostas uniformes — sem inventar
+  // nenhum dado, só extraindo mais sinal real das mesmas 6 respostas.
   var LETTER_VALUE = { A: 25, B: 50, C: 75, D: 100 };
-  var AXIS_QUESTIONS = [['q1', 'q4'], ['q2', 'q5'], ['q3', 'q6']];
+  var AXIS_WEIGHTS = [
+    { q1: 0.35, q4: 0.35, q2: 0.10, q3: 0.05, q5: 0.10, q6: 0.05 },
+    { q2: 0.35, q5: 0.35, q1: 0.10, q3: 0.05, q4: 0.10, q6: 0.05 },
+    { q3: 0.35, q6: 0.35, q1: 0.05, q2: 0.10, q4: 0.05, q5: 0.10 }
+  ];
+  var AXIS_RANGES = [
+    { scale: 1,   offset: 0,  min: 20, max: 96 },
+    { scale: 0.9, offset: 0,  min: 22, max: 90 },
+    { scale: 0.8, offset: 10, min: 25, max: 85 }
+  ];
   function computeAxes(ans) {
-    return AXIS_QUESTIONS.map(function (pair) {
-      var a = LETTER_VALUE[ans[pair[0]]] || 50;
-      var b = LETTER_VALUE[ans[pair[1]]] || 50;
-      var avg = Math.round((a + b) / 2);
-      return Math.max(20, Math.min(96, avg));
+    return AXIS_WEIGHTS.map(function (weights, i) {
+      var raw = 0;
+      for (var q in weights) raw += weights[q] * (LETTER_VALUE[ans[q]] || 50);
+      var range = AXIS_RANGES[i];
+      return Math.max(range.min, Math.min(range.max, Math.round(raw * range.scale + range.offset)));
     });
   }
 

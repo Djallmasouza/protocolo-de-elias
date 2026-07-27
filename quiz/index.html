@@ -166,7 +166,32 @@
      pra "leitura" (termo já validado, neutro, sem risco) em toda parte
      (botão, subheadline, Q1-Q3, Q6, loading, eyebrow do resultado) —
      mantida a justificativa por pergunta adicionada em Q1/Q2, que é o
-     achado que realmente se sustenta. -->
+     achado que realmente se sustenta.
+     27/07/2026 (17ª rodada, pedido explícito do usuário, após reclamação de
+     que a tela de resultado estava "fraca, sem nada premium" e pesquisa em
+     11 PDFs da pasta Empreendedor + pesquisa de quizzes gamificados de
+     outros nichos, ambas salvas em 11-ESTUDOS_E_INSIGHTS/). Protótipo
+     aprovado pelo usuário em Artifact antes de ir pro ar (4 rodadas de
+     revisão). Adicionado: (a) linha de compromisso/coerência logo após o
+     headline; (b) painel de 3 sub-eixos de identificação (estilo
+     16Personalities), calculados de verdade a partir das respostas reais
+     via computeAxes() — cada letra vira número (A=25...D=100), cada eixo é
+     a média de duas perguntas relacionadas, limitado 20-96%; NÃO é fixo por
+     perfil, cada pessoa vê seu próprio número; (c) dossiê de entrega
+     (inspirado no princípio de "demonstração exagerada do produto" do livro
+     de marketing de guerrilha) com 4 cards revelados em sequência e contagem
+     nomeada real; (d) botão "Compartilhar minha leitura" que gera uma
+     imagem via canvas (fontes Lora/Inter carregadas de propósito, sem isso
+     cairiam pro padrão do sistema) e usa a Web Share API pra abrir o menu
+     nativo de compartilhar no celular, com fallback pra download simples;
+     (e) CTA da oferta ganhou brilho pulsante + seta animada (affordance de
+     clique — antes era estático); (f) texto do contador passou a citar o
+     valor real do desconto ("Seu desconto de R$17,90 acaba em") em vez do
+     genérico "Esse valor expira em". Sobre o link clicável no Instagram:
+     não é possível forçar isso, a plataforma bloqueia link em legenda e
+     comentário — por isso o site fica escrito na própria imagem gerada, é
+     o que sobrevive ao repost. Testado em viewport mobile (390px) antes de
+     publicar, sem estouro horizontal. -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -245,7 +270,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   .intro h1 { font-size: clamp(24px, 6vw, 32px); line-height: 1.3; text-align: center; margin-bottom: 16px; color: #fff; }
   .intro p { font-size: 15px; color: var(--gold-muted); text-align: center; max-width: 36ch; margin: 0 auto 32px; }
 
-  .btn { display: block; width: 100%; background: var(--gold); color: var(--dark); text-decoration: none; font-weight: 800; font-size: 16px; padding: 18px 24px; border-radius: 8px; border: none; cursor: pointer; text-align: center; transition: transform 160ms var(--ease-out), background 160ms ease; font-family: 'Inter', sans-serif; }
+  .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; background: var(--gold); color: var(--dark); text-decoration: none; font-weight: 800; font-size: 16px; padding: 18px 24px; border-radius: 8px; border: none; cursor: pointer; text-align: center; transition: transform 160ms var(--ease-out), background 160ms ease; font-family: 'Inter', sans-serif; }
   .btn:hover { background: #D4A94B; }
   .btn:active { transform: scale(0.97); }
   @media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
@@ -300,6 +325,63 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   .seals { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 18px; font-size: 11.5px; color: var(--ink-soft); opacity: 0.75; }
 
   .footer-note { font-size: 11px; color: rgba(250,247,242,0.35); text-align: center; margin-top: 28px; line-height: 1.6; }
+
+  /* Linha de compromisso/coerência (rodada 17) */
+  .commitment-line {
+    font-family: 'Lora', serif; font-style: italic; font-size: 14.5px; color: var(--gold-soft);
+    text-align: center; max-width: 34ch; margin: 0 auto 28px; opacity: 0;
+    animation: fadeUp 500ms var(--ease-out) forwards;
+  }
+
+  /* Indicador de identificação em 3 sub-eixos, calculados das respostas reais (rodada 17) */
+  .id-panel { background: var(--dark2); border-radius: 12px; padding: 20px 22px; margin-bottom: 28px; opacity: 0; animation: fadeUp 500ms var(--ease-out) 150ms forwards; }
+  .id-panel-title { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 16px; }
+  .id-axis { margin-bottom: 16px; }
+  .id-axis:last-child { margin-bottom: 0; }
+  .id-axis-label { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; color: var(--cream); margin-bottom: 7px; }
+  .id-axis-value { font-family: 'Lora', serif; font-size: 15px; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; }
+  .id-axis-track { height: 7px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+  .id-axis-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold-muted), var(--gold)); border-radius: 4px; transition: width 1000ms var(--ease-out); }
+  .id-panel-note { font-size: 12px; color: rgba(250,247,242,0.45); margin-top: 14px; }
+
+  /* Dossiê de entrega revelado em sequência (rodada 17) */
+  .dossier-title { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); text-align: center; margin-bottom: 8px; font-weight: 700; }
+  .dossier-count { text-align: center; font-size: 13.5px; color: var(--gold-soft); margin-bottom: 18px; opacity: 0; animation: fadeUp 400ms var(--ease-out) 350ms forwards; }
+  .dossier-count strong { color: var(--gold); font-weight: 700; }
+  .dossier-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  .dossier-card { display: flex; align-items: center; gap: 14px; background: var(--dark2); border: 1px solid rgba(196,151,59,0.18); border-radius: 10px; padding: 14px 16px; opacity: 0; transform: translateY(10px); animation: cardIn 520ms var(--ease-out) forwards; }
+  .dossier-card:nth-child(1) { animation-delay: 500ms; }
+  .dossier-card:nth-child(2) { animation-delay: 900ms; }
+  .dossier-card:nth-child(3) { animation-delay: 1300ms; }
+  .dossier-card:nth-child(4) { animation-delay: 1700ms; }
+  .dossier-icon { flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%; background: rgba(196,151,59,0.14); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .dossier-text { flex: 1; }
+  .dossier-name { font-size: 14.5px; font-weight: 600; color: var(--cream); margin-bottom: 2px; }
+  .dossier-desc { font-size: 12.5px; color: var(--gold-muted); }
+  .dossier-badge { flex-shrink: 0; font-size: 10.5px; font-weight: 700; letter-spacing: 0.5px; color: #1C1208; background: var(--gold); padding: 4px 9px; border-radius: 20px; opacity: 0; animation: badgePop 400ms var(--ease-out) forwards; }
+  .dossier-card:nth-child(1) .dossier-badge { animation-delay: 850ms; }
+  .dossier-card:nth-child(2) .dossier-badge { animation-delay: 1250ms; }
+  .dossier-card:nth-child(3) .dossier-badge { animation-delay: 1650ms; }
+  .dossier-card:nth-child(4) .dossier-badge { animation-delay: 2050ms; }
+
+  /* Baixar/compartilhar resultado (rodada 17) */
+  .download-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: transparent; border: 1.5px solid rgba(196,151,59,0.5); color: var(--gold); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; padding: 13px 18px; border-radius: 8px; cursor: pointer; margin-bottom: 32px; opacity: 0; animation: fadeUp 500ms var(--ease-out) 2150ms forwards; transition: background 160ms ease; }
+  .download-btn:hover { background: rgba(196,151,59,0.1); }
+  .download-btn svg { width: 16px; height: 16px; }
+  .download-hint { text-align: center; font-size: 11.5px; color: rgba(250,247,242,0.4); margin-top: -24px; margin-bottom: 32px; opacity: 0; animation: fadeUp 400ms var(--ease-out) 2300ms forwards; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes cardIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes badgePop { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
+  @keyframes ctaGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(196,151,59,0.5), 0 4px 14px rgba(0,0,0,0.15); } 50% { box-shadow: 0 0 0 9px rgba(196,151,59,0), 0 4px 14px rgba(0,0,0,0.15); } }
+  @keyframes ctaArrow { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
+  .btn.btn-glow { animation: ctaGlow 1.8s ease-in-out infinite; }
+  .btn-arrow { display: inline-block; animation: ctaArrow 1.4s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) {
+    .commitment-line, .id-panel, .dossier-card, .dossier-badge, .dossier-count, .download-btn, .download-hint { animation: none !important; opacity: 1 !important; transform: none !important; }
+    .id-axis-fill { transition: none !important; }
+    .btn.btn-glow, .btn-arrow { animation: none !important; }
+  }
 
   /* Raspadinha: cobre o preço/contador até a pessoa arrastar ou tocar.
      O desconto revelado é sempre o mesmo desconto real — não há sorteio. */
@@ -444,6 +526,8 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     <p class="result-tag" id="resultTag"></p>
     <h2 id="resultHeadline"></h2>
 
+    <p class="commitment-line">Você já respondeu com sinceridade a 6 perguntas sobre um peso que carrega há tempo. Isso já é o começo de nomear o que pesa.</p>
+
     <div class="result-block">
       <p id="resultP1"></p>
       <p id="resultP2"></p>
@@ -462,6 +546,66 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 
     <p class="result-highlight" id="resultAltruism" style="margin-bottom: 24px;"></p>
 
+    <div class="id-panel">
+      <p class="id-panel-title">O que suas respostas revelam</p>
+      <div class="id-axis">
+        <div class="id-axis-label"><span>Peso de servir sem pausa</span><span class="id-axis-value" id="axisValue0">0%</span></div>
+        <div class="id-axis-track"><div class="id-axis-fill" id="axisFill0"></div></div>
+      </div>
+      <div class="id-axis">
+        <div class="id-axis-label"><span>Culpa ao pensar em descansar</span><span class="id-axis-value" id="axisValue1">0%</span></div>
+        <div class="id-axis-track"><div class="id-axis-fill" id="axisFill1"></div></div>
+      </div>
+      <div class="id-axis">
+        <div class="id-axis-label"><span>Prontidão para o Método</span><span class="id-axis-value" id="axisValue2">0%</span></div>
+        <div class="id-axis-track"><div class="id-axis-fill" id="axisFill2"></div></div>
+      </div>
+      <p class="id-panel-note">Calculado a partir das suas próprias respostas nas 6 perguntas, não é um diagnóstico clínico.</p>
+    </div>
+
+    <p class="dossier-title">O que você recebe agora</p>
+    <p class="dossier-count">Seu protocolo tem <strong>4 elementos</strong> revelados abaixo</p>
+    <div class="dossier-list">
+      <div class="dossier-card">
+        <div class="dossier-icon">📖</div>
+        <div class="dossier-text">
+          <div class="dossier-name">Guia completo do Método</div>
+          <div class="dossier-desc">Protocolo prático de 7 dias, em PDF</div>
+        </div>
+        <div class="dossier-badge">INCLUSO</div>
+      </div>
+      <div class="dossier-card">
+        <div class="dossier-icon">🎧</div>
+        <div class="dossier-text">
+          <div class="dossier-name">Áudios guiados</div>
+          <div class="dossier-desc">10 a 15 min por dia, os 7 dias</div>
+        </div>
+        <div class="dossier-badge">INCLUSO</div>
+      </div>
+      <div class="dossier-card">
+        <div class="dossier-icon">⚡</div>
+        <div class="dossier-text">
+          <div class="dossier-name">Acesso imediato</div>
+          <div class="dossier-desc">Direto no seu celular, sem esperar</div>
+        </div>
+        <div class="dossier-badge">INCLUSO</div>
+      </div>
+      <div class="dossier-card">
+        <div class="dossier-icon">🛡️</div>
+        <div class="dossier-text">
+          <div class="dossier-name">Garantia de 7 dias</div>
+          <div class="dossier-desc">Incondicional, sem pergunta</div>
+        </div>
+        <div class="dossier-badge">INCLUSO</div>
+      </div>
+    </div>
+
+    <button class="download-btn" id="downloadBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
+      Compartilhar minha leitura
+    </button>
+    <p class="download-hint">No celular abre o menu de compartilhar (Instagram, WhatsApp); no computador baixa a imagem</p>
+
     <div class="offer-panel">
       <p class="offer-eyebrow">Pleno | Fase 1 do Protocolo</p>
       <p class="offer-name">Método do Zimbreiro</p>
@@ -470,7 +614,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
         <div class="scratch-content">
           <p class="offer-price" id="offerPrice">R$17,90</p>
           <div class="offer-countdown pulse" id="offerCountdown">
-            <p class="offer-countdown-label" id="offerCountdownLabel">Esse valor expira em</p>
+            <p class="offer-countdown-label" id="offerCountdownLabel">Seu desconto de R$17,90 acaba em</p>
             <div class="offer-countdown-clock">
               <span class="offer-countdown-digit" id="cdMin">15</span>
               <span class="offer-countdown-colon">:</span>
@@ -482,7 +626,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       </div>
       <p class="offer-reinforcement" id="offerReinforcement">Você acabou de desbloquear esse valor. Ele não aparece de novo depois que o tempo abaixo terminar.</p>
       <p class="offer-detail">Guia digital + áudios de 7 dias, 10 a 15 minutos por dia. Acesso imediato. Uma única vez.</p>
-      <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7?payment=pix" class="btn" id="ctaResultado" data-track="quiz-cta-result">QUERO DESCANSAR EM DEUS</a>
+      <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7?payment=pix" class="btn btn-glow" id="ctaResultado" data-track="quiz-cta-result"><span>QUERO DESCANSAR EM DEUS</span><span class="btn-arrow">→</span></a>
       <div class="seals">
         <span>Pagamento seguro</span>
         <span>Acesso pelo celular</span>
@@ -563,6 +707,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       showScreen('result');
       var perfil = getPerfil();
       initScratchCard(perfil);
+      initAxes();
       trackEvent('QuizComplete', { perfil: perfil });
       armBackRedirect();
     }, 2200);
@@ -689,6 +834,47 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     });
   }
 
+  // Indicador de identificação em 3 sub-eixos (rodada 17, pesquisa de quizzes
+  // gamificados de outros nichos — estilo 16Personalities: percentual por eixo
+  // em vez de categoria única). Calculado de verdade a partir das respostas
+  // reais da pessoa, não é fixo por perfil: cada letra vira número (A=25,
+  // B=50, C=75, D=100), cada eixo é a média de duas perguntas relacionadas,
+  // limitado entre 20% e 96% pra nunca mostrar 0% ou 100% (pareceria quebrado).
+  var LETTER_VALUE = { A: 25, B: 50, C: 75, D: 100 };
+  var AXIS_QUESTIONS = [['q1', 'q4'], ['q2', 'q5'], ['q3', 'q6']];
+  function computeAxes(ans) {
+    return AXIS_QUESTIONS.map(function (pair) {
+      var a = LETTER_VALUE[ans[pair[0]]] || 50;
+      var b = LETTER_VALUE[ans[pair[1]]] || 50;
+      var avg = Math.round((a + b) / 2);
+      return Math.max(20, Math.min(96, avg));
+    });
+  }
+
+  function animateAxes(axes) {
+    axes.forEach(function (score, i) {
+      var fill = document.getElementById('axisFill' + i);
+      var valueEl = document.getElementById('axisValue' + i);
+      void fill.offsetWidth; // força reflow antes de mudar a largura, garante a transição
+      fill.style.width = score + '%';
+      var start = null;
+      var duration = 1000;
+      function step(ts) {
+        if (!start) start = ts;
+        var progress = Math.min((ts - start) / duration, 1);
+        valueEl.textContent = Math.round(progress * score) + '%';
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
+  // Chamado depois de showScreen('result') (precisa do painel já visível
+  // pra transição de largura funcionar, mesma lógica de initScratchCard).
+  function initAxes() {
+    animateAxes(computeAxes(answers));
+  }
+
   var PERFIS = {
     'carrega-o-piano': {
       tag: 'A QUE CARREGA O PIANO',
@@ -793,6 +979,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       renderResult();
       showScreen('result');
       initScratchCard(getPerfil());
+      initAxes();
       armBackRedirect();
       return;
     }
@@ -1087,6 +1274,132 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     e.preventDefault();
     trackEvent('BackRedirectDismiss', { layer: backRedirectLayerIndex });
     closeBackRedirectOverlay();
+  });
+
+  // Compartilhar/baixar resultado (rodada 17, pesquisa de quizzes gamificados
+  // de outros nichos): gera uma imagem real via canvas com o perfil e os 3
+  // eixos, e usa a Web Share API pra abrir o menu nativo de compartilhar no
+  // celular (Instagram, WhatsApp). Sem suporte (desktop, navegador antigo),
+  // cai pro download normal do arquivo. Instagram não permite link clicável
+  // em legenda/comentário — por isso o site fica escrito na própria imagem.
+  function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    var words = text.split(' ');
+    var line = '';
+    var lines = [];
+    for (var n = 0; n < words.length; n++) {
+      var testLine = line + words[n] + ' ';
+      if (ctx.measureText(testLine).width > maxWidth && n > 0) {
+        lines.push(line);
+        line = words[n] + ' ';
+      } else {
+        line = testLine;
+      }
+    }
+    lines.push(line);
+    lines.forEach(function (l, i) { ctx.fillText(l.trim(), x, y + i * lineHeight); });
+    return lines.length * lineHeight;
+  }
+
+  document.getElementById('downloadBtn').addEventListener('click', async function () {
+    var btn = this;
+    var originalHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.textContent = 'Gerando...';
+
+    try {
+      await Promise.all([
+        document.fonts.load('700 44px Lora'),
+        document.fonts.load('700 26px Lora'),
+        document.fonts.load('700 24px Lora'),
+        document.fonts.load('700 22px Inter'),
+        document.fonts.load('600 24px Inter'),
+        document.fonts.load('600 15px Inter')
+      ]);
+    } catch (e) {}
+
+    var perfil = getPerfil();
+    var p = PERFIS[perfil];
+    var axes = computeAxes(answers);
+    var canvas = document.createElement('canvas');
+    var W = 1080, H = 1080;
+    canvas.width = W; canvas.height = H;
+    var ctx = canvas.getContext('2d');
+
+    var bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, '#1C1208');
+    bg.addColorStop(1, '#241A0C');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.strokeStyle = 'rgba(196,151,59,0.5)';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(40, 40, W - 80, H - 80);
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#C4973B';
+    ctx.font = '700 26px Lora, Georgia, serif';
+    ctx.fillText('PLENO  ·  MÉTODO DO ZIMBREIRO', W / 2, 150);
+
+    ctx.fillStyle = '#D8C9A8';
+    ctx.font = '700 22px Inter, Arial, sans-serif';
+    ctx.fillText(p.tag, W / 2, 230);
+
+    ctx.fillStyle = '#FAF7F2';
+    ctx.font = '700 44px Lora, Georgia, serif';
+    var used = wrapText(ctx, p.headline, W / 2, 330, W - 200, 56);
+
+    var axisNames = ['Peso de servir sem pausa', 'Culpa ao pensar em descansar', 'Prontidão para o Método'];
+    var startY = 330 + used + 70;
+    ctx.textAlign = 'left';
+    for (var i = 0; i < 3; i++) {
+      var y = startY + i * 90;
+      ctx.fillStyle = '#FAF7F2';
+      ctx.font = '600 24px Inter, Arial, sans-serif';
+      ctx.fillText(axisNames[i], 100, y);
+      ctx.fillStyle = '#C4973B';
+      ctx.font = '700 24px Lora, Georgia, serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(axes[i] + '%', W - 100, y);
+      ctx.textAlign = 'left';
+
+      ctx.fillStyle = 'rgba(255,255,255,0.1)';
+      ctx.fillRect(100, y + 14, W - 200, 10);
+      var barGrad = ctx.createLinearGradient(100, 0, W - 100, 0);
+      barGrad.addColorStop(0, '#C0B090');
+      barGrad.addColorStop(1, '#C4973B');
+      ctx.fillStyle = barGrad;
+      ctx.fillRect(100, y + 14, (W - 200) * (axes[i] / 100), 10);
+    }
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(250,247,242,0.5)';
+    ctx.font = '600 15px Inter, Arial, sans-serif';
+    ctx.fillText('zimbreiro.acessopleno.com', W / 2, H - 70);
+
+    canvas.toBlob(async function (blob) {
+      btn.disabled = false;
+      btn.innerHTML = originalHTML;
+
+      var shareText = 'Fiz o teste do Método do Zimbreiro e essa foi minha leitura. zimbreiro.acessopleno.com';
+      var file = null;
+      try { file = new File([blob], 'minha-leitura-zimbreiro.png', { type: 'image/png' }); } catch (e) {}
+
+      if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: 'Minha leitura — Método do Zimbreiro', text: shareText });
+          trackEvent('ResultShared', { perfil: perfil, method: 'webshare' });
+          return;
+        } catch (shareErr) {
+          // Usuário cancelou o compartilhamento ou o navegador recusou — cai pro download normal abaixo.
+        }
+      }
+
+      var link = document.createElement('a');
+      link.download = 'minha-leitura-zimbreiro.png';
+      link.href = URL.createObjectURL(blob);
+      link.click();
+      trackEvent('ResultShared', { perfil: perfil, method: 'download' });
+    }, 'image/png');
   });
 
   resumeFromSavedState();

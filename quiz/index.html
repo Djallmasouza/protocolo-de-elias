@@ -96,7 +96,24 @@
      usada como checklist de oferta — resultado × certeza / tempo × esforço.
      A variável "esforço" estava ausente no offer-detail do quiz (só dizia
      "7 dias", sem tempo por dia), enquanto a LP principal já tinha "10 a 15
-     minutos por dia". Corrigida a inconsistência. -->
+     minutos por dia". Corrigida a inconsistência.
+     27/07/2026 (12ª rodada, pedido explícito do usuário, referência: Arthur
+     Oliveira, transcrição "Como Validar Ofertas de $1M_Dia" — ele mostra a
+     Shein usando raspadinha/roleta pra revelar desconto, frase real dele:
+     "você desbloqueou um desconto exclusivo"). Adicionada uma raspadinha
+     (scratch card via canvas) sobre o preço/contador na tela de resultado:
+     a pessoa arrasta ou toca pra revelar o desconto, que só então começa a
+     contar os 15 minutos reais. Optado por raspadinha em vez de roleta —
+     roleta implica sorteio, e o resultado seria sempre o mesmo desconto
+     real, o que soaria como mecanismo forjado (viola a mesma regra de
+     urgência/oferta real de sempre). A raspadinha não finge sorte, só
+     transforma a revelação em uma ação, mantendo o desconto 100% real.
+     Funciona por arraste (Pointer Events, mouse/touch/caneta unificados),
+     por toque simples (revela tudo de uma vez, evita fricção em quem só
+     toca sem arrastar) e por teclado (Enter/Espaço, acessibilidade). Se a
+     pessoa já revelou antes de sair e voltar, não mostra a raspadinha de
+     novo (persistido no mesmo localStorage da 9ª rodada) — consistente com
+     a regra de não resetar a experiência de quem já interagiu. -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -228,6 +245,23 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   .seals { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 18px; font-size: 11.5px; color: var(--ink-soft); opacity: 0.75; }
 
   .footer-note { font-size: 11px; color: rgba(250,247,242,0.35); text-align: center; margin-top: 28px; line-height: 1.6; }
+
+  /* Raspadinha: cobre o preço/contador até a pessoa arrastar ou tocar.
+     O desconto revelado é sempre o mesmo desconto real — não há sorteio. */
+  .scratch-wrap { position: relative; }
+  .scratch-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+    touch-action: none;
+  }
+  .scratch-canvas:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
 
   /* Back redirect: overlay mostrado quando a pessoa tenta voltar/sair da
      tela de resultado (ver comentário no head). */
@@ -375,15 +409,20 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     <div class="offer-panel">
       <p class="offer-eyebrow">Pleno | Fase 1 do Protocolo</p>
       <p class="offer-name">Método do Zimbreiro</p>
-      <p class="offer-price-anchor" id="offerPriceAnchor">R$47,90</p>
-      <p class="offer-price" id="offerPrice">R$17,90</p>
-      <div class="offer-countdown pulse" id="offerCountdown">
-        <p class="offer-countdown-label" id="offerCountdownLabel">Esse valor expira em</p>
-        <div class="offer-countdown-clock">
-          <span class="offer-countdown-digit" id="cdMin">15</span>
-          <span class="offer-countdown-colon">:</span>
-          <span class="offer-countdown-digit" id="cdSec">00</span>
+      <div class="scratch-wrap" id="scratchWrap">
+        <div class="scratch-content">
+          <p class="offer-price-anchor" id="offerPriceAnchor">R$47,90</p>
+          <p class="offer-price" id="offerPrice">R$17,90</p>
+          <div class="offer-countdown pulse" id="offerCountdown">
+            <p class="offer-countdown-label" id="offerCountdownLabel">Esse valor expira em</p>
+            <div class="offer-countdown-clock">
+              <span class="offer-countdown-digit" id="cdMin">15</span>
+              <span class="offer-countdown-colon">:</span>
+              <span class="offer-countdown-digit" id="cdSec">00</span>
+            </div>
+          </div>
         </div>
+        <canvas class="scratch-canvas" id="scratchCanvas" role="button" tabindex="0" aria-label="Raspe ou toque para revelar seu desconto"></canvas>
       </div>
       <p class="offer-detail">Guia digital + áudios de 7 dias, 10 a 15 minutos por dia. Acesso imediato. Uma única vez.</p>
       <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7?payment=pix" class="btn" id="ctaResultado" data-track="quiz-cta-result">QUERO DESCANSAR EM DEUS</a>
@@ -466,6 +505,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       renderResult();
       showScreen('result');
       var perfil = getPerfil();
+      initScratchCard(perfil);
       trackEvent('QuizComplete', { perfil: perfil });
       armBackRedirect();
     }, 2200);
@@ -647,18 +687,21 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   var FULL_PRICE_CHECKOUT_URL = 'https://checkout.payt.com.br/9a8a6e0246a672d7b49c372278dfe755?payment=pix';
   var COUNTDOWN_SECONDS = 15 * 60;
   var offerDeadline = null;
+  var scratchRevealed = false;
 
   // Persistência: se a pessoa sair (fecha a aba, perde o wifi, troca de app)
   // e voltar, ela retoma de onde parou em vez de reiniciar do zero — sair no
   // meio e ter que recomeçar passa péssima impressão. Guarda só o essencial
-  // (respostas + prazo real da oferta) via localStorage, nada sensível.
+  // (respostas + prazo real da oferta + se já raspou o desconto) via
+  // localStorage, nada sensível.
   var STORAGE_KEY = 'zimbreiro_quiz_state_v1';
 
   function saveState() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         answers: answers,
-        offerDeadline: offerDeadline
+        offerDeadline: offerDeadline,
+        scratchRevealed: scratchRevealed
       }));
     } catch (e) {}
   }
@@ -674,13 +717,16 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 
   // Retoma o quiz do ponto salvo. Se já tinha terminado, vai direto pro
   // resultado com o MESMO prazo do contador (não reseta o tempo real só
-  // porque a pessoa saiu e voltou). Se parou no meio, volta pra próxima
-  // pergunta não respondida, já personalizada se Q3 já tinha sido respondida.
+  // porque a pessoa saiu e voltou), e sem mostrar a raspadinha de novo se
+  // ela já tinha revelado o desconto antes de sair. Se parou no meio, volta
+  // pra próxima pergunta não respondida, já personalizada se Q3 já tinha
+  // sido respondida.
   function resumeFromSavedState() {
     var saved = loadState();
     if (!saved || !saved.answers) return;
     answers = saved.answers;
     if (saved.offerDeadline) offerDeadline = saved.offerDeadline;
+    if (saved.scratchRevealed) scratchRevealed = true;
 
     var answeredCount = Object.keys(answers).length;
     if (answeredCount === 0) return;
@@ -689,6 +735,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       if (answers.q3) personalizeQuestions(getPerfil());
       renderResult();
       showScreen('result');
+      initScratchCard(getPerfil());
       armBackRedirect();
       return;
     }
@@ -704,6 +751,8 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   // cosmético — se a pessoa não decidir dentro do tempo, o preço mostrado
   // aqui vira o mesmo que ela veria clicando depois do prazo. Sem alegar
   // estoque ou vagas limitadas (que não existem) — só o preço, que é real.
+  // Só começa a contar depois que a pessoa revela o desconto na raspadinha
+  // (initScratchCard chama esta função no momento da revelação).
   function startCountdown(perfil) {
     if (!offerDeadline) {
       offerDeadline = Date.now() + COUNTDOWN_SECONDS * 1000;
@@ -744,6 +793,135 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     interval = setInterval(tick, 1000);
   }
 
+  // Raspadinha (Arthur Oliveira, transcrição "Como Validar Ofertas de
+  // $1M_Dia" — a Shein usa raspadinha/roleta pra revelar desconto, "você
+  // desbloqueou um desconto exclusivo"). Cobre o preço/contador com um
+  // canvas até a pessoa arrastar (raspar de verdade) ou tocar (revela tudo
+  // de uma vez, evita fricção). O desconto revelado é sempre o mesmo
+  // desconto real — não há sorteio, só transforma a revelação em uma ação.
+  function initScratchCard(perfil) {
+    var wrap = document.getElementById('scratchWrap');
+    var canvas = document.getElementById('scratchCanvas');
+    if (!wrap || !canvas) return;
+
+    if (scratchRevealed) {
+      canvas.style.display = 'none';
+      startCountdown(perfil);
+      return;
+    }
+
+    canvas.style.display = '';
+    canvas.style.opacity = '';
+    canvas.style.transform = '';
+
+    var ctx = canvas.getContext('2d');
+    var dpr = window.devicePixelRatio || 1;
+    var w = wrap.offsetWidth;
+    var h = wrap.offsetHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.scale(dpr, dpr);
+
+    function paintCoating() {
+      ctx.globalCompositeOperation = 'source-over';
+      var grad = ctx.createLinearGradient(0, 0, w, h);
+      grad.addColorStop(0, '#8a6a2a');
+      grad.addColorStop(1, '#5c4415');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#FAF7F2';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = '700 15px Inter, sans-serif';
+      ctx.fillText('Raspe aqui e revele seu desconto real', w / 2, h / 2 - 10);
+      ctx.font = '600 12px Inter, sans-serif';
+      ctx.fillText('(ou toque para abrir)', w / 2, h / 2 + 14);
+    }
+    paintCoating();
+
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var drawing = false;
+    var moved = false;
+    var startX, startY;
+    var finished = false;
+
+    function getPos(e) {
+      var rect = canvas.getBoundingClientRect();
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+
+    function erase(x, y) {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(x, y, 22, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function checkThreshold() {
+      var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      var total = 0, cleared = 0;
+      for (var i = 3; i < data.length; i += 4 * 37) {
+        total++;
+        if (data[i] < 80) cleared++;
+      }
+      if (total > 0 && cleared / total > 0.35) {
+        finishReveal();
+      }
+    }
+
+    function finishReveal() {
+      if (finished) return;
+      finished = true;
+      scratchRevealed = true;
+      trackEvent('ScratchRevealed', { perfil: perfil });
+      saveState();
+      if (reducedMotion) {
+        canvas.style.display = 'none';
+      } else {
+        canvas.style.transition = 'opacity 380ms ease, transform 380ms ease';
+        canvas.style.opacity = '0';
+        canvas.style.transform = 'scale(1.03)';
+        setTimeout(function () { canvas.style.display = 'none'; }, 400);
+      }
+      startCountdown(perfil);
+    }
+
+    function onDown(e) {
+      if (finished) return;
+      drawing = true;
+      moved = false;
+      var p = getPos(e);
+      startX = p.x; startY = p.y;
+      erase(p.x, p.y);
+    }
+    function onMove(e) {
+      if (!drawing || finished) return;
+      var p = getPos(e);
+      if (Math.abs(p.x - startX) > 4 || Math.abs(p.y - startY) > 4) moved = true;
+      erase(p.x, p.y);
+      checkThreshold();
+    }
+    function onUp() {
+      if (finished) return;
+      if (drawing && !moved) {
+        finishReveal();
+      }
+      drawing = false;
+    }
+
+    canvas.addEventListener('pointerdown', onDown);
+    canvas.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    canvas.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        finishReveal();
+      }
+    });
+  }
+
   function renderResult() {
     var perfil = getPerfil();
     var p = PERFIS[perfil];
@@ -764,8 +942,6 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     link.addEventListener('click', function () {
       trackEvent('CTAResultClick', { perfil: perfil });
     });
-
-    startCountdown(perfil);
   }
 
   // Back redirect: 4 camadas mostradas quando a pessoa aperta VOLTAR

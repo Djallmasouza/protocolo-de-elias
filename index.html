@@ -113,7 +113,14 @@
      toca sem arrastar) e por teclado (Enter/Espaço, acessibilidade). Se a
      pessoa já revelou antes de sair e voltar, não mostra a raspadinha de
      novo (persistido no mesmo localStorage da 9ª rodada) — consistente com
-     a regra de não resetar a experiência de quem já interagiu. -->
+     a regra de não resetar a experiência de quem já interagiu.
+     27/07/2026 (13ª rodada, feedback explícito do usuário): a raspadinha
+     cobria preço cheio + desconto + contador juntos. Usuário apontou que o
+     valor cheio (R$47,90, riscado) deveria ficar sempre visível, fora da
+     raspadinha — só o desconto em si (R$17,90 + contador) fica coberto até
+     revelar. Isso dá contraste real ao desconto assim que revelado, em vez
+     de esconder também a âncora de preço. Mudança só estrutural (HTML/CSS),
+     nenhuma lógica de JS mudou. -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -409,9 +416,9 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     <div class="offer-panel">
       <p class="offer-eyebrow">Pleno | Fase 1 do Protocolo</p>
       <p class="offer-name">Método do Zimbreiro</p>
+      <p class="offer-price-anchor" id="offerPriceAnchor">R$47,90</p>
       <div class="scratch-wrap" id="scratchWrap">
         <div class="scratch-content">
-          <p class="offer-price-anchor" id="offerPriceAnchor">R$47,90</p>
           <p class="offer-price" id="offerPrice">R$17,90</p>
           <div class="offer-countdown pulse" id="offerCountdown">
             <p class="offer-countdown-label" id="offerCountdownLabel">Esse valor expira em</p>

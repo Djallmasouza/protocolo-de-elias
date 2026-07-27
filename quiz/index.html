@@ -142,7 +142,16 @@
      assim que a oferta aparece). Os outros dois achados do levantamento
      (storytelling com depoimento e prova social) não foram implementados
      porque exigiriam fabricar depoimento, o que viola regra fixa deste
-     negócio. -->
+     negócio.
+     27/07/2026 (15ª rodada, bug apontado pelo usuário via screenshot real):
+     o texto de reforço da 14ª rodada ("você acabou de desbloquear esse
+     valor, ele não aparece de novo") ficava desatualizado depois que o
+     contador expirava, contradizendo o "Esse valor expirou" logo acima.
+     Corrigido pra trocar de texto quando expira: "O prazo do seu desconto
+     encerrou. A partir de agora, esse é o valor cheio do Método do
+     Zimbreiro." Sem culpa, sem reabrir uma nova contagem (seria escassez
+     forjada) — só constata o fato e mantém o CTA funcionando pro preço
+     cheio. -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -818,6 +827,9 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
         anchorEl.style.display = 'none';
         priceEl.textContent = 'R$47,90';
         linkEl.href = withPassthrough(FULL_PRICE_CHECKOUT_URL);
+        var reinforcementEl = document.getElementById('offerReinforcement');
+        reinforcementEl.textContent = 'O prazo do seu desconto encerrou. A partir de agora, esse é o valor cheio do Método do Zimbreiro.';
+        reinforcementEl.classList.add('show');
         trackEvent('OfferExpired', { perfil: perfil });
       }
     }

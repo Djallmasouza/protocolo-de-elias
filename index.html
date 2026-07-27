@@ -151,7 +151,22 @@
      encerrou. A partir de agora, esse é o valor cheio do Método do
      Zimbreiro." Sem culpa, sem reabrir uma nova contagem (seria escassez
      forjada) — só constata o fato e mantém o CTA funcionando pro preço
-     cheio. -->
+     cheio.
+     27/07/2026 (16ª rodada, correção de julgamento do próprio usuário): a
+     14ª rodada trocou "leitura" por "diagnóstico" em todo o funil,
+     generalizando demais o achado de Arthur Oliveira/Antonio Carneiro (que
+     falavam de nichos de emagrecimento/pilates, nunca testado em nicho
+     espiritual). O usuário apontou dois problemas reais: "diagnóstico" soa
+     clínico, e entra em tensão direta com o disclaimer da própria página
+     ("não substitui acompanhamento médico, psicológico ou pastoral
+     profissional") — além do risco de a Meta ler isso como atributo
+     pessoal de saúde e sinalizar o anúncio. O ponto que a mesa-redonda
+     Davi/Slender/Kauê realmente defende é justificar por que a pessoa está
+     respondendo cada pergunta, não a palavra em si. Revertido "diagnóstico"
+     pra "leitura" (termo já validado, neutro, sem risco) em toda parte
+     (botão, subheadline, Q1-Q3, Q6, loading, eyebrow do resultado) —
+     mantida a justificativa por pergunta adicionada em Q1/Q2, que é o
+     achado que realmente se sustenta. -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -322,8 +337,8 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   <div class="container">
     <p class="intro-eyebrow">Pleno</p>
     <h1>Você não desistiu de servir. Só esqueceu como parar.</h1>
-    <p>Um diagnóstico pessoal, de 1 minuto, pra você nomear o peso que carrega e ver o que fazer com ele.</p>
-    <button class="btn" onclick="startQuiz()" data-track="quiz-start">Começar meu diagnóstico personalizado</button>
+    <p>Uma leitura pessoal, de 1 minuto, pra você nomear o peso que carrega e ver o que fazer com ele.</p>
+    <button class="btn" onclick="startQuiz()" data-track="quiz-start">Começar minha leitura personalizada</button>
   </div>
 </section>
 
@@ -332,7 +347,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   <div class="container">
     <p class="q-label">Pergunta 1 de 6</p>
     <h2 class="q-title">Há quanto tempo você serve na igreja sem uma pausa de verdade?</h2>
-    <p class="q-micro">Sem resposta certa. Essa primeira resposta já começa a moldar seu diagnóstico.</p>
+    <p class="q-micro">Sem resposta certa. Essa primeira resposta já começa a moldar sua leitura.</p>
     <div class="q-options">
       <button class="q-option" onclick="answer(1,'A')">Menos de 1 ano</button>
       <button class="q-option" onclick="answer(1,'B')">De 1 a 5 anos</button>
@@ -346,7 +361,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   <div class="container">
     <p class="q-label">Pergunta 2 de 6</p>
     <h2 class="q-title">Qual dessas frases mais parece com você?</h2>
-    <p class="q-micro">Escolha a que mais dói de admitir. Isso ajuda a mirar exatamente onde seu diagnóstico precisa chegar.</p>
+    <p class="q-micro">Escolha a que mais dói de admitir. Isso ajuda a mirar exatamente onde sua leitura precisa chegar.</p>
     <div class="q-options">
       <button class="q-option" onclick="answer(2,'A')">Sou sempre a que fica até o fim resolvendo tudo</button>
       <button class="q-option" onclick="answer(2,'B')">Já pensei em sumir um domingo, mas nunca fiz</button>
@@ -360,7 +375,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   <div class="container">
     <p class="q-label">Pergunta 3 de 6</p>
     <h2 class="q-title">Qual dessas te descreve melhor hoje?</h2>
-    <p class="q-micro">Isso vai calibrar o diagnóstico que você recebe no final.</p>
+    <p class="q-micro">Isso vai calibrar a leitura que você recebe no final.</p>
     <div class="q-options">
       <button class="q-option" onclick="answer(3,'A')">Lidero ou coordeno um ministério</button>
       <button class="q-option" onclick="answer(3,'B')">Sou casada com um pastor ou líder</button>
@@ -418,14 +433,14 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     <div class="spinner"></div>
     <p class="loading-step" id="loadStep1">Analisando suas respostas...</p>
     <p class="loading-step" id="loadStep2">Identificando o padrão por trás do seu cansaço...</p>
-    <p class="loading-step" id="loadStep3">Montando seu diagnóstico personalizado...</p>
+    <p class="loading-step" id="loadStep3">Montando sua leitura personalizada...</p>
   </div>
 </section>
 
 <!-- RESULTADO -->
 <section class="screen result" data-screen="result">
   <div class="container">
-    <p class="intro-eyebrow">Seu diagnóstico personalizado</p>
+    <p class="intro-eyebrow">Sua leitura personalizada</p>
     <p class="result-tag" id="resultTag"></p>
     <h2 id="resultHeadline"></h2>
 
@@ -632,7 +647,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     6: {
       'carrega-o-piano': {
         title: 'Se você tivesse que nomear o que sente, qual seria?',
-        micro: 'Esta última resposta vai calibrar seu diagnóstico final.',
+        micro: 'Esta última resposta vai calibrar sua leitura final.',
         options: {
           A: 'Medo de decepcionar quem conta com você',
           B: 'Um cansaço que já não tem mais nome',
@@ -642,7 +657,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       },
       'esposa-de-lider': {
         title: 'Se você tivesse que nomear o que sente, qual seria?',
-        micro: 'Esta última resposta vai calibrar seu diagnóstico final.',
+        micro: 'Esta última resposta vai calibrar sua leitura final.',
         options: {
           A: 'Medo de que, se você falhar, o ministério do seu marido pague o preço',
           B: 'Um cansaço que já não tem mais nome',
@@ -652,7 +667,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       },
       'lidera-cansada': {
         title: 'Se você tivesse que nomear o que sente, qual seria?',
-        micro: 'Esta última resposta vai calibrar seu diagnóstico final.',
+        micro: 'Esta última resposta vai calibrar sua leitura final.',
         options: {
           A: 'Medo de que ninguém segure o que você segurava se você parar',
           B: 'Um cansaço que já não tem mais nome',

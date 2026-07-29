@@ -233,7 +233,18 @@
      percebeu que aquele retângulo é interativo. Correção no mesmo dia
      (apontada pelo usuário via print): a dica estava ACIMA da raspadinha,
      mas o emoji 👆 aponta pra cima — fazia mais sentido a dica ficar
-     ABAIXO da caixa, apontando pra ela. Movida pra depois do scratch-wrap. -->
+     ABAIXO da caixa, apontando pra ela. Movida pra depois do scratch-wrap.
+     29/07/2026 (21ª rodada, pedido explícito do usuário: "precisa deixar
+     esta oferta agressiva ou não vamos vender nada"). Adicionado bloco de
+     presell agressivo por perfil, logo antes do painel de oferta —
+     confronto direto, comando, sem hedge. Distinção importante mantida:
+     agressivo ≠ fabricado. Nenhum depoimento, credencial ou dado inventado
+     — a intensidade vem só da copy (confronto direto, urgência, comando),
+     grounded no mecanismo 100% real (Elias/zimbreiro, 7 dias de áudio
+     guiado, 10-15min/dia). Visual proposital diferente do
+     .result-highlight (que é itálico/reflexivo): bold, reto, fundo com
+     leve tom de alerta — sinaliza "isso é diferente do resto do texto,
+     preste atenção" sem parecer prova social fabricada. -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -440,6 +451,13 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   .scratch-hint { text-align: center; font-size: 12.5px; font-weight: 700; color: var(--gold); margin: 10px 0 4px; opacity: 0; animation: hintFadeIn 400ms ease 1200ms forwards, hintBounce 1.3s ease-in-out 1200ms infinite; }
   @keyframes hintFadeIn { to { opacity: 1; } }
   @keyframes hintBounce { 0%, 50%, 100% { transform: translateY(0); } 25% { transform: translateY(-3px); } }
+  /* Presell agressivo (21ª rodada) — confronto direto logo antes da oferta.
+     Diferente do .result-highlight (itálico, reflexivo), este bloco é bold,
+     reto, sem itálico — a intenção é peso e urgência, não contemplação.
+     Grounded no mecanismo real (7 dias, áudio guiado, Elias/zimbreiro) —
+     nenhum depoimento ou dado fabricado, só intensidade de copy. */
+  .presell-block { background: rgba(122,31,15,0.14); border-left: 3px solid var(--gold); border-radius: 8px; padding: 22px 20px; margin-bottom: 30px; }
+  .presell-block p { font-size: 16.5px; font-weight: 700; line-height: 1.6; color: var(--cream); }
   .scratch-wrap { position: relative; border-radius: 10px; }
   @keyframes scratchGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(196,151,59,0.45); } 50% { box-shadow: 0 0 0 8px rgba(196,151,59,0); } }
   .scratch-wrap.invite { animation: scratchGlow 1.6s ease-in-out infinite; }
@@ -662,6 +680,10 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       Compartilhar minha leitura
     </button>
     <p class="download-hint">No celular abre o menu de compartilhar (Instagram, WhatsApp); no computador baixa a imagem</p>
+
+    <div class="presell-block">
+      <p id="resultPresell"></p>
+    </div>
 
     <div class="offer-panel">
       <p class="offer-eyebrow">Pleno | Fase 1 do Protocolo</p>
@@ -966,7 +988,8 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       pd2: 'O domingo que devia ser descanso virou mais um turno. E ninguém perguntou se você aguenta.',
       pd3: 'A culpa de parar é maior que o cansaço de continuar. Por isso você nunca para.',
       altruism: 'Parar não é abandonar quem você ama. É a única forma de continuar servindo sem se esvaziar até não sobrar nada pra dar.',
-      nextStep: 'Passo de hoje: antes de dormir, escreve uma frase só. "Hoje eu servi. Amanhã, alguém pode segurar o piano no meu lugar." Não precisa mais que isso agora.'
+      nextStep: 'Passo de hoje: antes de dormir, escreve uma frase só. "Hoje eu servi. Amanhã, alguém pode segurar o piano no meu lugar." Não precisa mais que isso agora.',
+      presell: 'Você vai fechar essa tela agora e carregar o mesmo piano amanhã. De novo. Esse cansaço não vai embora sozinho — ele não foi embora esse ano, não vai no próximo. O Método do Zimbreiro não é mais um conteúdo pra "ver quando der tempo": é o primeiro dia em que alguém te ensina a parar de verdade, 10 a 15 minutos de áudio guiado, no seu celular, hoje. Se você sair dessa página sem decidir, a decisão já foi tomada — continuar exatamente como está.'
     },
     'esposa-de-lider': {
       tag: 'A ESPOSA QUE SUSTENTA POR TRÁS',
@@ -978,7 +1001,8 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       pd2: 'Todo mundo pergunta como seu marido está. Quase ninguém pergunta como você está.',
       pd3: 'Você tem medo de que descansar pareça fraqueza. Porque, se você cai, parece que o ministério inteiro cai junto.',
       altruism: 'Descansar não enfraquece o ministério do seu marido. Uma esposa inteira sustenta muito mais do que uma esposa exaurida.',
-      nextStep: 'Passo de hoje: da próxima vez que alguém perguntar como seu marido está, responde também como você está. Só isso.'
+      nextStep: 'Passo de hoje: da próxima vez que alguém perguntar como seu marido está, responde também como você está. Só isso.',
+      presell: 'Ninguém vai perguntar como você está hoje. Amanhã também não. Isso não muda sozinho enquanto você continuar sustentando por dentro sem nenhum apoio de verdade. O Método do Zimbreiro é 7 dias de áudio guiado pensado pra alguém que segura o ministério de outra pessoa e nunca teve o próprio descanso ensinado. Fechar essa página agora é escolher continuar sozinha nisso por mais um dia.'
     },
     'lidera-cansada': {
       tag: 'A LÍDER QUE JÁ NÃO SABE PARAR',
@@ -990,7 +1014,8 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       pd2: 'Se você falha uma vez, tem medo de que ninguém mais segure o que você segurava.',
       pd3: 'Ninguém pediu pra você ser insubstituível. Foi você que aprendeu a viver como se fosse.',
       altruism: 'Quem você lidera aprende com o seu exemplo. Se você nunca para, é isso que você está ensinando pra eles também.',
-      nextStep: 'Passo de hoje: escolhe uma coisa da sua escala de amanhã pra delegar de verdade, sem checar depois se foi feito do seu jeito.'
+      nextStep: 'Passo de hoje: escolhe uma coisa da sua escala de amanhã pra delegar de verdade, sem checar depois se foi feito do seu jeito.',
+      presell: 'Você vai liderar de novo amanhã sem ter liderado o seu próprio descanso hoje. Isso tem um limite, e você já sabe disso. O Método do Zimbreiro não pede que você pare de liderar — pede 10 a 15 minutos por dia, 7 dias, pra você aprender o que Deus ensinou a Elias antes de qualquer missão nova: descansar não é abandonar o posto. Sair daqui sem decidir é decidir continuar do jeito que está.'
     }
   };
 
@@ -1274,6 +1299,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     document.getElementById('resultPD3').textContent = p.pd3;
     document.getElementById('resultAltruism').textContent = p.altruism;
     document.getElementById('resultNextStep').textContent = p.nextStep;
+    document.getElementById('resultPresell').textContent = p.presell;
 
     // Passthrough de fbclid/UTM + perfil pro checkout, mesma lógica da LP principal
     var link = document.getElementById('ctaResultado');

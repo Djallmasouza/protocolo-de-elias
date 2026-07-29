@@ -279,7 +279,19 @@
      verde do WhatsApp) — o objetivo é o padrão de interação já conhecido,
      não a marca de outra empresa. preload trocado de "none" pra
      "metadata" nos dois players (só o suficiente pra saber a duração,
-     não baixa o áudio inteiro antes do clique). -->
+     não baixa o áudio inteiro antes do clique).
+     29/07/2026 (mesmo dia): (a) segunda trilha ("A Light on the Hill", 80
+     BPM, mesma pasta licenciada, nome ecoa a referência bíblica de luz/monte
+     já usada no quiz) entra via crossfade de ~1,4s assim que o painel de
+     oferta aparece na tela (IntersectionObserver, dispara uma vez só, não
+     alterna de volta se rolar pra cima de novo) — reforça o momento de
+     decisão com mais pulso que a trilha calma do resto do quiz. Fundamento
+     real (tempo/ritmo mais acelerado reduz hesitação, efeito documentado em
+     atmosfera de varejo), não o exagero popular de "música que ativa o
+     botão de compra no cérebro". (b) Volume padrão da trilha baixado de
+     0.18 pra 0.09 (pedido do usuário ouvindo ao vivo: "mais ambiente, tipo
+     um sussurro"), duck durante narração ajustado proporcionalmente de
+     0.04 pra 0.02. Arquivo em assets/audio/bg-offer.mp3. -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -566,6 +578,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   <svg id="muteIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M3 10v4h4l5 5V5L7 10H3z"/><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.74 2.5-2.26 2.5-4.02z"/><path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
 </button>
 <audio id="bgMusic" loop preload="none" src="assets/audio/bg-piano-emotions.mp3"></audio>
+<audio id="bgMusicOffer" loop preload="none" src="assets/audio/bg-offer.mp3"></audio>
 
 <!-- TELA 0: INTRO -->
 <section class="screen active intro" data-screen="intro">
@@ -886,24 +899,79 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   // baixo pra não competir com o conteúdo. Abaixa ainda mais (duck) durante
   // os dois mini-pitches narrados, volta ao normal quando eles terminam —
   // sem isso a narração e a música embolariam.
-  var BG_VOLUME = 0.18;
-  var BG_VOLUME_DUCKED = 0.04;
+  // 29/07/2026 (mesmo dia, pedido do usuário): troca pra uma segunda faixa
+  // com mais pulso ("A Light on the Hill", 80 BPM vs 40 BPM da trilha
+  // principal — e o nome "luz no monte" ecoa a mesma referência bíblica já
+  // usada no quiz, Elias ouvindo a voz mansa no monte em 1 Reis 19) assim
+  // que a pessoa rola até o painel de oferta — reforça o momento de decisão
+  // com mais energia, sem trocar de estilo bruscamente. Troca é definitiva
+  // (uma vez na oferta, não volta pra trilha calma se rolar pra cima de
+  // novo — evitar ida-e-volta que quebraria a continuidade). Fundamento
+  // real, não "botão de compra no cérebro": tempo/ritmo mais acelerado
+  // aumenta sensação de urgência e reduz hesitação, efeito documentado em
+  // atmosfera de varejo — não é mito, só não é o exagero popular do termo.
+  var BG_VOLUME = 0.09;
+  var BG_VOLUME_DUCKED = 0.02;
   var bgMusicMuted = false;
   var bgDucked = false;
+  var activeBgTrackId = 'bgMusic';
+  var offerMusicStarted = false;
 
   function applyBgVolume() {
-    var m = document.getElementById('bgMusic');
+    var m = document.getElementById(activeBgTrackId);
     m.volume = bgMusicMuted ? 0 : (bgDucked ? BG_VOLUME_DUCKED : BG_VOLUME);
   }
 
   function startBgMusic() {
-    var m = document.getElementById('bgMusic');
+    var m = document.getElementById(activeBgTrackId);
     applyBgVolume();
     m.play().catch(function () {});
   }
 
   function duckBgMusic() { bgDucked = true; applyBgVolume(); }
   function unduckBgMusic() { bgDucked = false; applyBgVolume(); }
+
+  // Crossfade de ~1.4s entre a trilha calma e a trilha da oferta, disparado
+  // por IntersectionObserver quando o painel de oferta entra na tela pela
+  // primeira vez (ver armOfferMusicObserver, chamado em renderResult()).
+  function crossfadeToOfferMusic() {
+    if (offerMusicStarted) return;
+    offerMusicStarted = true;
+    var from = document.getElementById('bgMusic');
+    var to = document.getElementById('bgMusicOffer');
+    to.volume = 0;
+    to.play().catch(function () {});
+    var steps = 14, i = 0;
+    var fromStart = from.volume;
+    var targetVol = bgMusicMuted ? 0 : (bgDucked ? BG_VOLUME_DUCKED : BG_VOLUME);
+    var interval = setInterval(function () {
+      i++;
+      var t = i / steps;
+      from.volume = Math.max(0, fromStart * (1 - t));
+      to.volume = Math.min(targetVol, targetVol * t);
+      if (i >= steps) {
+        clearInterval(interval);
+        from.pause();
+        activeBgTrackId = 'bgMusicOffer';
+        applyBgVolume();
+      }
+    }, 100);
+  }
+
+  function armOfferMusicObserver() {
+    if (offerMusicStarted) return;
+    var panel = document.querySelector('.offer-panel');
+    if (!panel || !window.IntersectionObserver) return;
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          crossfadeToOfferMusic();
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    observer.observe(panel);
+  }
 
   function updateMuteIcon() {
     var icon = document.getElementById('muteIcon');
@@ -969,6 +1037,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     initAxes();
     trackEvent('QuizComplete', { perfil: perfil });
     armBackRedirect();
+    armOfferMusicObserver();
   }
 
   // Mini-pitch em áudio (22ª rodada, achado de Vicente Lima/mesa-redonda
@@ -1343,6 +1412,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       initScratchCard(getPerfil());
       initAxes();
       armBackRedirect();
+      armOfferMusicObserver();
       return;
     }
 

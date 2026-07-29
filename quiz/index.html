@@ -269,7 +269,17 @@
      quando termina — sem isso a narração ficaria abafada pela música.
      Botão de mudo discreto no canto superior direito, disponível em toda
      tela, preferência persistida no mesmo localStorage do resto do
-     estado. Arquivo em assets/audio/bg-piano-emotions.mp3. -->
+     estado. Arquivo em assets/audio/bg-piano-emotions.mp3.
+     29/07/2026 (mesma 22ª rodada, refinamento pedido pelo usuário ao ver o
+     protótipo): card de áudio redesenhado pra parecer mensagem de voz de
+     WhatsApp — bolha "recebida" com rabinho (canto reto embaixo à
+     esquerda), 9 barras de onda em vez de 5, e duração visível (ex:
+     "0:12") ANTES de tocar, resolvendo a preocupação de "a pessoa achar
+     que é longo demais". Paleta mantida dourado/escuro do site (não o
+     verde do WhatsApp) — o objetivo é o padrão de interação já conhecido,
+     não a marca de outra empresa. preload trocado de "none" pra
+     "metadata" nos dois players (só o suficiente pra saber a duração,
+     não baixa o áudio inteiro antes do clique). -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -487,20 +497,32 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
      visual já familiar de WhatsApp pro público), com botão de play/pause
      e um botão "Continuar" sempre disponível, nunca bloqueado por ouvir
      ou não — não força interação, só oferece. */
-  .audio-card { background: var(--dark2); border-radius: 14px; padding: 28px 24px; display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
-  .audio-play-btn { flex-shrink: 0; width: 52px; height: 52px; border-radius: 50%; background: var(--gold); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); transition: transform 160ms ease; }
+  /* Card redesenhado com cara de mensagem de voz de WhatsApp (pedido do
+     usuário) — bolha "recebida" com rabinho, paleta própria do site (não o
+     verde do WhatsApp, pra manter identidade visual), duração visível
+     (resolve a preocupação de "achar que é longo demais" antes de tocar). */
+  .audio-card { position: relative; background: var(--dark2); border-radius: 4px 16px 16px 16px; padding: 14px 18px 14px 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+  .audio-card::before { content: ''; position: absolute; top: 0; left: -7px; width: 14px; height: 14px; background: var(--dark2); clip-path: polygon(100% 0, 100% 100%, 0 0); }
+  .audio-play-btn { flex-shrink: 0; width: 42px; height: 42px; border-radius: 50%; background: var(--gold); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); transition: transform 160ms ease; }
   .audio-play-btn:active { transform: scale(0.94); }
-  .audio-play-btn svg { width: 20px; height: 20px; }
-  .audio-card-text { flex: 1; font-size: 14.5px; color: var(--gold-soft); line-height: 1.5; }
-  .audio-waveform { display: flex; align-items: center; gap: 3px; height: 20px; margin-top: 8px; }
-  .audio-waveform span { width: 3px; background: var(--gold); border-radius: 2px; opacity: 0.5; }
-  .audio-waveform.playing span { animation: waveBounce 900ms ease-in-out infinite; }
-  .audio-waveform span:nth-child(1) { height: 8px; animation-delay: 0ms; }
-  .audio-waveform span:nth-child(2) { height: 16px; animation-delay: 120ms; }
-  .audio-waveform span:nth-child(3) { height: 10px; animation-delay: 240ms; }
-  .audio-waveform span:nth-child(4) { height: 18px; animation-delay: 360ms; }
-  .audio-waveform span:nth-child(5) { height: 7px; animation-delay: 480ms; }
-  @keyframes waveBounce { 0%, 100% { opacity: 0.5; transform: scaleY(1); } 50% { opacity: 1; transform: scaleY(1.6); } }
+  .audio-play-btn svg { width: 17px; height: 17px; }
+  .audio-card-text { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .audio-card-label { font-size: 11.5px; color: rgba(250,247,242,0.45); }
+  .audio-waveform-row { display: flex; align-items: center; gap: 8px; }
+  .audio-waveform { display: flex; align-items: center; gap: 2.5px; height: 22px; }
+  .audio-waveform span { width: 2.5px; background: var(--gold); border-radius: 2px; opacity: 0.45; }
+  .audio-waveform.playing span { animation: waveBounce 900ms ease-in-out infinite; opacity: 0.9; }
+  .audio-waveform span:nth-child(1) { height: 6px; animation-delay: 0ms; }
+  .audio-waveform span:nth-child(2) { height: 12px; animation-delay: 90ms; }
+  .audio-waveform span:nth-child(3) { height: 18px; animation-delay: 180ms; }
+  .audio-waveform span:nth-child(4) { height: 9px; animation-delay: 270ms; }
+  .audio-waveform span:nth-child(5) { height: 16px; animation-delay: 360ms; }
+  .audio-waveform span:nth-child(6) { height: 7px; animation-delay: 450ms; }
+  .audio-waveform span:nth-child(7) { height: 14px; animation-delay: 540ms; }
+  .audio-waveform span:nth-child(8) { height: 10px; animation-delay: 630ms; }
+  .audio-waveform span:nth-child(9) { height: 6px; animation-delay: 720ms; }
+  .audio-duration { flex-shrink: 0; font-size: 12px; font-weight: 600; color: var(--gold-soft); font-variant-numeric: tabular-nums; }
+  @keyframes waveBounce { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.7); } }
   @media (prefers-reduced-motion: reduce) { .audio-waveform.playing span { animation: none !important; } }
 
   /* Presell agressivo (21ª rodada) — confronto direto logo antes da oferta.
@@ -607,11 +629,14 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
         <svg id="audioMidPlayIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
       </button>
       <div class="audio-card-text">
-        Uma mensagem rápida antes das próximas perguntas.
-        <div class="audio-waveform" id="audioMidWave"><span></span><span></span><span></span><span></span><span></span></div>
+        <span class="audio-card-label">Uma mensagem rápida antes das próximas perguntas</span>
+        <div class="audio-waveform-row">
+          <div class="audio-waveform" id="audioMidWave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          <span class="audio-duration" id="audioMidDuration">0:00</span>
+        </div>
       </div>
     </div>
-    <audio id="audioMidPlayer" preload="none"></audio>
+    <audio id="audioMidPlayer" preload="metadata"></audio>
     <button class="btn" onclick="advanceFromAudioMid()">Continuar</button>
   </div>
 </section>
@@ -677,11 +702,14 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
         <svg id="audioPrePlayIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
       </button>
       <div class="audio-card-text">
-        Uma mensagem rápida antes de você ver sua leitura.
-        <div class="audio-waveform" id="audioPreWave"><span></span><span></span><span></span><span></span><span></span></div>
+        <span class="audio-card-label">Uma mensagem rápida antes de você ver sua leitura</span>
+        <div class="audio-waveform-row">
+          <div class="audio-waveform" id="audioPreWave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          <span class="audio-duration" id="audioPreDuration">0:00</span>
+        </div>
       </div>
     </div>
-    <audio id="audioPrePlayer" preload="none"></audio>
+    <audio id="audioPrePlayer" preload="metadata"></audio>
     <button class="btn" onclick="advanceFromAudioPre()">Ver minha leitura</button>
   </div>
 </section>
@@ -962,16 +990,32 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     'lidera-cansada': 'assets/audio/pre-lidera.mp3'
   };
 
+  // Formata segundos como M:SS (estilo duração de mensagem de voz do
+  // WhatsApp) — mostrar isso ANTES de tocar resolve a preocupação de
+  // "achar que é longo demais" (pedido do usuário).
+  function formatDuration(seconds) {
+    if (!isFinite(seconds)) return '0:00';
+    var m = Math.floor(seconds / 60);
+    var s = Math.round(seconds % 60);
+    if (s === 60) { m++; s = 0; }
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
   function setupAudioCard(prefix, src) {
     var player = document.getElementById(prefix + 'Player');
     var playBtn = document.getElementById(prefix + 'PlayBtn');
     var icon = document.getElementById(prefix + 'PlayIcon');
     var wave = document.getElementById(prefix + 'Wave');
+    var durationEl = document.getElementById(prefix + 'Duration');
     player.pause();
     player.currentTime = 0;
     player.src = src;
     icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
     wave.classList.remove('playing');
+    durationEl.textContent = '0:00';
+    player.onloadedmetadata = function () {
+      durationEl.textContent = formatDuration(player.duration);
+    };
 
     playBtn.onclick = function () {
       if (player.paused) {

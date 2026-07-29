@@ -219,7 +219,18 @@
      mesmo valor — sem inventar dado nenhum, só mais sinal real extraído
      das mesmas respostas. Testado com respostas uniformes (tudo A, tudo C,
      tudo D) e mistas antes de publicar, confirmando que os 3 eixos sempre
-     saem diferentes. -->
+     saem diferentes.
+     29/07/2026 (20ª rodada, dado real do GA4 apontou problema: de 13
+     conclusões do quiz, só 1 raspou a raspadinha antes de comprar — a
+     grande maioria pula direto pro botão de CTA, que é visualmente mais
+     chamativo (dourado, com brilho) que a raspadinha (retângulo neutro
+     com texto simples). Corrigido sem bloquear ninguém: a raspadinha
+     ganhou o mesmo tratamento visual de "isso é clicável" que o CTA
+     (brilho pulsante, classe .invite) e uma dica textual com leve
+     animação ("👆 toque aqui pra ver seu desconto") que desaparece assim
+     que a pessoa raspa ou revela. Não força interação — quem já quer
+     comprar direto continua podendo, só fica mais claro pra quem não
+     percebeu que aquele retângulo é interativo. -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -409,11 +420,26 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     .commitment-line, .id-panel, .dossier-card, .dossier-badge, .dossier-count, .download-btn, .download-hint { animation: none !important; opacity: 1 !important; transform: none !important; }
     .id-axis-fill { transition: none !important; }
     .btn.btn-glow, .btn-arrow { animation: none !important; }
+    .scratch-wrap.invite, .scratch-hint { animation: none !important; }
+    .scratch-hint { opacity: 1 !important; }
   }
 
   /* Raspadinha: cobre o preço/contador até a pessoa arrastar ou tocar.
-     O desconto revelado é sempre o mesmo desconto real — não há sorteio. */
-  .scratch-wrap { position: relative; }
+     O desconto revelado é sempre o mesmo desconto real — não há sorteio.
+     19ª rodada: dado real mostrou que quase ninguém raspava (1 de 13
+     conclusões) — o botão de CTA logo abaixo é visualmente mais chamativo
+     (dourado, com brilho) que a raspadinha (retângulo neutro com texto),
+     então a atenção pulava direto pro botão sem passar pela raspadinha.
+     Adicionado brilho pulsante na própria raspadinha (mesma linguagem
+     visual do CTA, .invite) + dica textual com animação sutil (.scratch-hint)
+     pra competir pela atenção antes do botão, sem bloquear quem já sabe
+     que quer comprar. */
+  .scratch-hint { text-align: center; font-size: 12.5px; font-weight: 700; color: var(--gold); margin-bottom: 10px; opacity: 0; animation: hintFadeIn 400ms ease 1200ms forwards, hintBounce 1.3s ease-in-out 1200ms infinite; }
+  @keyframes hintFadeIn { to { opacity: 1; } }
+  @keyframes hintBounce { 0%, 50%, 100% { transform: translateY(0); } 25% { transform: translateY(-3px); } }
+  .scratch-wrap { position: relative; border-radius: 10px; }
+  @keyframes scratchGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(196,151,59,0.45); } 50% { box-shadow: 0 0 0 8px rgba(196,151,59,0); } }
+  .scratch-wrap.invite { animation: scratchGlow 1.6s ease-in-out infinite; }
   .scratch-canvas {
     position: absolute;
     inset: 0;
@@ -638,6 +664,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       <p class="offer-eyebrow">Pleno | Fase 1 do Protocolo</p>
       <p class="offer-name">Método do Zimbreiro</p>
       <p class="offer-price-anchor" id="offerPriceAnchor">R$47,90</p>
+      <p class="scratch-hint" id="scratchHint">👆 toque aqui pra ver seu desconto</p>
       <div class="scratch-wrap" id="scratchWrap">
         <div class="scratch-content">
           <p class="offer-price" id="offerPrice">R$17,90</p>
@@ -1099,10 +1126,13 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   function initScratchCard(perfil) {
     var wrap = document.getElementById('scratchWrap');
     var canvas = document.getElementById('scratchCanvas');
+    var hint = document.getElementById('scratchHint');
     if (!wrap || !canvas) return;
 
     if (scratchRevealed) {
       canvas.style.display = 'none';
+      if (hint) hint.style.display = 'none';
+      wrap.classList.remove('invite');
       document.getElementById('offerReinforcement').classList.add('show');
       startCountdown(perfil);
       return;
@@ -1111,6 +1141,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     canvas.style.display = '';
     canvas.style.opacity = '';
     canvas.style.transform = '';
+    wrap.classList.add('invite');
 
     var ctx = canvas.getContext('2d');
     var dpr = window.devicePixelRatio || 1;
@@ -1179,6 +1210,8 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       scratchRevealed = true;
       trackEvent('ScratchRevealed', { perfil: perfil });
       saveState();
+      wrap.classList.remove('invite');
+      if (hint) hint.style.display = 'none';
       document.getElementById('offerReinforcement').classList.add('show');
       if (reducedMotion) {
         canvas.style.display = 'none';

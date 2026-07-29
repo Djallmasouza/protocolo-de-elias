@@ -244,7 +244,21 @@
      guiado, 10-15min/dia). Visual proposital diferente do
      .result-highlight (que é itálico/reflexivo): bold, reto, fundo com
      leve tom de alerta — sinaliza "isso é diferente do resto do texto,
-     preste atenção" sem parecer prova social fabricada. -->
+     preste atenção" sem parecer prova social fabricada.
+     29/07/2026 (22ª rodada, achado mais forte da pesquisa de
+     11-ESTUDOS_E_INSIGHTS/padrao-quiz-pergunta-a-oferta.md — Vicente Lima
+     + mesa-redonda Davi/Slender/Kauê, dois mini-VSLs no funil superam quiz
+     só-texto). Adicionados dois momentos de mini-pitch em áudio: um logo
+     depois da Q3 (define o perfil), antes das perguntas 4-6 mais
+     profundas; outro depois do loading, antes de mostrar o resultado.
+     Roteiro por perfil (6 áudios no total), voz gerada via ElevenLabs
+     (voz "VO3 Clonada — Feminina Brasileira Empática", já usada em outro
+     projeto espiritual do portfólio, tom calmo/acolhedor/espiritual,
+     escolhida pelo usuário). Opt-in: sem autoplay (navegador bloqueia
+     áudio com som sem clique) e o botão "Continuar"/"Ver minha leitura"
+     nunca fica bloqueado por ouvir ou não — quem já quer seguir direto
+     continua podendo. Arquivos em assets/audio/{mid,pre}-{piano,esposa,
+     lidera}.mp3. -->
 
 <!-- Meta Pixel Code -->
 <script>
@@ -451,6 +465,28 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   .scratch-hint { text-align: center; font-size: 12.5px; font-weight: 700; color: var(--gold); margin: 10px 0 4px; opacity: 0; animation: hintFadeIn 400ms ease 1200ms forwards, hintBounce 1.3s ease-in-out 1200ms infinite; }
   @keyframes hintFadeIn { to { opacity: 1; } }
   @keyframes hintBounce { 0%, 50%, 100% { transform: translateY(0); } 25% { transform: translateY(-3px); } }
+  /* Mini-pitch em áudio (22ª rodada, opt-in — sem autoplay, navegador bloqueia
+     áudio com som sem interação, e mesmo se não bloqueasse, forçar tocar
+     sozinho seria ruim de UX). Card estilo "mensagem de voz" (linguagem
+     visual já familiar de WhatsApp pro público), com botão de play/pause
+     e um botão "Continuar" sempre disponível, nunca bloqueado por ouvir
+     ou não — não força interação, só oferece. */
+  .audio-card { background: var(--dark2); border-radius: 14px; padding: 28px 24px; display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+  .audio-play-btn { flex-shrink: 0; width: 52px; height: 52px; border-radius: 50%; background: var(--gold); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); transition: transform 160ms ease; }
+  .audio-play-btn:active { transform: scale(0.94); }
+  .audio-play-btn svg { width: 20px; height: 20px; }
+  .audio-card-text { flex: 1; font-size: 14.5px; color: var(--gold-soft); line-height: 1.5; }
+  .audio-waveform { display: flex; align-items: center; gap: 3px; height: 20px; margin-top: 8px; }
+  .audio-waveform span { width: 3px; background: var(--gold); border-radius: 2px; opacity: 0.5; }
+  .audio-waveform.playing span { animation: waveBounce 900ms ease-in-out infinite; }
+  .audio-waveform span:nth-child(1) { height: 8px; animation-delay: 0ms; }
+  .audio-waveform span:nth-child(2) { height: 16px; animation-delay: 120ms; }
+  .audio-waveform span:nth-child(3) { height: 10px; animation-delay: 240ms; }
+  .audio-waveform span:nth-child(4) { height: 18px; animation-delay: 360ms; }
+  .audio-waveform span:nth-child(5) { height: 7px; animation-delay: 480ms; }
+  @keyframes waveBounce { 0%, 100% { opacity: 0.5; transform: scaleY(1); } 50% { opacity: 1; transform: scaleY(1.6); } }
+  @media (prefers-reduced-motion: reduce) { .audio-waveform.playing span { animation: none !important; } }
+
   /* Presell agressivo (21ª rodada) — confronto direto logo antes da oferta.
      Diferente do .result-highlight (itálico, reflexivo), este bloco é bold,
      reto, sem itálico — a intenção é peso e urgência, não contemplação.
@@ -542,6 +578,24 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   </div>
 </section>
 
+<!-- MINI-PITCH EM ÁUDIO (meio do quiz, opt-in, ver comentário no head) -->
+<section class="screen" data-screen="audioMid">
+  <div class="container">
+    <p class="q-label">Antes de continuar</p>
+    <div class="audio-card">
+      <button class="audio-play-btn" id="audioMidPlayBtn" aria-label="Ouvir áudio">
+        <svg id="audioMidPlayIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <div class="audio-card-text">
+        Uma mensagem rápida antes das próximas perguntas.
+        <div class="audio-waveform" id="audioMidWave"><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+    </div>
+    <audio id="audioMidPlayer" preload="none"></audio>
+    <button class="btn" onclick="advanceFromAudioMid()">Continuar</button>
+  </div>
+</section>
+
 <section class="screen" data-screen="q4">
   <div class="container">
     <p class="q-label">Pergunta 4 de 6</p>
@@ -591,6 +645,24 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     <p class="loading-step" id="loadStep1">Analisando suas respostas...</p>
     <p class="loading-step" id="loadStep2">Identificando o padrão por trás do seu cansaço...</p>
     <p class="loading-step" id="loadStep3">Montando sua leitura personalizada...</p>
+  </div>
+</section>
+
+<!-- MINI-PITCH EM ÁUDIO (antes do resultado, opt-in) -->
+<section class="screen" data-screen="audioPre">
+  <div class="container">
+    <p class="q-label">Sua leitura está pronta</p>
+    <div class="audio-card">
+      <button class="audio-play-btn" id="audioPrePlayBtn" aria-label="Ouvir áudio">
+        <svg id="audioPrePlayIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <div class="audio-card-text">
+        Uma mensagem rápida antes de você ver sua leitura.
+        <div class="audio-waveform" id="audioPreWave"><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+    </div>
+    <audio id="audioPrePlayer" preload="none"></audio>
+    <button class="btn" onclick="advanceFromAudioPre()">Ver minha leitura</button>
   </div>
 </section>
 
@@ -733,7 +805,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 <script>
   var TOTAL_SCREENS = 8; // intro + 6 perguntas + loading (resultado fora da barra)
   var answers = {};
-  var screens = ['intro','q1','q2','q3','q4','q5','q6','loading','result'];
+  var screens = ['intro','q1','q2','q3','audioMid','q4','q5','q6','loading','audioPre','result'];
   var currentIndex = 0;
 
   function showScreen(name) {
@@ -765,7 +837,12 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     trackEvent('QuizAnswer', { q: qNum, r: opt });
 
     if (qNum === 3) {
-      personalizeQuestions(getPerfil());
+      var perfil = getPerfil();
+      personalizeQuestions(perfil);
+      setupAudioCard('audioMid', AUDIO_MID[perfil]);
+      showScreen('audioMid');
+      updateProgress(3);
+      return;
     }
 
     if (qNum < 6) {
@@ -777,20 +854,89 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     }
   }
 
+  function advanceFromAudioMid() {
+    stopAudioCard('audioMid');
+    showScreen('q4');
+    updateProgress(4);
+  }
+
   function runLoading() {
     showScreen('loading');
     setTimeout(function () { document.getElementById('loadStep1').classList.add('show'); }, 200);
     setTimeout(function () { document.getElementById('loadStep2').classList.add('show'); }, 900);
     setTimeout(function () { document.getElementById('loadStep3').classList.add('show'); }, 1600);
     setTimeout(function () {
-      renderResult();
-      showScreen('result');
-      var perfil = getPerfil();
-      initScratchCard(perfil);
-      initAxes();
-      trackEvent('QuizComplete', { perfil: perfil });
-      armBackRedirect();
+      setupAudioCard('audioPre', AUDIO_PRE[getPerfil()]);
+      showScreen('audioPre');
     }, 2200);
+  }
+
+  function advanceFromAudioPre() {
+    stopAudioCard('audioPre');
+    renderResult();
+    showScreen('result');
+    var perfil = getPerfil();
+    initScratchCard(perfil);
+    initAxes();
+    trackEvent('QuizComplete', { perfil: perfil });
+    armBackRedirect();
+  }
+
+  // Mini-pitch em áudio (22ª rodada, achado de Vicente Lima/mesa-redonda
+  // Davi-Slender-Kauê: dois mini-VSLs, um no meio do quiz e outro antes do
+  // resultado, superam quiz só-texto). Opt-in — sem autoplay (navegador
+  // bloqueia áudio com som sem clique, e forçar tocar sozinho seria ruim de
+  // UX de qualquer forma). Botão de play/pause estilo "mensagem de voz" do
+  // WhatsApp, com "Continuar" sempre disponível, nunca bloqueado por ouvir
+  // ou não. Voz gerada via ElevenLabs (voz feminina brasileira já usada em
+  // outro projeto espiritual do portfólio, tom calmo/acolhedor/espiritual).
+  var AUDIO_MID = {
+    'carrega-o-piano': 'assets/audio/mid-piano.mp3',
+    'esposa-de-lider': 'assets/audio/mid-esposa.mp3',
+    'lidera-cansada': 'assets/audio/mid-lidera.mp3'
+  };
+  var AUDIO_PRE = {
+    'carrega-o-piano': 'assets/audio/pre-piano.mp3',
+    'esposa-de-lider': 'assets/audio/pre-esposa.mp3',
+    'lidera-cansada': 'assets/audio/pre-lidera.mp3'
+  };
+
+  function setupAudioCard(prefix, src) {
+    var player = document.getElementById(prefix + 'Player');
+    var playBtn = document.getElementById(prefix + 'PlayBtn');
+    var icon = document.getElementById(prefix + 'PlayIcon');
+    var wave = document.getElementById(prefix + 'Wave');
+    player.pause();
+    player.currentTime = 0;
+    player.src = src;
+    icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+    wave.classList.remove('playing');
+
+    playBtn.onclick = function () {
+      if (player.paused) {
+        player.play();
+        trackEvent('MiniPitchPlay', { moment: prefix });
+      } else {
+        player.pause();
+      }
+    };
+    player.onplay = function () {
+      icon.innerHTML = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
+      wave.classList.add('playing');
+    };
+    player.onpause = function () {
+      icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+      wave.classList.remove('playing');
+    };
+    player.onended = function () {
+      icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+      wave.classList.remove('playing');
+    };
+  }
+
+  function stopAudioCard(prefix) {
+    var player = document.getElementById(prefix + 'Player');
+    if (player) player.pause();
   }
 
   // Q3 define o perfil (variável em aberto, nunca testada com dado real).

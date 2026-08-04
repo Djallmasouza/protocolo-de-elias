@@ -428,6 +428,11 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   .offer-detail { font-size: 13px; color: var(--ink-soft); margin-bottom: 22px; }
   .guarantee-note { font-size: 13px; color: var(--gold-muted); text-align: center; margin-top: 18px; }
   .seals { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 18px; font-size: 11.5px; color: var(--ink-soft); opacity: 0.75; }
+  .payment-processor-badges { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; background: #fff; border-radius: 12px; padding: 12px 18px; margin: 16px auto 0; max-width: 420px; }
+  .ppb-item { display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; color: #333; white-space: nowrap; }
+  .ppb-item svg { flex-shrink: 0; }
+  .ppb-brand { font-family: Arial, sans-serif; letter-spacing: 0.5px; color: #111; }
+  .ppb-caption { text-align: center; font-size: 10.5px; color: var(--ink-soft); opacity: 0.6; margin-top: 8px; }
 
   .footer-note { font-size: 11px; color: rgba(250,247,242,0.35); text-align: center; margin-top: 28px; line-height: 1.6; }
 
@@ -839,12 +844,18 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       <p class="scratch-hint" id="scratchHint">👆 toque aqui pra ver seu desconto</p>
       <p class="offer-reinforcement" id="offerReinforcement">Você acabou de desbloquear esse valor. Ele não aparece de novo depois que o tempo abaixo terminar.</p>
       <p class="offer-detail">Guia digital + áudios de 7 dias, 10 a 15 minutos por dia. Acesso imediato. Uma única vez.</p>
-      <a href="https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7?payment=pix" class="btn btn-glow" id="ctaResultado" data-track="quiz-cta-result"><span>QUERO DESCANSAR EM DEUS</span><span class="btn-arrow">→</span></a>
+      <a href="https://pay.herospark.com/metodo-do-zimbreiro-536020" class="btn btn-glow" id="ctaResultado" data-track="quiz-cta-result"><span>QUERO DESCANSAR EM DEUS</span><span class="btn-arrow">→</span></a>
       <div class="seals">
         <span>Pagamento seguro</span>
         <span>Acesso pelo celular</span>
         <span>Entrega imediata</span>
       </div>
+      <div class="payment-processor-badges">
+        <span class="ppb-item ppb-brand">HEROSPARK</span>
+        <span class="ppb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Dados 100% Protegidos</span>
+        <span class="ppb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3.5v5.5c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V5.5L12 2z"></path><path d="M8.5 12l2.5 2.5 5-5"></path></svg>Compra 100% Segura</span>
+      </div>
+      <p class="ppb-caption">Pagamento processado com segurança por SPARKPAY by HeroSpark</p>
       <p class="guarantee-note">Garantia de 7 dias, incondicional. Sem pergunta, sem burocracia.</p>
     </div>
 
@@ -1354,8 +1365,8 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     return url.toString();
   }
 
-  var DISCOUNT_CHECKOUT_URL = 'https://checkout.payt.com.br/962077fdacfccfd7f1ae080eeecbade7?payment=pix';
-  var FULL_PRICE_CHECKOUT_URL = 'https://checkout.payt.com.br/9a8a6e0246a672d7b49c372278dfe755?payment=pix';
+  var DISCOUNT_CHECKOUT_URL = 'https://pay.herospark.com/metodo-do-zimbreiro-536020';
+  var FULL_PRICE_CHECKOUT_URL = 'https://pay.herospark.com/metodo-do-zimbreiro-536052';
   var COUNTDOWN_SECONDS = 15 * 60;
   var offerDeadline = null;
   var scratchRevealed = false;

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O Segundo Toque — Protocolo de Descanso | Pleno</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #FAF7F2;
+      --cream2: #F0E8D8;
+      --dark: #1C1208;
+      --dark2: #241A0C;
+      --gold: #C4973B;
+      --gold-light: #D4A94B;
+      --brown: #3A2810;
+      --muted: #8A7060;
+      --muted2: #6A5840;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--cream); min-height: 100vh; font-size: 16px; line-height: 1.7; }
+    .header { background: #100C06; border-bottom: 1px solid #2A1E10; padding: 16px 20px; text-align: center; position: sticky; top: 0; z-index: 100; }
+    .header-brand { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
+    .header-title { font-family: 'Lora', serif; font-size: 15px; color: var(--cream); font-weight: 600; }
+    .main { max-width: 640px; margin: 0 auto; padding: 32px 20px 80px; }
+    .day-eyebrow { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .day-title { font-family: 'Lora', serif; font-size: 30px; line-height: 1.2; color: var(--cream); margin-bottom: 6px; font-weight: 700; }
+    .day-subtitle { font-family: 'Lora', serif; font-style: italic; font-size: 15px; color: var(--muted); margin-bottom: 32px; }
+    .section-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; font-weight: 700; margin-top: 28px; }
+    .reflexao-text { color: #E8DDD0; font-size: 17px; line-height: 1.85; margin-bottom: 8px; }
+    .reflexao-text p { margin-bottom: 14px; }
+    .reflexao-text p:last-child { margin-bottom: 0; }
+    .verse-box { background: #100C06; border: 1px solid #2A1E10; border-left: 3px solid var(--gold); border-radius: 6px; padding: 20px; margin-bottom: 8px; }
+    .verse-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; font-weight: 600; }
+    .verse-text { font-family: 'Lora', serif; font-style: italic; font-size: 18px; line-height: 1.75; color: #EDE0C8; }
+    .verse-ref { font-size: 12px; color: var(--muted); margin-top: 10px; }
+    .pergunta-box { background: rgba(196,151,59,0.06); border: 1px solid rgba(196,151,59,0.2); border-radius: 6px; padding: 18px 20px; margin-bottom: 8px; }
+    .pergunta-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; font-weight: 600; }
+    .pergunta-text { font-size: 16px; font-weight: 500; color: #F0E8D8; line-height: 1.65; }
+    .audio-box { background: linear-gradient(135deg, #1C1208 0%, #241A0C 100%); border: 1px solid #3A2810; border-radius: 8px; padding: 22px 20px; margin-bottom: 8px; text-align: center; }
+    .audio-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; font-weight: 600; }
+    .audio-sublabel { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+    .audio-box audio { width: 100%; }
+    .passo-box { background: #100C06; border: 1px solid #2A1E10; border-radius: 6px; padding: 20px; margin-bottom: 16px; }
+    .passo-num { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; font-weight: 600; }
+    .passo-title { font-family: 'Lora', serif; font-size: 20px; color: var(--cream); margin-bottom: 10px; font-weight: 700; }
+    .passo-text { color: #E8DDD0; font-size: 16px; line-height: 1.75; }
+    .oracao-box { background: linear-gradient(135deg, #1C1208 0%, #241A0C 100%); border: 1px solid #3A2810; border-radius: 8px; padding: 24px 20px; margin-bottom: 8px; }
+    .oracao-text { font-size: 16px; line-height: 1.85; color: #EDE0C8; font-style: italic; }
+    .complete-btn { width: 100%; padding: 18px; background: var(--gold); color: var(--dark); border: none; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; margin-top: 28px; }
+    .complete-btn:hover { background: var(--gold-light); }
+    .complete-btn:disabled { background: #3A2810; color: var(--muted); cursor: default; }
+    .divider { width: 40px; height: 2px; background: var(--gold); margin: 28px 0; opacity: 0.5; }
+    .final-badge { text-align: center; padding: 32px 20px; background: #100C06; border: 1px solid #3A2810; border-radius: 8px; margin-top: 20px; }
+    .final-icon { font-size: 40px; margin-bottom: 12px; }
+    .final-title { font-family: 'Lora', serif; font-size: 20px; color: var(--gold); margin-bottom: 8px; }
+    .final-text { color: var(--muted); font-size: 14px; line-height: 1.7; }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--gold); color: var(--dark); padding: 12px 24px; border-radius: 40px; font-size: 13px; font-weight: 700; transition: transform 0.3s ease; z-index: 200; white-space: nowrap; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    @media (max-width: 480px) { .day-title { font-size: 25px; } .verse-text { font-size: 15px; } }
+  </style>
+</head>
+<body>
+<div class="header">
+  <p class="header-brand">Pleno</p>
+  <p class="header-title">O Segundo Toque — Protocolo de Descanso</p>
+</div>
+<div class="main">
+
+  <p class="day-eyebrow">Um protocolo de descanso</p>
+  <h1 class="day-title">O Segundo Toque</h1>
+  <p class="day-subtitle">O protocolo de 10 minutos para dormir sem culpa</p>
+
+  <p class="section-title">Por que a culpa aparece justamente quando você decide descansar?</p>
+  <div class="reflexao-text">
+    <p>Você passou anos aprendendo que parar é fraqueza. Que descansar é preguiça disfarçada. Então no exato momento em que você decide parar, uma voz aparece: "você deveria estar fazendo mais."</p>
+    <p>Essa voz não é Deus. É o cansaço tentando justificar a exaustão.</p>
+  </div>
+
+  <p class="section-title">O que aconteceu na primeira noite de Elias</p>
+  <div class="reflexao-text">
+    <p>Em 1 Reis 19, Elias chegou num ponto que não aguentava mais. Se jogou debaixo de uma árvore e disse que já bastava.</p>
+    <p>E a primeira coisa que Deus fez não foi cobrar oração, fé ou serviço. Um anjo tocou nele e disse só isso: levanta e come. Elias comeu, e dormiu de novo. Duas vezes.</p>
+    <p>Antes de qualquer palavra espiritual, Deus cuidou do corpo dele primeiro.</p>
+  </div>
+
+  <p class="section-title">O erro que quase toda mulher cristã comete</p>
+  <div class="reflexao-text">
+    <p>Ela chama culpa de fidelidade.</p>
+    <p>Acha que se sentir mal por descansar é prova de que leva a fé a sério. Mas Elias, um dos maiores profetas da Bíblia, descansou antes de qualquer palavra de Deus. Se ele precisou, você também pode.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <p class="section-title">Ouça enquanto pratica</p>
+  <div class="audio-box">
+    <p class="audio-label">Áudio guiado</p>
+    <p class="audio-sublabel">Pra ouvir enquanto faz os 4 passos abaixo</p>
+    <audio controls preload="none">
+      <source src="assets/audio/segundo-toque-audio.mp3" type="audio/mpeg">
+      Seu navegador não suporta áudio. Baixe o arquivo pra ouvir.
+    </audio>
+  </div>
+
+  <p class="section-title">O Ritual da Primeira Noite</p>
+  <p class="reflexao-text" style="margin-bottom: 20px;">Quatro passos simples, pra fazer ainda hoje, antes de dormir.</p>
+
+  <div class="passo-box">
+    <p class="passo-num">Passo 1</p>
+    <p class="passo-title">Desligar</p>
+    <p class="passo-text">Celular na mesa, longe da cama. Luz baixa. Você não precisa resolver mais nada hoje.</p>
+  </div>
+
+  <div class="passo-box">
+    <p class="passo-num">Passo 2</p>
+    <p class="passo-title">Respiração</p>
+    <p class="passo-text">Três respirações lentas. Inspira contando até 4, segura até 4, solta até 6. A cada respiração, solta um pouco dos ombros.</p>
+  </div>
+
+  <div class="passo-box">
+    <p class="passo-num">Passo 3</p>
+    <p class="passo-title">Leitura de um único trecho</p>
+    <p class="passo-text" style="margin-bottom: 14px;">Leia em voz baixa:</p>
+    <div class="verse-box" style="margin-bottom: 0;">
+      <p class="verse-text">"Levanta e come, porque o caminho é longo demais para ti."</p>
+      <p class="verse-ref">1 Reis 19:7</p>
+    </div>
+    <p class="passo-text" style="margin-top: 14px;">Não precisa interpretar. Só deixar a frase existir.</p>
+  </div>
+
+  <div class="passo-box">
+    <p class="passo-num">Passo 4</p>
+    <p class="passo-title">Oração guiada</p>
+    <p class="passo-text" style="margin-bottom: 14px;">Fale baixinho, ou só no pensamento:</p>
+    <div class="oracao-box" style="margin-bottom: 0;">
+      <p class="oracao-text">"Deus, hoje eu não vou provar nada. Eu vou descansar, do jeito que o senhor deixou Elias descansar. Amanhã eu continuo. Hoje, eu paro."</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <p class="section-title">Antes de dormir, uma pergunta</p>
+  <div class="pergunta-box">
+    <p class="pergunta-text">"Se Deus permitiu que Elias descansasse, por que você acredita que precisa continuar carregando esse peso?"</p>
+  </div>
+
+  <div class="final-badge">
+    <div class="final-icon">🌙</div>
+    <p class="final-title">Feche os olhos. E durma.</p>
+    <p class="final-text">Sem culpa. Sem prova. Só descanso.</p>
+  </div>
+
+  <button class="complete-btn" id="complete-btn" onclick="completeRitual()">Concluir o ritual de hoje</button>
+
+</div>
+<div class="toast" id="toast"></div>
+<script>
+  const STORAGE_KEY = 'segundo_toque_progress';
+  function completeRitual() {
+    localStorage.setItem(STORAGE_KEY, 'true');
+    const btn = document.getElementById('complete-btn');
+    btn.disabled = true;
+    btn.textContent = '✓ Ritual concluído';
+    showToast('Descanse bem. 🌙');
+  }
+  function showToast(msg) {
+    const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+  if (localStorage.getItem(STORAGE_KEY) === 'true') {
+    const btn = document.getElementById('complete-btn');
+    if (btn) { btn.disabled = true; btn.textContent = '✓ Ritual concluído'; }
+  }
+</script>
+</body>
+</html>

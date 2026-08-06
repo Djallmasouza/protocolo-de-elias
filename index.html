@@ -1571,9 +1571,19 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 
   var DISCOUNT_CHECKOUT_URL = 'https://pay.herospark.com/metodo-do-zimbreiro-536020';
   var FULL_PRICE_CHECKOUT_URL = 'https://pay.herospark.com/metodo-do-zimbreiro-536052';
+  var DISCOUNT_PRICE_BRL = 17.90;
+  var FULL_PRICE_BRL = 47.90;
   var COUNTDOWN_SECONDS = 15 * 60;
   var offerDeadline = null;
   var scratchRevealed = false;
+
+  // Preço real no momento do clique — usa o mesmo critério do contador
+  // (deadline passou = valor cheio), pra bater com o link/preço que a
+  // pessoa está vendo na tela naquele instante.
+  function currentOfferPrice() {
+    if (offerDeadline && Date.now() >= offerDeadline) return FULL_PRICE_BRL;
+    return DISCOUNT_PRICE_BRL;
+  }
 
   // Persistência: se a pessoa sair (fecha a aba, perde o wifi, troca de app)
   // e voltar, ela retoma de onde parou em vez de reiniciar do zero — sair no
@@ -1847,11 +1857,35 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     document.getElementById('resultDateAnchor').textContent = buildDateAnchor();
     document.getElementById('ctaResultadoText').textContent = (CTA_BY_FEELING[perfil] && CTA_BY_FEELING[perfil][answers.q6]) || 'QUERO DESCANSAR EM DEUS';
 
+    // ViewContent padrão da Meta — dispara quando a oferta (preço) fica
+    // visível pra pessoa, não só o evento customizado. Sem isso o
+    // algoritmo não tem sinal de "chegou na oferta" pra otimizar campanha,
+    // só o PageView genérico do início.
+    if (window.fbq) {
+      fbq('track', 'ViewContent', {
+        content_name: 'Método do Zimbreiro',
+        content_type: 'product',
+        value: DISCOUNT_PRICE_BRL,
+        currency: 'BRL',
+      });
+    }
+
     // Passthrough de fbclid/UTM + perfil pro checkout, mesma lógica da LP principal
     var link = document.getElementById('ctaResultado');
     link.href = withPassthrough(DISCOUNT_CHECKOUT_URL);
     link.addEventListener('click', function () {
       trackEvent('CTAResultClick', { perfil: perfil });
+      // InitiateCheckout padrão da Meta — o CAPI do webhook já manda o
+      // Purchase quando a venda confirma, mas sem esse evento client-side
+      // o algoritmo não enxerga quem chegou no checkout e não converteu,
+      // perdendo o sinal mais forte pra otimizar/remarketing.
+      if (window.fbq) {
+        fbq('track', 'InitiateCheckout', {
+          content_name: 'Método do Zimbreiro',
+          value: currentOfferPrice(),
+          currency: 'BRL',
+        });
+      }
     });
   }
 

@@ -1006,6 +1006,10 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 
   function startQuiz() {
     trackEvent('QuizStart', {});
+    // Search padrão da Meta — a pessoa começa a buscar a resposta certa
+    // pra ela através do quiz, mesmo sentido de "busca" que o evento
+    // representa noutros funis (aqui não tem barra de busca literal).
+    if (window.fbq) fbq('track', 'Search', { content_name: 'Método do Zimbreiro' });
     showScreen('q1');
     updateProgress(1);
     startBgMusic();
@@ -1186,6 +1190,16 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     initAxes();
     renderTrustGraph(computeAxes(answers));
     trackEvent('QuizComplete', { perfil: perfil });
+    // Lead padrão da Meta — terminou o diagnóstico e chegou no resultado
+    // personalizado. content_category carrega o perfil (lidera-cansada/
+    // esposa-de-lider/carrega-o-piano), pendente de usar pra segmentar
+    // audiência por personalidade assim que houver verba/volume pra isso.
+    if (window.fbq) {
+      fbq('track', 'Lead', {
+        content_name: 'Método do Zimbreiro',
+        content_category: perfil,
+      });
+    }
     armBackRedirect();
     armOfferMusicObserver();
   }
@@ -1790,6 +1804,17 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       finished = true;
       scratchRevealed = true;
       trackEvent('ScratchRevealed', { perfil: perfil });
+      // AddToWishlist padrão da Meta — revelou o desconto, marcou interesse
+      // real na oferta, mas ainda não clicou pra comprar (isso é AddToCart,
+      // no clique do CTA). Sinal de intenção intermediário entre ver a
+      // oferta (ViewContent) e decidir comprar (AddToCart).
+      if (window.fbq) {
+        fbq('track', 'AddToWishlist', {
+          content_name: 'Método do Zimbreiro',
+          value: DISCOUNT_PRICE_BRL,
+          currency: 'BRL',
+        });
+      }
       saveState();
       wrap.classList.remove('invite');
       if (hint) hint.style.display = 'none';
@@ -1875,12 +1900,13 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     link.href = withPassthrough(DISCOUNT_CHECKOUT_URL);
     link.addEventListener('click', function () {
       trackEvent('CTAResultClick', { perfil: perfil });
-      // InitiateCheckout padrão da Meta — o CAPI do webhook já manda o
-      // Purchase quando a venda confirma, mas sem esse evento client-side
-      // o algoritmo não enxerga quem chegou no checkout e não converteu,
-      // perdendo o sinal mais forte pra otimizar/remarketing.
+      // AddToCart padrão da Meta, não InitiateCheckout — o quiz só expressa
+      // intenção de compra aqui, quem chegou no checkout de verdade (domínio
+      // pay.herospark.com) é a HeroSpark, via o Pixel configurado lá dentro
+      // ("Pixel de Rastreamento" da oferta, pendência separada). Disparar
+      // InitiateCheckout no nosso domínio duplicaria o evento errado.
       if (window.fbq) {
-        fbq('track', 'InitiateCheckout', {
+        fbq('track', 'AddToCart', {
           content_name: 'Método do Zimbreiro',
           value: currentOfferPrice(),
           currency: 'BRL',

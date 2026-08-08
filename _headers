@@ -1,0 +1,8 @@
+# RISK-3 (auditoria 08/08/2026, docs/plans/2026-08-08-auditoria-csp-ratelimit-conteudo.md
+# no repo acesso-pleno-crm): os PDFs do Zimbreiro respondem 200 sem
+# autenticação e estavam indexáveis pelo Google (sem robots.txt, sem
+# noindex). Isso reduz DESCOBERTA/indexação — não é controle de acesso.
+# Quem já tem a URL (link legítimo enviado por e-mail) continua acessando
+# normalmente; só para de aparecer em busca.
+/assets/pdfs/*
+  X-Robots-Tag: noindex, nofollow

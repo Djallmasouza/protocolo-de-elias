@@ -1862,6 +1862,14 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
         finishReveal();
       }
     });
+
+    // Auto-revela em 2,5s mesmo sem interacao - dado real (GA4, 07-11/08/2026)
+    // mostrou que em 4 de 5 dias ninguem raspa nem toca, e a oferta nunca
+    // aparece pra quem ja completou o quiz. Quem interagir revela antes;
+    // quem nao interagir revela sozinho, sem perder a venda por causa do gesto.
+    setTimeout(function () {
+      if (!finished) finishReveal();
+    }, 2500);
   }
 
   function renderResult() {

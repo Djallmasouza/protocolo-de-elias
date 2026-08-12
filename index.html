@@ -1733,81 +1733,21 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       return;
     }
 
-    canvas.style.display = '';
-    canvas.style.opacity = '';
-    canvas.style.transform = '';
-    wrap.classList.add('invite');
-
-    var ctx = canvas.getContext('2d');
-    var dpr = window.devicePixelRatio || 1;
-    var w = wrap.offsetWidth;
-    var h = wrap.offsetHeight;
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    canvas.style.width = w + 'px';
-    canvas.style.height = h + 'px';
-    ctx.scale(dpr, dpr);
-
-    function paintCoating() {
-      ctx.globalCompositeOperation = 'source-over';
-      var grad = ctx.createLinearGradient(0, 0, w, h);
-      grad.addColorStop(0, '#8a6a2a');
-      grad.addColorStop(1, '#5c4415');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, w, h);
-      ctx.fillStyle = '#FAF7F2';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.font = '26px sans-serif';
-      ctx.fillText('🎁', w / 2, h / 2 - 42);
-      ctx.font = '700 17px Inter, sans-serif';
-      ctx.fillText('Raspe aqui e revele', w / 2, h / 2 - 6);
-      ctx.fillText('seu desconto real', w / 2, h / 2 + 20);
-      ctx.font = '600 13px Inter, sans-serif';
-      ctx.fillStyle = 'rgba(250,247,242,0.8)';
-      ctx.fillText('(ou toque para abrir)', w / 2, h / 2 + 52);
-    }
-    paintCoating();
-
-    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var drawing = false;
-    var moved = false;
-    var startX, startY;
     var finished = false;
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function getPos(e) {
-      var rect = canvas.getBoundingClientRect();
-      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    }
-
-    function erase(x, y) {
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.beginPath();
-      ctx.arc(x, y, 22, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    function checkThreshold() {
-      var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-      var total = 0, cleared = 0;
-      for (var i = 3; i < data.length; i += 4 * 37) {
-        total++;
-        if (data[i] < 80) cleared++;
-      }
-      if (total > 0 && cleared / total > 0.35) {
-        finishReveal();
-      }
-    }
-
-    function finishReveal() {
+    // Fail-open: revelacao minima que nao depende de nada do canvas. Existe
+    // pra ser chamada tanto pelo timeout normal (ninguem interagiu) quanto
+    // pelo catch abaixo (canvas quebrou). Dado real 12/08/2026 (Clarity):
+    // erro de script so acontece em webview do Instagram (9,4%) e Facebook
+    // (5,1%) - navegador de verdade (Chrome Mobile) teve 0%. Como 85% do
+    // trafego pago chega por esses webviews, a oferta nao pode depender do
+    // canvas funcionar pra aparecer.
+    function revealOfferMinimo(motivo) {
       if (finished) return;
       finished = true;
       scratchRevealed = true;
-      trackEvent('ScratchRevealed', { perfil: perfil });
-      // AddToWishlist padrão da Meta — revelou o desconto, marcou interesse
-      // real na oferta, mas ainda não clicou pra comprar (isso é AddToCart,
-      // no clique do CTA). Sinal de intenção intermediário entre ver a
-      // oferta (ViewContent) e decidir comprar (AddToCart).
+      trackEvent('ScratchRevealed', { perfil: perfil, motivo: motivo });
       if (window.fbq) {
         fbq('track', 'AddToWishlist', {
           content_name: 'Método do Zimbreiro',
@@ -1818,58 +1758,158 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       saveState();
       wrap.classList.remove('invite');
       if (hint) hint.style.display = 'none';
+      canvas.style.display = 'none';
       document.getElementById('offerReinforcement').classList.add('show');
-      if (reducedMotion) {
-        canvas.style.display = 'none';
-      } else {
-        canvas.style.transition = 'opacity 380ms ease, transform 380ms ease';
-        canvas.style.opacity = '0';
-        canvas.style.transform = 'scale(1.03)';
-        setTimeout(function () { canvas.style.display = 'none'; }, 400);
-      }
       startCountdown(perfil);
     }
 
-    function onDown(e) {
-      if (finished) return;
-      drawing = true;
-      moved = false;
-      var p = getPos(e);
-      startX = p.x; startY = p.y;
-      erase(p.x, p.y);
-    }
-    function onMove(e) {
-      if (!drawing || finished) return;
-      var p = getPos(e);
-      if (Math.abs(p.x - startX) > 4 || Math.abs(p.y - startY) > 4) moved = true;
-      erase(p.x, p.y);
-      checkThreshold();
-    }
-    function onUp() {
-      if (finished) return;
-      if (drawing && !moved) {
-        finishReveal();
-      }
-      drawing = false;
-    }
-
-    canvas.addEventListener('pointerdown', onDown);
-    canvas.addEventListener('pointermove', onMove);
-    window.addEventListener('pointerup', onUp);
-    canvas.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        finishReveal();
-      }
-    });
-
-    // Auto-revela em 2,5s mesmo sem interacao - dado real (GA4, 07-11/08/2026)
-    // mostrou que em 4 de 5 dias ninguem raspa nem toca, e a oferta nunca
-    // aparece pra quem ja completou o quiz. Quem interagir revela antes;
-    // quem nao interagir revela sozinho, sem perder a venda por causa do gesto.
+    // Fallback obrigatorio, armado antes de qualquer operacao de canvas.
+    // Se a experiencia da raspadinha nunca inicializar (canvas quebrou e
+    // caiu no catch abaixo, que ja chama revealOfferMinimo direto), este
+    // timer so confirma o estado (finished ja true, nao faz nada de novo).
+    // Se o canvas funcionar mas a pessoa nao interagir, e este timer quem
+    // revela - mesmo timing de antes (2,5s), nao mudou.
     setTimeout(function () {
-      if (!finished) finishReveal();
+      if (!finished) revealOfferMinimo('timeout_sem_interacao');
     }, 2500);
+
+    try {
+      canvas.style.display = '';
+      canvas.style.opacity = '';
+      canvas.style.transform = '';
+      wrap.classList.add('invite');
+
+      var ctx = canvas.getContext('2d');
+      var dpr = window.devicePixelRatio || 1;
+      var w = wrap.offsetWidth;
+      var h = wrap.offsetHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx.scale(dpr, dpr);
+
+      var paintCoating = function () {
+        ctx.globalCompositeOperation = 'source-over';
+        var grad = ctx.createLinearGradient(0, 0, w, h);
+        grad.addColorStop(0, '#8a6a2a');
+        grad.addColorStop(1, '#5c4415');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#FAF7F2';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = '26px sans-serif';
+        ctx.fillText('🎁', w / 2, h / 2 - 42);
+        ctx.font = '700 17px Inter, sans-serif';
+        ctx.fillText('Raspe aqui e revele', w / 2, h / 2 - 6);
+        ctx.fillText('seu desconto real', w / 2, h / 2 + 20);
+        ctx.font = '600 13px Inter, sans-serif';
+        ctx.fillStyle = 'rgba(250,247,242,0.8)';
+        ctx.fillText('(ou toque para abrir)', w / 2, h / 2 + 52);
+      };
+      paintCoating();
+
+      var drawing = false;
+      var moved = false;
+      var startX, startY;
+
+      var getPos = function (e) {
+        var rect = canvas.getBoundingClientRect();
+        return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      };
+
+      var erase = function (x, y) {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 22, 0, Math.PI * 2);
+        ctx.fill();
+      };
+
+      var checkThreshold = function () {
+        var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        var total = 0, cleared = 0;
+        for (var i = 3; i < data.length; i += 4 * 37) {
+          total++;
+          if (data[i] < 80) cleared++;
+        }
+        if (total > 0 && cleared / total > 0.35) {
+          finishInteractive();
+        }
+      };
+
+      // Versao completa de revelacao, usada quando o canvas funcionou e a
+      // pessoa interagiu de verdade (raspou/tocou/Enter). Faz tudo que
+      // revealOfferMinimo faz, mais a animacao de saida do canvas.
+      var finishInteractive = function () {
+        if (finished) return;
+        finished = true;
+        scratchRevealed = true;
+        trackEvent('ScratchRevealed', { perfil: perfil, motivo: 'interacao' });
+        if (window.fbq) {
+          fbq('track', 'AddToWishlist', {
+            content_name: 'Método do Zimbreiro',
+            value: DISCOUNT_PRICE_BRL,
+            currency: 'BRL',
+          });
+        }
+        saveState();
+        wrap.classList.remove('invite');
+        if (hint) hint.style.display = 'none';
+        document.getElementById('offerReinforcement').classList.add('show');
+        if (reducedMotion) {
+          canvas.style.display = 'none';
+        } else {
+          canvas.style.transition = 'opacity 380ms ease, transform 380ms ease';
+          canvas.style.opacity = '0';
+          canvas.style.transform = 'scale(1.03)';
+          setTimeout(function () { canvas.style.display = 'none'; }, 400);
+        }
+        startCountdown(perfil);
+      };
+
+      var onDown = function (e) {
+        if (finished) return;
+        drawing = true;
+        moved = false;
+        var p = getPos(e);
+        startX = p.x; startY = p.y;
+        erase(p.x, p.y);
+      };
+      var onMove = function (e) {
+        if (!drawing || finished) return;
+        var p = getPos(e);
+        if (Math.abs(p.x - startX) > 4 || Math.abs(p.y - startY) > 4) moved = true;
+        erase(p.x, p.y);
+        checkThreshold();
+      };
+      var onUp = function () {
+        if (finished) return;
+        if (drawing && !moved) {
+          finishInteractive();
+        }
+        drawing = false;
+      };
+
+      canvas.addEventListener('pointerdown', onDown);
+      canvas.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onUp);
+      canvas.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          finishInteractive();
+        }
+      });
+    } catch (canvasErr) {
+      // Canvas quebrou na inicializacao (comum em webview do Instagram/
+      // Facebook). Nao espera o timeout de 2,5s - revela na hora, e loga
+      // separado do timeout normal pra sabermos quantas vezes isso acontece.
+      trackEvent('ScratchCanvasError', {
+        perfil: perfil,
+        error: String((canvasErr && canvasErr.message) || canvasErr),
+      });
+      revealOfferMinimo('erro_canvas');
+    }
   }
 
   function renderResult() {

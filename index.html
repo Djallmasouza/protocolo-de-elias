@@ -655,7 +655,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 <!-- PERGUNTAS -->
 <section class="screen" data-screen="q1">
   <div class="container">
-    <p class="q-label">Pergunta 1 de 6</p>
+    <p class="q-label">Vamos começar por você</p>
     <h2 class="q-title">Há quanto tempo você serve na igreja sem uma pausa de verdade?</h2>
     <p class="q-micro">Sem resposta certa. Essa primeira resposta já começa a moldar sua leitura.</p>
     <div class="q-options">
@@ -1004,12 +1004,22 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     if (window.gtag) gtag('event', name, params);
   }
 
+  // Teste H1b (18/08/2026, pré-registrado em
+  // 09-INFRA/2026-08-18-diff-teste-progresso-oculto.md): esconde o
+  // rótulo/barra de progresso só na 1ª tela, pra isolar a hipótese de que
+  // ver "Pergunta 1 de 6" imediatamente após "leitura de 1 minuto" quebra
+  // expectativa e derruba QuizStart->1ª resposta (hoje ~50% de abandono
+  // nessa transição). Não muda nenhuma pergunta, ordem, peso ou cálculo.
+  var QUIZ_TEST_VARIANT = 'hide_progress_q1_v1';
+
   function startQuiz() {
-    trackEvent('QuizStart', {});
+    trackEvent('QuizStart', { variant: QUIZ_TEST_VARIANT });
     // Search padrão da Meta — a pessoa começa a buscar a resposta certa
     // pra ela através do quiz, mesmo sentido de "busca" que o evento
     // representa noutros funis (aqui não tem barra de busca literal).
     if (window.fbq) fbq('track', 'Search', { content_name: 'Método do Zimbreiro' });
+    document.querySelector('.progress-wrap').style.display = 'none';
+    document.querySelector('.progress-percent').style.display = 'none';
     showScreen('q1');
     updateProgress(1);
     startBgMusic();
@@ -1113,7 +1123,12 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   function answer(qNum, opt) {
     answers['q' + qNum] = opt;
     saveState();
-    trackEvent('QuizAnswer', { q: qNum, r: opt });
+    trackEvent('QuizAnswer', { q: qNum, r: opt, variant: QUIZ_TEST_VARIANT });
+
+    if (qNum === 1) {
+      document.querySelector('.progress-wrap').style.display = '';
+      document.querySelector('.progress-percent').style.display = '';
+    }
 
     if (qNum === 3) {
       var perfil = getPerfil();
@@ -1643,6 +1658,10 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 
     var answeredCount = Object.keys(answers).length;
     if (answeredCount === 0) return;
+
+    // Já passou da 1ª tela (teste H1b) — reexibe a barra de progresso.
+    document.querySelector('.progress-wrap').style.display = '';
+    document.querySelector('.progress-percent').style.display = '';
 
     if (answeredCount >= 6) {
       if (answers.q3) personalizeQuestions(getPerfil());

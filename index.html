@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Você não desistiu de servir. Só esqueceu como parar. | Pleno</title>
-<meta name="description" content="Um teste rápido de 6 perguntas pra você nomear o que está por trás do seu esgotamento em servir.">
+<meta name="description" content="Um teste rápido de 5 perguntas pra você nomear o que está por trás do seu esgotamento em servir.">
 
 <!-- 23/07/2026 (construído em paralelo ao teste de orçamento em andamento, não
      ligado a nenhuma campanha ainda). Reaproveita a estrutura técnica provada
@@ -669,7 +669,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 
 <section class="screen" data-screen="q2">
   <div class="container">
-    <p class="q-label">Pergunta 2 de 6</p>
+    <p class="q-label">Pergunta 2 de 5</p>
     <h2 class="q-title">Qual dessas frases mais parece com você?</h2>
     <p class="q-micro">Escolha a que mais dói de admitir. Isso ajuda a mirar exatamente onde sua leitura precisa chegar.</p>
     <div class="q-options">
@@ -683,7 +683,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 
 <section class="screen" data-screen="q3">
   <div class="container">
-    <p class="q-label">Pergunta 3 de 6</p>
+    <p class="q-label">Pergunta 3 de 5</p>
     <h2 class="q-title">Qual dessas te descreve melhor hoje?</h2>
     <p class="q-micro">Isso vai calibrar a leitura que você recebe no final.</p>
     <div class="q-options">
@@ -718,7 +718,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 
 <section class="screen" data-screen="q4">
   <div class="container">
-    <p class="q-label">Pergunta 4 de 6</p>
+    <p class="q-label">Pergunta 4 de 5</p>
     <h2 class="q-title" id="q4Title"></h2>
     <p class="q-micro" id="q4Micro"></p>
     <div class="q-options">
@@ -732,7 +732,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 
 <section class="screen" data-screen="q5">
   <div class="container">
-    <p class="q-label">Pergunta 5 de 6</p>
+    <p class="q-label">Pergunta 5 de 5</p>
     <h2 class="q-title" id="q5Title"></h2>
     <p class="q-micro" id="q5Micro"></p>
     <div class="q-options">
@@ -744,19 +744,13 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   </div>
 </section>
 
-<section class="screen" data-screen="q6">
-  <div class="container">
-    <p class="q-label">Pergunta 6 de 6</p>
-    <h2 class="q-title" id="q6Title"></h2>
-    <p class="q-micro" id="q6Micro"></p>
-    <div class="q-options">
-      <button class="q-option" id="q6OptA" onclick="answer(6,'A')"></button>
-      <button class="q-option" id="q6OptB" onclick="answer(6,'B')"></button>
-      <button class="q-option" id="q6OptC" onclick="answer(6,'C')"></button>
-      <button class="q-option" id="q6OptD" onclick="answer(6,'D')"></button>
-    </div>
-  </div>
-</section>
+<!-- Q6 removida em 26/08/2026: única função era personalizar o texto do
+     CTA (CTA_BY_FEELING); auditoria confirmou que nenhum bloco da
+     ResultView usa a resposta dela, e o custo de um clique a mais não se
+     justificava sem função própria. Ver 09-INFRA/2026-08-26 (crm) e
+     05-COPY/estrategia-oferta/2026-08-26-resultview-copy-candidata-auditoria.md
+     no repo da Empresa. -->
+
 
 <!-- LOADING -->
 <section class="screen" data-screen="loading">
@@ -800,25 +794,38 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     <p class="result-tag" id="resultTag"></p>
     <h2 id="resultHeadline"></h2>
 
-    <p class="commitment-line">Você já respondeu com sinceridade a 6 perguntas sobre um peso que carrega há tempo. Isso já é o começo de nomear o que pesa.</p>
+    <!-- ResultView redesenhada 26/08/2026 — cadeia Q1→Q2→Q4→diagnóstico→
+         Q5→Elias→reframe→antes/depois→transição, ver auditoria em
+         05-COPY/estrategia-oferta/2026-08-26-resultview-copy-candidata-auditoria.md
+         no repo da Empresa. Q6 removida (ver comentário no lugar da antiga
+         seção q6). -->
+    <div class="result-block">
+      <p id="resultQ1"></p>
+      <p id="resultQ2Callback"></p>
+      <p id="resultQ4Gatilho"></p>
+    </div>
 
     <div class="result-block">
-      <p id="resultP1"></p>
-      <p id="resultP2"></p>
-      <p class="result-highlight" id="resultP3"></p>
+      <p id="resultDiagnostico"></p>
+      <p class="result-highlight" id="resultDiagnosticoPivo"></p>
+    </div>
+
+    <p class="result-highlight" id="resultObjection" style="margin-bottom: 24px;"></p>
+
+    <p class="bridge" id="resultElias"></p>
+
+    <div class="result-block">
+      <p id="resultReframe"></p>
+      <p class="result-highlight" id="resultReframePivo"></p>
     </div>
 
     <div class="pain-deepening">
       <p id="resultPD1"></p>
       <p id="resultPD2"></p>
-      <p id="resultPD3"></p>
+      <p class="result-highlight" id="resultPD3"></p>
     </div>
 
     <p class="result-highlight" id="resultNextStep" style="margin-bottom: 24px;"></p>
-
-    <p class="result-highlight" id="resultObjection" style="margin-bottom: 24px;"></p>
-
-    <p class="bridge">Isso já é um começo. Mas pra sustentar essa pausa além de hoje, o Método do Zimbreiro existe exatamente pra isso: aprender a parar sem sentir que está falhando com Deus. O mesmo caminho que Ele usou com Elias: primeiro o descanso debaixo do zimbreiro, depois a caverna onde ele finalmente ouviu a voz mansa, em 1 Reis 19.</p>
 
     <p class="bridge" id="resultDateAnchor"></p>
 
@@ -838,7 +845,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
         <div class="id-axis-label"><span>Prontidão para o Método</span><span class="id-axis-value" id="axisValue2">0%</span></div>
         <div class="id-axis-track"><div class="id-axis-fill" id="axisFill2"></div></div>
       </div>
-      <p class="id-panel-note">Calculado a partir das suas próprias respostas nas 6 perguntas, não é um diagnóstico clínico.</p>
+      <p class="id-panel-note">Calculado a partir das suas próprias respostas nas 5 perguntas, não é um diagnóstico clínico.</p>
     </div>
 
     <div class="trust-graph" id="trustGraph">
@@ -906,6 +913,8 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       Compartilhar minha leitura
     </button>
     <p class="download-hint">No celular abre o menu de compartilhar (Instagram, WhatsApp); no computador baixa a imagem</p>
+
+    <p class="bridge" id="resultTransicaoOferta"></p>
 
     <div class="presell-block">
       <p id="resultPresell"></p>
@@ -982,7 +991,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
 <script>
   var TOTAL_SCREENS = 8; // intro + 6 perguntas + loading (resultado fora da barra)
   var answers = {};
-  var screens = ['intro','q1','q2','q3','audioMid','q4','q5','q6','loading','audioPre','result'];
+  var screens = ['intro','q1','q2','q3','audioMid','q4','q5','loading','audioPre','result'];
   var currentIndex = 0;
 
   function showScreen(name) {
@@ -993,7 +1002,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   }
 
   function updateProgress(qNum) {
-    var pct = Math.round((qNum / 6) * 100);
+    var pct = Math.round((qNum / 5) * 100);
     document.getElementById('progressBar').style.width = pct + '%';
     document.getElementById('progressPercent').textContent = pct + '%';
   }
@@ -1004,13 +1013,18 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     if (window.gtag) gtag('event', name, params);
   }
 
-  // Teste H1b (18/08/2026, pré-registrado em
-  // 09-INFRA/2026-08-18-diff-teste-progresso-oculto.md): esconde o
-  // rótulo/barra de progresso só na 1ª tela, pra isolar a hipótese de que
-  // ver "Pergunta 1 de 6" imediatamente após "leitura de 1 minuto" quebra
-  // expectativa e derruba QuizStart->1ª resposta (hoje ~50% de abandono
-  // nessa transição). Não muda nenhuma pergunta, ordem, peso ou cálculo.
-  var QUIZ_TEST_VARIANT = 'hide_progress_q1_v1';
+  // Versão corrente do quiz, presente em QuizStart/QuizAnswer/QuizComplete/
+  // CTAResultClick — permite separar antes/depois sem adivinhar por
+  // timestamp de deploy. Histórico: 'hide_progress_q1_v1' (18/08/2026,
+  // esconde progresso só na 1ª tela). Atualizado em 26/08/2026 pra
+  // 'quiz_argument_v2_20260826': Q6 removida, ResultView reconstruída como
+  // cadeia argumentativa Q1→Q2→Q4→diagnóstico→Q5→Elias→reframe→antes-
+  // depois→transição, com o desejo de Q2 evoluindo através do argumento
+  // (não mais callback isolado). Ver
+  // 05-COPY/estrategia-oferta/2026-08-26-resultview-copy-candidata-auditoria.md
+  // no repo da Empresa. O comportamento de esconder progresso na 1ª tela
+  // (linhas abaixo) continua ativo, não foi revertido.
+  var QUIZ_TEST_VARIANT = 'quiz_argument_v2_20260826';
 
   function startQuiz() {
     trackEvent('QuizStart', { variant: QUIZ_TEST_VARIANT });
@@ -1139,11 +1153,11 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
       return;
     }
 
-    if (qNum < 6) {
+    if (qNum < 5) {
       showScreen('q' + (qNum + 1));
       updateProgress(qNum + 1);
     } else {
-      updateProgress(6);
+      updateProgress(5);
       runLoading();
     }
   }
@@ -1204,7 +1218,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     initScratchCard(perfil);
     initAxes();
     renderTrustGraph(computeAxes(answers));
-    trackEvent('QuizComplete', { perfil: perfil });
+    trackEvent('QuizComplete', { perfil: perfil, variant: QUIZ_TEST_VARIANT });
     // Lead padrão da Meta — terminou o diagnóstico e chegou no resultado
     // personalizado. content_category carrega o perfil (lidera-cansada/
     // esposa-de-lider/carrega-o-piano), pendente de usar pra segmentar
@@ -1370,43 +1384,16 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
           D: 'Nada. Só continuar segurando tudo sozinha'
         }
       }
-    },
-    6: {
-      'carrega-o-piano': {
-        title: 'Se você tivesse que nomear o que sente, qual seria?',
-        micro: 'Esta última resposta vai calibrar sua leitura final.',
-        options: {
-          A: 'Medo de decepcionar quem conta com você',
-          B: 'Um cansaço que já não tem mais nome',
-          C: 'Culpa de parar, mesmo por um dia',
-          D: 'Medo de ser substituída se parar de fazer tudo'
-        }
-      },
-      'esposa-de-lider': {
-        title: 'Se você tivesse que nomear o que sente, qual seria?',
-        micro: 'Esta última resposta vai calibrar sua leitura final.',
-        options: {
-          A: 'Medo de que, se você falhar, o ministério do seu marido pague o preço',
-          B: 'Um cansaço que já não tem mais nome',
-          C: 'Culpa de precisar de cuidado quando todos olham pro seu marido',
-          D: 'Medo de que descansar pareça fraqueza'
-        }
-      },
-      'lidera-cansada': {
-        title: 'Se você tivesse que nomear o que sente, qual seria?',
-        micro: 'Esta última resposta vai calibrar sua leitura final.',
-        options: {
-          A: 'Medo de que ninguém segure o que você segurava se você parar',
-          B: 'Um cansaço que já não tem mais nome',
-          C: 'Culpa de parar quando tantas pessoas dependem de você',
-          D: 'Medo de que parar pareça abandonar quem você lidera'
-        }
-      }
     }
   };
 
+  // Q6 removida em 26/08/2026 — só alimentava CTA_BY_FEELING (texto do
+  // botão), nenhuma outra função. Auditoria completa em
+  // 05-COPY/estrategia-oferta/2026-08-26-resultview-copy-candidata-auditoria.md
+  // (repo da Empresa).
+
   function personalizeQuestions(perfil) {
-    [4, 5, 6].forEach(function (qNum) {
+    [4, 5].forEach(function (qNum) {
       var v = Q_VARIANTS[qNum][perfil];
       document.getElementById('q' + qNum + 'Title').textContent = v.title;
       document.getElementById('q' + qNum + 'Micro').textContent = v.micro;
@@ -1436,10 +1423,14 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   // colapsem no mesmo valor, mesmo com respostas uniformes — sem inventar
   // nenhum dado, só extraindo mais sinal real das mesmas 6 respostas.
   var LETTER_VALUE = { A: 25, B: 50, C: 75, D: 100 };
+  // Pesos redistribuídos em 26/08/2026 após a remoção de Q6 — o peso que
+  // era dela (0.05 nos eixos 1/2, 0.35 no eixo 3) foi somado ao componente
+  // mais próximo tematicamente de cada eixo (q1 no eixo 1, q2 no eixo 2,
+  // q3 no eixo 3, que passa a ser majoritariamente sobre o papel/perfil).
   var AXIS_WEIGHTS = [
-    { q1: 0.35, q4: 0.35, q2: 0.10, q3: 0.05, q5: 0.10, q6: 0.05 },
-    { q2: 0.35, q5: 0.35, q1: 0.10, q3: 0.05, q4: 0.10, q6: 0.05 },
-    { q3: 0.35, q6: 0.35, q1: 0.05, q2: 0.10, q4: 0.05, q5: 0.10 }
+    { q1: 0.40, q4: 0.35, q2: 0.10, q3: 0.05, q5: 0.10 },
+    { q2: 0.40, q5: 0.35, q1: 0.10, q3: 0.05, q4: 0.10 },
+    { q3: 0.70, q1: 0.05, q2: 0.10, q4: 0.05, q5: 0.10 }
   ];
   var AXIS_RANGES = [
     { scale: 1,   offset: 0,  min: 20, max: 96 },
@@ -1497,16 +1488,104 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     label.style.top = (pt.y * scaleY) + 'px';
   }
 
+  // ResultView redesenhada em 26/08/2026 — arquitetura aprovada e auditada
+  // adversarialmente em
+  // 05-COPY/estrategia-oferta/2026-08-26-resultview-copy-candidata-auditoria.md
+  // (repo da Empresa). Princípio: Q1/Q2/Q4/Q5 deixam de ser callbacks
+  // soltos e viram uma cadeia argumentativa única (tempo → padrão →
+  // gatilho → diagnóstico → tentativa anterior → mecanismo/Elias →
+  // reframe → antes/depois → oferta). Blocos abaixo são universais
+  // (não variam por perfil de Q3) — só Q4 e Q5 puxam texto por perfil,
+  // reaproveitando os dados que já existem em Q_VARIANTS/TRIED_BRIDGE.
+
+  // Bloco 1 — reconhecimento temporal (Q1). Legitima cronicidade real,
+  // não move crença ainda.
+  var Q1_RECOGNITION = {
+    A: 'Faz menos de 1 ano que isso começou pra você. Ainda assim, já é tempo suficiente pra perceber que não é um dia ruim isolado — é um padrão.',
+    B: 'Faz entre 1 e 5 anos que você carrega isso sem parar de verdade. Tempo suficiente pra virar rotina, não exceção.',
+    C: 'Faz mais de 5 anos que você carrega isso sem parar de verdade. Isso não é fase. É um padrão antigo.',
+    D: 'Você nem lembra mais quando foi a última vez que parou de verdade. Isso, sozinho, já diz muita coisa.'
+  };
+
+  // Bloco 2 — padrão/confissão (callback Q2). Todas as 4 convergem pra
+  // mesma raiz ("parar parece ter um preço"), sem afirmar causalidade que
+  // a resposta dela não prova — sempre "talvez", nunca "você faz isso
+  // porque X".
+  var Q2_CALLBACK = {
+    A: 'E quando esse peso aparece, você é sempre a que fica até o fim resolvendo tudo. Talvez o que esteja em jogo não seja só cansaço — é a sensação de que, se você parar, alguma coisa importante fica sem solução. Talvez o que falte não seja mais força pra continuar, mas permissão pra parar sem tratar isso como uma falha sua.',
+    B: 'E quando esse peso aparece, você já pensou em sumir um domingo, mas nunca fez. Não porque ama menos a igreja ou a família. Uma parte sua só queria, uma vez, não precisar ser essencial. Talvez não esteja faltando mais força para continuar — mas uma forma diferente de lidar com a culpa que aparece quando você pensa em parar.',
+    C: 'E quando esse peso aparece, você diz que está tudo bem, mesmo quando não está. Talvez o que esteja faltando não seja força para continuar segurando — mas permissão para parar sem interpretar essa pausa como fraqueza ou falha.',
+    D: 'E quando esse peso aparece, você sente que, se parar, tudo desmorona. Talvez o que você precise não seja a prova de que nada vai desmoronar — mas a chance de examinar esse medo antes de obedecer a ele automaticamente.'
+  };
+
+  // Bloco 4 — diagnóstico. Separa explicitamente confissão (o que as
+  // respostas confirmam) de interpretação (o que propomos como leitura) —
+  // não afirma causalidade que Q1/Q2/Q4 não provam sozinhas.
+  var RESULT_DIAGNOSTICO = 'Três respostas diferentes. Mas juntas, elas parecem apontar para a mesma tensão. Você já sabe que precisa de descanso. O conflito parece começar no momento em que tenta parar — porque a pausa ganha algum significado: fraqueza, culpa, abandono, risco de decepcionar ou de deixar algo desmoronar.';
+  var RESULT_DIAGNOSTICO_PIVO = 'Talvez o problema não seja aprender que precisa descansar. Talvez seja conseguir parar sem transformar essa pausa numa acusação contra você mesma.';
+
+  // Bloco 6 — mecanismo/Elias (função de "mini-VSL 1": prova/reformula a
+  // crença, NÃO prova que o produto gera transformação — essa fronteira
+  // fica pro Logic Point 4, que continua sem prova disponível e não é
+  // fabricada aqui). Precisão bíblica: não afirma "Deus mandou Elias
+  // descansar duas vezes" nem estados internos que o texto não afirma.
+  var RESULT_ELIAS = 'Existe um momento em 1 Reis 19 que ajuda a enxergar isso por outro ângulo. Elias tinha acabado de atravessar um confronto enorme. Pouco depois, chega ao limite, senta-se debaixo de uma árvore e pede para morrer. E a sequência que vem depois é curiosa. Não começa com uma cobrança. Elias dorme. Um anjo o toca e diz: "Levanta e come." Ele come, torna a deitar. Depois, o anjo volta: "Levanta e come, porque o caminho é longo demais para ti." Só então a caminhada continua. Se, para você, parar sempre parece significar que está falhando, essa passagem apresenta uma possibilidade diferente: em certos momentos, receber cuidado e recuperar forças também faz parte do caminho.';
+
+  // Bloco 7 — reframe. Abertura universal (prova por contradição) +
+  // fechamento por resposta de Q2, pra o desejo dela evoluir através do
+  // mecanismo em vez de ser só mencionado no Bloco 2 e abandonado. Sem
+  // "heresia das obras", sem extrapolação teológica, sem prometer nada
+  // externo (amor/aceitação de terceiros, ausência de culpa, garantia de
+  // que nada vai desmoronar) — só uma nova forma de lidar com o próprio
+  // desejo, dentro do que uma prática de 7 dias pode de fato entregar.
+  var RESULT_REFRAME = 'Talvez você tenha aprendido a medir sua fidelidade pelo tanto que consegue continuar fazendo. Mas observe a sequência: se continuar imediatamente fosse sempre a única expressão de obediência, o cuidado que aparece em 1 Reis 19 seria um detalhe sem importância. Não é. Antes da continuação do caminho, Elias recebe alimento, tempo e cuidado.';
+  var Q2_REFRAME_PIVO = {
+    A: 'Por isso, pausa e obediência não precisam ser opostas — e seu valor não precisa depender de nunca parar de resolver as coisas.',
+    B: 'Por isso, pausa e obediência não precisam ser opostas — e culpa não precisa ser a única resposta possível quando você finalmente para.',
+    C: 'Por isso, pausa e obediência não precisam ser opostas — e admitir que você não está bem não é o mesmo que falhar diante de Deus.',
+    D: 'Por isso, pausa e obediência não precisam ser opostas — e o medo de que tudo desmorone não precisa ser tratado automaticamente como um sinal pra continuar.'
+  };
+
+  // Bloco 8 — antes/depois. PD1/PD3 universais (não perfil nem Q2
+  // específicos — não promete ausência de culpa, LP4 não existe ainda).
+  // PD2 recebe uma continuação por resposta de Q2 (mesma frase, sem virar
+  // card novo) pra reconectar o desejo dela à transformação concreta.
+  var RESULT_CICLO_HOJE = 'Hoje, o ciclo costuma ser assim: você tenta parar → a culpa aparece → você interpreta essa culpa como sinal de que deveria continuar → volta a fazer.';
+  var RESULT_CICLO_NOVO_BASE = 'O que esses 7 dias propõem é uma nova resposta: você tenta parar → a culpa pode aparecer → você reconhece o padrão → lembra de uma referência diferente → consegue questionar a culpa antes de obedecer automaticamente a ela.';
+  var Q2_CICLO_PESSOAL = {
+    A: 'E isso começa a abrir espaço para não medir seu valor apenas pelo tanto que você consegue resolver antes de parar.',
+    B: 'E isso começa a abrir espaço para se permitir parar sem transformar imediatamente essa pausa em motivo de culpa.',
+    C: 'E isso começa a abrir espaço para reconhecer, diante de você mesma e de Deus, que não está bem — sem que isso vire mais uma cobrança.',
+    D: 'E isso começa a abrir espaço para examinar esse medo antes de obedecer a ele — em vez de deixar que ele decida por você.'
+  };
+  var RESULT_CICLO_OBJETIVO = 'O objetivo não é prometer que você nunca mais vai se sentir culpada. É deixar de tratar toda culpa como se fosse uma instrução de Deus.';
+
+  // Bloco 9 — transição pra oferta (reason why). Resolve a objeção
+  // silenciosa "isso está na Bíblia, por que eu pagaria por isso?" —
+  // abertura universal + fechamento por resposta de Q2, na mesma frase
+  // (o produto pratica a nova resposta ao desejo dela, não "realiza" o
+  // desejo).
+  var RESULT_TRANSICAO_OFERTA_BASE = 'Entender essa passagem agora é uma coisa. Conseguir lembrar dela exatamente no momento em que a culpa aparece é outra. É por isso que o Método do Zimbreiro não foi criado para apenas explicar 1 Reis 19. Ele transforma essa sequência em 7 dias de prática guiada, para você percorrer um passo de cada vez — leitura, reflexão, prática e oração —';
+  var Q2_TRANSICAO_FINAL = {
+    A: 'e praticar uma resposta diferente pro momento em que parar parece colocar seu valor em jogo.',
+    B: 'e praticar o que fazer com a culpa quando ela aparecer — em vez de deixar que ela decida por você se pode parar ou não.',
+    C: 'e praticar dizer a verdade sobre como está, pra Deus e pra você mesma, sem transformar isso em mais uma exigência.',
+    D: 'e praticar reconhecer esse medo sem deixar que ele continue tomando a decisão por você.'
+  };
+
+  // Helper: minúscula na primeira letra, pra encaixar respostas (que
+  // começam com maiúscula como opção autônoma) dentro de uma frase.
+  function lowerFirst(s) {
+    return s ? s.charAt(0).toLowerCase() + s.slice(1) : s;
+  }
+
   var PERFIS = {
     'carrega-o-piano': {
       tag: 'A QUE CARREGA O PIANO',
       headline: 'Você é sempre a que sobra pra fazer o que ninguém mais quer.',
-      p1: 'Suas respostas mostram um padrão: você é a peça que segura o ministério, mesmo quando ninguém percebe o preço que isso cobra de você.',
-      p2: 'Isso tem nome: é a heresia das obras, a crença silenciosa de que seu valor diante de Deus se mede pelo que você entrega. A culpa não é sua. Ninguém te ensinou a diferença entre servir por amor e servir por medo.',
-      p3: 'Quando você entende que Deus nunca pediu isso de você, o piano para de pesar sozinho. Você continua servindo, mas por escolha, não por medo.',
-      pd1: 'Você chega em casa depois do culto e não sobra nada pra você mesma, só pro que os outros precisam.',
-      pd2: 'O domingo que devia ser descanso virou mais um turno. E ninguém perguntou se você aguenta.',
-      pd3: 'A culpa de parar é maior que o cansaço de continuar. Por isso você nunca para.',
+      // p1/p2/p3/pd1/pd2/pd3 removidos em 26/08/2026 (continham "heresia
+      // das obras" e Antes/Depois antigo) — substituídos por blocos
+      // universais RESULT_DIAGNOSTICO/RESULT_CICLO_* em renderResult().
       altruism: 'Parar não é abandonar quem você ama. É a única forma de continuar servindo sem se esvaziar até não sobrar nada pra dar.',
       nextStep: 'Passo de hoje: antes de dormir, escreve uma frase só. "Hoje eu servi. Amanhã, alguém pode segurar o piano no meu lugar." Não precisa mais que isso agora.',
       presell: 'Você vai fechar essa tela agora e carregar o mesmo piano amanhã. De novo. Esse cansaço não vai embora sozinho — ele não foi embora esse ano, não vai no próximo. O Método do Zimbreiro não é mais um conteúdo pra "ver quando der tempo": é o primeiro dia em que alguém te ensina a parar de verdade, 10 a 15 minutos de áudio guiado, no seu celular, hoje. Se você sair dessa página sem decidir, a decisão já foi tomada — continuar exatamente como está.'
@@ -1514,12 +1593,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     'esposa-de-lider': {
       tag: 'A ESPOSA QUE SUSTENTA POR TRÁS',
       headline: 'Você cuida de quem cuida de todo mundo. Ninguém cuida de você.',
-      p1: 'Suas respostas mostram um padrão comum entre esposas de líderes: a cobrança dupla, da igreja e de casa, sem ninguém perguntar como você está.',
-      p2: 'Isso também é a heresia das obras, só que com um peso a mais: o medo de que, se você falhar, o ministério do seu marido é quem paga o preço. A culpa não é sua. Ninguém te ensinou que sustentar o ministério não é a mesma coisa que se esgotar por ele.',
-      p3: 'Quando você entende que Deus te adotou como filha, não te contratou como sustentação invisível do ministério, o papel de esposa de líder deixa de ser um fardo silencioso.',
-      pd1: 'Você sorri no culto enquanto segura por dentro o que ninguém sabe que está acontecendo em casa.',
-      pd2: 'Todo mundo pergunta como seu marido está. Quase ninguém pergunta como você está.',
-      pd3: 'Você tem medo de que descansar pareça fraqueza. Porque, se você cai, parece que o ministério inteiro cai junto.',
+      // p1/p2/p3/pd1/pd2/pd3 removidos em 26/08/2026 (ver bloco anterior).
       altruism: 'Descansar não enfraquece o ministério do seu marido. Uma esposa inteira sustenta muito mais do que uma esposa exaurida.',
       nextStep: 'Passo de hoje: da próxima vez que alguém perguntar como seu marido está, responde também como você está. Só isso.',
       presell: 'Ninguém vai perguntar como você está hoje. Amanhã também não. Isso não muda sozinho enquanto você continuar sustentando por dentro sem nenhum apoio de verdade. O Método do Zimbreiro é 7 dias de áudio guiado pensado pra alguém que segura o ministério de outra pessoa e nunca teve o próprio descanso ensinado. Fechar essa página agora é escolher continuar sozinha nisso por mais um dia.'
@@ -1527,12 +1601,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     'lidera-cansada': {
       tag: 'A LÍDER QUE JÁ NÃO SABE PARAR',
       headline: 'Você lidera outras pessoas. Mas quem lidera o seu descanso?',
-      p1: 'Suas respostas mostram alguém que segura um ministério inteiro nas costas e sente que parar seria decepcionar todo mundo que depende dela.',
-      p2: 'É a heresia das obras na sua versão mais silenciosa: liderar bem virou sinônimo de nunca parar. A culpa não é sua. Ninguém te ensinou que descansar também é liderar.',
-      p3: 'Quando você entende que Deus mandou Elias parar antes de qualquer missão nova, liderar deixa de significar se esgotar primeiro.',
-      pd1: 'Você organiza a escala de todo mundo, menos a sua própria pausa.',
-      pd2: 'Se você falha uma vez, tem medo de que ninguém mais segure o que você segurava.',
-      pd3: 'Ninguém pediu pra você ser insubstituível. Foi você que aprendeu a viver como se fosse.',
+      // p1/p2/p3/pd1/pd2/pd3 removidos em 26/08/2026 (ver bloco anterior).
       altruism: 'Quem você lidera aprende com o seu exemplo. Se você nunca para, é isso que você está ensinando pra eles também.',
       nextStep: 'Passo de hoje: escolhe uma coisa da sua escala de amanhã pra delegar de verdade, sem checar depois se foi feito do seu jeito.',
       presell: 'Você vai liderar de novo amanhã sem ter liderado o seu próprio descanso hoje. Isso tem um limite, e você já sabe disso. O Método do Zimbreiro não pede que você pare de liderar — pede 10 a 15 minutos por dia, 7 dias, pra você aprender o que Deus ensinou a Elias antes de qualquer missão nova: descansar não é abandonar o posto. Sair daqui sem decidir é decidir continuar do jeito que está.'
@@ -1569,11 +1638,9 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   // CTA personalizado por Q6 (novo, 04/08/2026): o sentimento que a pessoa
   // nomeou na última pergunta vira o texto do botão final, em vez do texto
   // fixo "QUERO DESCANSAR EM DEUS" pra todo mundo.
-  var CTA_BY_FEELING = {
-    'carrega-o-piano': { A: 'QUERO PARAR SEM DECEPCIONAR NINGUÉM', B: 'QUERO DAR NOME A ESSE CANSAÇO', C: 'QUERO PARAR SEM CULPA', D: 'QUERO DESCANSAR SEM MEDO' },
-    'esposa-de-lider': { A: 'QUERO DESCANSAR SEM PESAR NO MINISTÉRIO', B: 'QUERO DAR NOME A ESSE CANSAÇO', C: 'QUERO CUIDADO TAMBÉM PRA MIM', D: 'QUERO DESCANSAR SEM PARECER FRACA' },
-    'lidera-cansada': { A: 'QUERO PARAR SEM DEIXAR NINGUÉM NA MÃO', B: 'QUERO DAR NOME A ESSE CANSAÇO', C: 'QUERO PARAR SEM CULPA', D: 'QUERO LIDERAR TAMBÉM O MEU DESCANSO' }
-  };
+  // CTA_BY_FEELING removido em 26/08/2026 junto com Q6 — era a única
+  // função dela. `ctaResultadoText` agora usa texto universal fixo (ver
+  // renderResult()).
 
   // Âncora de data real (novo, 04/08/2026): hoje + 7 dias, matemática real
   // via Date() — nunca uma previsão inventada (diferente do padrão "você vai
@@ -1936,18 +2003,45 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     var p = PERFIS[perfil];
     document.getElementById('resultTag').textContent = p.tag;
     document.getElementById('resultHeadline').textContent = p.headline;
-    document.getElementById('resultP1').textContent = p.p1;
-    document.getElementById('resultP2').textContent = p.p2;
-    document.getElementById('resultP3').textContent = p.p3;
-    document.getElementById('resultPD1').textContent = p.pd1;
-    document.getElementById('resultPD2').textContent = p.pd2;
-    document.getElementById('resultPD3').textContent = p.pd3;
+
+    // Cadeia argumentativa nova (26/08/2026): Q1 → Q2 → Q4 → diagnóstico →
+    // Q5 → Elias → reframe → antes/depois → transição pra oferta. Ver
+    // 05-COPY/estrategia-oferta/2026-08-26-resultview-copy-candidata-auditoria.md
+    // no repo da Empresa pro texto aprovado e a auditoria bloco a bloco.
+    document.getElementById('resultQ1').textContent = Q1_RECOGNITION[answers.q1] || '';
+    document.getElementById('resultQ2Callback').textContent = Q2_CALLBACK[answers.q2] || '';
+
+    var q4Resposta = (Q_VARIANTS[4][perfil] && Q_VARIANTS[4][perfil].options[answers.q4]) || '';
+    document.getElementById('resultQ4Gatilho').textContent = q4Resposta
+      ? 'E isso fica ainda mais claro ' + lowerFirst(q4Resposta) + '.'
+      : '';
+
+    document.getElementById('resultDiagnostico').textContent = RESULT_DIAGNOSTICO;
+    document.getElementById('resultDiagnosticoPivo').textContent = RESULT_DIAGNOSTICO_PIVO;
+
+    // Q5 reposicionada antes do mecanismo (não depois) — quebra a objeção
+    // primeiro, só então revela a solução. TRIED_BRIDGE preservado como já
+    // funcionava (é o único bloco que já reaproveitava resposta real antes
+    // desta reformulação).
+    document.getElementById('resultObjection').textContent = buildObjectionLine(perfil);
+
+    document.getElementById('resultElias').textContent = RESULT_ELIAS;
+    document.getElementById('resultReframe').textContent = RESULT_REFRAME;
+    document.getElementById('resultReframePivo').textContent = Q2_REFRAME_PIVO[answers.q2] || '';
+
+    document.getElementById('resultPD1').textContent = RESULT_CICLO_HOJE;
+    document.getElementById('resultPD2').textContent = RESULT_CICLO_NOVO_BASE + ' ' + (Q2_CICLO_PESSOAL[answers.q2] || '');
+    document.getElementById('resultPD3').textContent = RESULT_CICLO_OBJETIVO;
+
     document.getElementById('resultAltruism').textContent = p.altruism;
     document.getElementById('resultNextStep').textContent = p.nextStep;
-    document.getElementById('resultPresell').textContent = p.presell;
-    document.getElementById('resultObjection').textContent = buildObjectionLine(perfil);
     document.getElementById('resultDateAnchor').textContent = buildDateAnchor();
-    document.getElementById('ctaResultadoText').textContent = (CTA_BY_FEELING[perfil] && CTA_BY_FEELING[perfil][answers.q6]) || 'QUERO DESCANSAR EM DEUS';
+
+    document.getElementById('resultTransicaoOferta').textContent = RESULT_TRANSICAO_OFERTA_BASE + ' ' + (Q2_TRANSICAO_FINAL[answers.q2] || '') + ' Esse é o Método do Zimbreiro.';
+    document.getElementById('resultPresell').textContent = p.presell;
+
+    // CTA_BY_FEELING removido junto com Q6 — texto universal fixo agora.
+    document.getElementById('ctaResultadoText').textContent = 'QUERO DESCANSAR EM DEUS';
 
     // ViewContent padrão da Meta — dispara quando a oferta (preço) fica
     // visível pra pessoa, não só o evento customizado. Sem isso o
@@ -1966,7 +2060,7 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     var link = document.getElementById('ctaResultado');
     link.href = withPassthrough(DISCOUNT_CHECKOUT_URL);
     link.addEventListener('click', function () {
-      trackEvent('CTAResultClick', { perfil: perfil });
+      trackEvent('CTAResultClick', { perfil: perfil, variant: QUIZ_TEST_VARIANT });
       // AddToCart padrão da Meta, não InitiateCheckout — o quiz só expressa
       // intenção de compra aqui, quem chegou no checkout de verdade (domínio
       // pay.herospark.com) é a HeroSpark, via o Pixel configurado lá dentro

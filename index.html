@@ -1,316 +1,284 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
+<!--
+LP B — candidata híbrida enxuta pro teste LP × Quiz (Método do Zimbreiro).
+Fonte: 2026-08-22-zimbreiro-pagina-nova-artifact.html (15 blocos) condensado
+pra 7, mantendo só a cadeia mínima aprovada: identificação → Elias → reframe
+→ mecanismo → tangibilização → oferta.
+
+Cortado (não fundido, removido mesmo — não estava na cadeia mínima):
+"ponte" (Mateus 11:28 isolado) e "antes/depois" (shift cards) — nenhum dos
+dois é indispensável pra vender o mecanismo, ambos custavam um bloco inteiro.
+
+Fundido:
+- Dor + Crença Antiga → 1 bloco.
+- Movimentos 2+3+4 (Bolo/Alimento/Voz Mansa) → comprimidos em lista de 1
+  linha cada dentro do bloco Elias/Mecanismo, fechando na citação da voz mansa.
+- Reasseguramento → virou a frase de abertura do bloco Qualificação.
+- Acesso final → fundido no bloco Oferta (mesmo CTA, sem 2º bloco/botão).
+
+Removido tecnicamente: .reveal/IntersectionObserver (fade-in ao rolar) — o
+mesmo padrão que já tinha sido eliminado permanentemente de LP do Zimbreiro
+em 16/07/2026 por revelar de forma inconsistente em tráfego pago real
+(ver memória project-zimbreiro-teste-ticket.md). Conteúdo sempre visível.
+
+STATUS: rascunho local, NÃO deployado, NÃO commitado no repo, NÃO ligado a
+nenhuma campanha. Falta decisão sobre orçamento/ativação do teste A/B.
+-->
+<title>Método do Zimbreiro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Você não desistiu de servir. Só esqueceu como parar. | Pleno</title>
-<meta name="description" content="Um teste rápido de 5 perguntas pra você nomear o que está por trás do seu esgotamento em servir.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1C1208; --ink-soft:#3A2810; --cream:#FAF7F2; --warm:#F0E8D8;
+    --gold:#C4973B; --gold-soft:#D8C9A8; --gold-muted:#C0B090;
+    --dark-deep:#100C06; --line: rgba(28,18,8,0.12);
+    --ease: cubic-bezier(.23,1,.32,1);
+    --disp:"Lora",Georgia,serif; --sans:"Inter",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;min-width:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  img,svg{max-width:100%}
+  h1,h2,h3{font-family:var(--disp);font-weight:600;text-wrap:balance;letter-spacing:-.01em;color:var(--ink)}
+  .container{max-width:640px;margin:0 auto;padding:0 24px}
+  .section{padding:clamp(48px,9vw,80px) 0}
+  .section-warm{background:var(--warm)}
+  .section-dark{background:var(--dark-deep);color:var(--cream)}
+  .section-dark h2,.section-dark h3{color:var(--cream)}
+  .label{font-family:var(--sans);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:14px;display:block}
+  .section-dark .label{color:var(--gold-soft)}
+  p{margin-bottom:16px;max-width:60ch}
+  p:last-child{margin-bottom:0}
+  .prose p{color:var(--ink-soft)}
+  .section-dark .prose p{color:var(--gold-soft)}
+  h1{font-size:clamp(28px,5.2vw,42px);line-height:1.15;text-align:center;max-width:16ch;margin:0 auto 18px}
+  h2{font-size:clamp(23px,3.6vw,30px);line-height:1.2;margin-bottom:20px}
+  .center{text-align:center}
+  .center h2{max-width:20ch;margin-left:auto;margin-right:auto}
+  .lede{font-family:var(--disp);font-style:italic;font-size:clamp(17px,3vw,20px);color:var(--gold);max-width:32ch;line-height:1.55;margin:0 auto 22px;text-align:center}
+  .quote{font-family:var(--disp);font-style:italic;color:var(--ink-soft);font-size:clamp(17px,2.6vw,19px);line-height:1.6;max-width:38ch;margin:20px auto;text-align:center;position:relative;padding:0 8px}
+  .section-dark .quote{color:var(--gold-soft)}
+  .btn{font-family:var(--sans);font-weight:700;font-size:15px;letter-spacing:.01em;background:var(--gold);color:var(--dark-deep);border:0;border-radius:3px;padding:16px 30px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:transform .18s var(--ease),background .18s}
+  .btn:hover{background:var(--gold-soft);transform:translateY(-1px)}
+  .btn-wide{width:100%;justify-content:center;padding:18px 24px;font-size:16px}
+  .belief-card{background:var(--warm);border-left:3px solid var(--gold);border-radius:2px;padding:26px 28px;max-width:460px;margin:24px auto 0}
+  .belief-card p{font-family:var(--disp);font-style:italic;font-size:18px;color:var(--ink);margin:0}
+  .objection-q{font-family:var(--disp);font-style:italic;font-size:19px;color:var(--gold);text-align:center;max-width:34ch;margin:0 auto 22px}
+  .mech-list{list-style:none;max-width:480px;margin:20px auto 0;text-align:left}
+  .mech-list li{padding:8px 0;font-size:14.5px;color:var(--ink-soft);border-bottom:1px solid var(--line)}
+  .section-dark .mech-list li{color:var(--gold-soft);border-color:rgba(250,247,242,.14)}
+  .mech-list li:last-child{border-bottom:0}
+  .mech-list strong{color:inherit;font-weight:700}
+  .method-card{background:var(--cream);border:1px solid var(--line);border-radius:6px;padding:32px;max-width:480px;margin:28px auto 0}
+  .method-row{display:flex;gap:14px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line)}
+  .method-row:last-of-type{border-bottom:0}
+  .method-num{font-family:var(--disp);color:var(--gold);font-weight:700;font-size:14px;flex-shrink:0;width:20px}
+  .method-name{font-weight:700}
+  .method-desc{color:var(--ink-soft);font-size:14.5px}
+  .method-cadence{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);color:var(--ink-soft);font-size:14px;text-align:center}
+  .preview-card{background:var(--cream);border:1px solid var(--line);border-radius:10px;max-width:440px;margin:20px auto 0;overflow:hidden;box-shadow:0 1px 2px rgba(28,18,8,.04),0 8px 24px rgba(28,18,8,.06)}
+  .preview-topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--warm);border-bottom:1px solid var(--line);font-size:12.5px;color:var(--ink-soft)}
+  .preview-topbar strong{color:var(--ink);font-weight:700}
+  .preview-progress{height:4px;background:var(--line)}
+  .preview-progress-fill{height:100%;width:14%;background:var(--gold)}
+  .preview-body{padding:24px 22px 22px}
+  .preview-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin:0 0 4px}
+  .preview-title{font-family:var(--disp);font-weight:700;font-size:19px;color:var(--ink);margin:0}
+  .preview-subtitle{font-family:var(--disp);font-style:italic;font-size:14px;color:var(--ink-soft);margin:2px 0 18px}
+  .preview-frag{margin-bottom:16px}
+  .preview-frag:last-child{margin-bottom:0}
+  .preview-label{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--gold-muted);margin:0 0 4px}
+  .preview-text{font-size:14px;color:var(--ink-soft);line-height:1.55;margin:0;position:relative}
+  .preview-text.fade{-webkit-mask-image:linear-gradient(to bottom,black 60%,transparent 100%);mask-image:linear-gradient(to bottom,black 60%,transparent 100%)}
+  .preview-more{font-size:12.5px;color:var(--gold);font-weight:600;margin-top:4px;display:inline-block}
+  .preview-check{font-size:14px;color:var(--ink-soft);margin:0 0 4px;display:flex;gap:8px}
+  .preview-check .mk{color:var(--gold);flex-shrink:0}
+  .preview-footer{padding:14px 22px;background:var(--warm);border-top:1px solid var(--line);text-align:center;font-size:12.5px;color:var(--ink-soft)}
+  .qual-grid{display:grid;grid-template-columns:1fr;gap:28px;max-width:480px;margin:0 auto}
+  @media(min-width:640px){.qual-grid{grid-template-columns:1fr 1fr}}
+  .qual-list{list-style:none}
+  .qual-list li{display:flex;gap:10px;padding:8px 0;font-size:14.5px;color:var(--ink-soft)}
+  .qual-list .mk{flex-shrink:0;width:18px}
+  .qual-yes .mk{color:var(--gold)}
+  .qual-no .mk{color:var(--ink-soft)}
+  .offer{background:var(--dark-deep);color:var(--cream);border-radius:8px;max-width:420px;margin:0 auto;padding:36px 30px;text-align:center}
+  .offer-eyebrow{font-family:var(--sans);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-soft)}
+  .offer-name{font-family:var(--disp);font-size:22px;font-weight:700;margin:8px 0 20px}
+  .offer-anchor{text-decoration:line-through;color:var(--gold-muted);font-size:16px;opacity:.7}
+  .offer-price{font-family:var(--disp);font-size:40px;font-weight:700;color:var(--cream);margin:2px 0 4px}
+  .offer-detail{font-size:13px;color:var(--gold-soft);margin-bottom:22px}
+  .guarantee{max-width:420px;margin:22px auto 0;text-align:center;padding:20px;border:1px solid rgba(250,247,242,.16);border-radius:6px}
+  .guarantee p{font-size:14px;color:var(--gold-soft);margin:0}
+  .guarantee strong{color:var(--cream)}
+  .authority{text-align:center;font-size:13px;font-style:italic;color:var(--gold-muted);font-family:var(--disp)}
+  footer{padding:28px 24px 40px;text-align:center;font-size:11.5px;color:var(--gold-muted);background:var(--dark-deep)}
+  footer p{max-width:52ch;margin:0 auto;line-height:1.7}
+</style>
 
-<!-- 23/07/2026 (construído em paralelo ao teste de orçamento em andamento, não
-     ligado a nenhuma campanha ainda). Reaproveita a estrutura técnica provada
-     no quiz "Arqueologia Emocional" do Caderno da Sombra (publicado 27/05/2026:
-     progresso fixo, loading 2200ms, resultado por perfil, eventos Meta/GA4) e
-     a metodologia de dor->mecanismo->ego booster->pain deepening->bridge do
-     mesmo framework. Conteúdo é 100% novo e específico do Zimbreiro: usa só
-     vocabulário já validado hoje (carregar o piano, domingo roubado, heresia
-     das obras, chefe vs Pai) — nada fabricado, nenhum depoimento, nenhuma
-     citação de pessoa real. Segmentação por papel (Q3) é a variável que
-     estava em aberto e nunca foi testada com dado real — este quiz é o
-     veículo pra medir isso, não uma resposta assumida como certa.
-     Atualização (mesma data, 3ª rodada): headline trocado usando padrão
-     validado de Big Idea (Fábio Cavalcante/ADC07, exemplo real citado:
-     "Você não parou de orar. Só esqueceu como recomeçar."), adaptado pro
-     ângulo de descanso. Inserido "a culpa não é sua" (gatilho de Inimigo
-     Comum, Fábio Cavalcante/ADC09) em cada perfil — ausente na versão
-     anterior. Adicionado reframe altruísta antes da oferta (framework P.I.G.
-     profundo: compra não pode parecer egoísmo pra esse público treinado a
-     nunca se priorizar). Fonte: pasta Marketing/base-marketing/copy
-     (frameworks de Evaldo Albuquerque, Stefan Georgi, Chris Haddad, Fábio
-     Cavalcante).
-     23/07/2026 (decisão do usuário): promovido de /quiz/ pra raiz do
-     domínio — passa a ser a página que recebe o tráfego pago em vez da
-     LP de venda direta. LP direta arquivada em /lp-direta/, e este mesmo
-     quiz segue também acessível em /quiz/ (arquivo duplicado, não
-     redirect, pra manter os dois paths funcionando).
-     23/07/2026 (4ª rodada, achado em avatar-crista-pesquisa.md — comentários
-     reais de pregadores cristãos no YouTube): "caverna" é vocabulário real
-     do avatar pra fase de colapso/baixa, e Elias literalmente vai pra uma
-     caverna em 1 Reis 19:9, onde ouve a voz mansa e delicada — a ponte do
-     resultado citava só o descanso debaixo do zimbreiro (1 Reis 19:5-7),
-     ficando biblicamente incompleta. Estendida pra incluir a caverna/voz
-     mansa, sem nomear a Fase 3 (mantém o princípio do quadradinho).
-     23/07/2026 (5ª rodada, checklist de project-quiz-referencias.md — síntese
-     de Levesque/Priestley/Carlson/Haynam/Zak/Nee já adotada pelo negócio):
-     a "prescription page" (Priestley/Carlson, Haynam) pede 5 blocos - o que
-     significa, por que acontece, o que fazer agora, prova, oferta. O
-     resultado pulava direto de "por que acontece" pra oferta paga, sem
-     passo gratuito antes (o que separa prescrição de mini sales page nos
-     cases citados: Priestley 66%, Makhosi 60-70%). Adicionado um passo
-     prático gratuito por perfil, antes da ponte pro produto pago.
-     23/07/2026 (6ª rodada, achado de Arthur Oliveira — transcrição
-     "Quiz escala mais"): o nível mais alto de personalização de quiz não é
-     só o resultado final variar, é a REDAÇÃO das perguntas seguintes mudar
-     conforme resposta anterior ("nível de profundidade 3" no exemplo dele:
-     casado com filhos recebe pergunta diferente de divorciado com filhos).
-     Até aqui o quiz só personalizava o resultado (via Q3/papel), as
-     perguntas 4-6 eram estáticas pra qualquer perfil. Reescritas em 3
-     variantes (uma por perfil), trocadas dinamicamente assim que Q3 é
-     respondida — Q1-Q3 seguem genéricas de propósito (aquecimento +
-     pergunta que define o perfil, antes de saber qual variante mostrar).
-     23/07/2026 (7ª rodada, pedido explícito do usuário): contador real de
-     15 minutos no preço da oferta, inspirado na gamificação de urgência da
-     Shein que o Arthur estuda, mas sem violar a regra de urgência real (ver
-     feedback-diretrizes-copywriting) — nada de estoque/vagas falsas. O
-     usuário criou de verdade um segundo checkout na Payt com o preço cheio
-     (R$47,90, ticket "Método do Zimbreiro - Preço Cheio"). Quando o contador
-     chega a zero, o preço exibido e o link do CTA trocam de fato pro
-     checkout cheio — não é cosmético, o preço que a pessoa veria depois do
-     prazo é exatamente esse.
-     23/07/2026 (8ª rodada): tratamento visual do contador — a 7ª rodada
-     entregou só texto plano, sem a cara de urgência que o usuário pediu
-     (referência: visual da Shein). Reconstruído como bloco vermelho com
-     dígitos em caixas separadas (MM : SS) e pulso sutil (respeita
-     prefers-reduced-motion), estado de expirado com bloco cinza. Mecanismo
-     por trás não mudou, só a apresentação.
-     23/07/2026 (9ª rodada, pedido explícito do usuário): persistência de
-     estado via localStorage. Sair no meio do quiz (fechar aba, perder wifi)
-     e voltar do zero passaria péssima impressão. Agora salva respostas +
-     prazo real do contador a cada resposta; ao recarregar, retoma na
-     próxima pergunta não respondida (ou direto no resultado, com o MESMO
-     prazo do contador, se já tinha terminado) — não reseta o tempo real só
-     porque a pessoa saiu e voltou.
-     23/07/2026 (10ª rodada, pedido explícito do usuário): sistema de back
-     redirect (Arthur Oliveira, arquivo quiz-e-back-redirect.md, nunca
-     aplicado antes hoje). Intercepta o botão VOLTAR do navegador só na tela
-     de resultado (via History API — fechar aba/digitar outra URL só
-     permite o aviso genérico do navegador, não dá pra mostrar oferta
-     customizada nesses casos). 4 camadas adaptadas ao Zimbreiro: urgência
-     real (reforça o mesmo contador, não um novo), garantia, reforço da
-     promessa central, e bônus grátis via WhatsApp (número informado pelo
-     usuário) como último recurso antes de deixar a pessoa sair de verdade.
-     Sem prova social fabricada em nenhuma camada.
-     23/07/2026 (11ª rodada, achado pontual — podcast Nicholas Fonseca/VTurb
-     sobre funis de call de high ticket): a maior parte não se aplica (é
-     arquitetura de venda consultiva com setter/closer, incompatível com
-     checkout direto de R$17,90). Achado real: a Equação do Valor (Hormozi)
-     usada como checklist de oferta — resultado × certeza / tempo × esforço.
-     A variável "esforço" estava ausente no offer-detail do quiz (só dizia
-     "7 dias", sem tempo por dia), enquanto a LP principal já tinha "10 a 15
-     minutos por dia". Corrigida a inconsistência.
-     27/07/2026 (12ª rodada, pedido explícito do usuário, referência: Arthur
-     Oliveira, transcrição "Como Validar Ofertas de $1M_Dia" — ele mostra a
-     Shein usando raspadinha/roleta pra revelar desconto, frase real dele:
-     "você desbloqueou um desconto exclusivo"). Adicionada uma raspadinha
-     (scratch card via canvas) sobre o preço/contador na tela de resultado:
-     a pessoa arrasta ou toca pra revelar o desconto, que só então começa a
-     contar os 15 minutos reais. Optado por raspadinha em vez de roleta —
-     roleta implica sorteio, e o resultado seria sempre o mesmo desconto
-     real, o que soaria como mecanismo forjado (viola a mesma regra de
-     urgência/oferta real de sempre). A raspadinha não finge sorte, só
-     transforma a revelação em uma ação, mantendo o desconto 100% real.
-     Funciona por arraste (Pointer Events, mouse/touch/caneta unificados),
-     por toque simples (revela tudo de uma vez, evita fricção em quem só
-     toca sem arrastar) e por teclado (Enter/Espaço, acessibilidade). Se a
-     pessoa já revelou antes de sair e voltar, não mostra a raspadinha de
-     novo (persistido no mesmo localStorage da 9ª rodada) — consistente com
-     a regra de não resetar a experiência de quem já interagiu.
-     27/07/2026 (13ª rodada, feedback explícito do usuário): a raspadinha
-     cobria preço cheio + desconto + contador juntos. Usuário apontou que o
-     valor cheio (R$47,90, riscado) deveria ficar sempre visível, fora da
-     raspadinha — só o desconto em si (R$17,90 + contador) fica coberto até
-     revelar. Isso dá contraste real ao desconto assim que revelado, em vez
-     de esconder também a âncora de preço. Mudança só estrutural (HTML/CSS),
-     nenhuma lógica de JS mudou.
-     27/07/2026 (14ª rodada, pente-fino explícito do usuário em 27 transcrições
-     de podcast/aulas do Arthur Oliveira e outros, síntese salva em
-     11-ESTUDOS_E_INSIGHTS/padrao-quiz-pergunta-a-oferta.md). 3 achados de
-     copy, sem custo de produção, escolhidos pelo usuário pra execução
-     imediata (o achado mais forte do levantamento, mini-VSL intercalada no
-     meio/fim do quiz, foi propositalmente adiado por exigir produção de
-     vídeo/áudio sem dado de tráfego que justifique o investimento ainda):
-     (a) botão de início e subheadline agora nomeiam "diagnóstico
-     personalizado" em vez de "teste" genérico (Davi/Slender/Kauê: o erro
-     mais comum é o primeiro botão não comunicar personalização);
-     (b) Q1 e Q2 ganharam justificativa de por que aquela resposta importa
-     pro diagnóstico (Q3 e Q6 já tinham isso desde antes); "leitura" trocado
-     por "diagnóstico" em Q3, Q6 e no loading, pra manter o enquadramento
-     consistente (Arthur Oliveira + Antonio Carneiro: quiz vendido como
-     diagnóstico, não como quiz);
-     (c) novo texto de reforço aparece só depois da raspadinha revelar o
-     desconto, antes do CTA (Davi/Slender/Kauê citam teste A/B com +20% de
-     conversão ao prolongar conteúdo após revelar o preço, em vez de parar
-     assim que a oferta aparece). Os outros dois achados do levantamento
-     (storytelling com depoimento e prova social) não foram implementados
-     porque exigiriam fabricar depoimento, o que viola regra fixa deste
-     negócio.
-     27/07/2026 (15ª rodada, bug apontado pelo usuário via screenshot real):
-     o texto de reforço da 14ª rodada ("você acabou de desbloquear esse
-     valor, ele não aparece de novo") ficava desatualizado depois que o
-     contador expirava, contradizendo o "Esse valor expirou" logo acima.
-     Corrigido pra trocar de texto quando expira: "O prazo do seu desconto
-     encerrou. A partir de agora, esse é o valor cheio do Método do
-     Zimbreiro." Sem culpa, sem reabrir uma nova contagem (seria escassez
-     forjada) — só constata o fato e mantém o CTA funcionando pro preço
-     cheio.
-     27/07/2026 (16ª rodada, correção de julgamento do próprio usuário): a
-     14ª rodada trocou "leitura" por "diagnóstico" em todo o funil,
-     generalizando demais o achado de Arthur Oliveira/Antonio Carneiro (que
-     falavam de nichos de emagrecimento/pilates, nunca testado em nicho
-     espiritual). O usuário apontou dois problemas reais: "diagnóstico" soa
-     clínico, e entra em tensão direta com o disclaimer da própria página
-     ("não substitui acompanhamento médico, psicológico ou pastoral
-     profissional") — além do risco de a Meta ler isso como atributo
-     pessoal de saúde e sinalizar o anúncio. O ponto que a mesa-redonda
-     Davi/Slender/Kauê realmente defende é justificar por que a pessoa está
-     respondendo cada pergunta, não a palavra em si. Revertido "diagnóstico"
-     pra "leitura" (termo já validado, neutro, sem risco) em toda parte
-     (botão, subheadline, Q1-Q3, Q6, loading, eyebrow do resultado) —
-     mantida a justificativa por pergunta adicionada em Q1/Q2, que é o
-     achado que realmente se sustenta.
-     27/07/2026 (17ª rodada, pedido explícito do usuário, após reclamação de
-     que a tela de resultado estava "fraca, sem nada premium" e pesquisa em
-     11 PDFs da pasta Empreendedor + pesquisa de quizzes gamificados de
-     outros nichos, ambas salvas em 11-ESTUDOS_E_INSIGHTS/). Protótipo
-     aprovado pelo usuário em Artifact antes de ir pro ar (4 rodadas de
-     revisão). Adicionado: (a) linha de compromisso/coerência logo após o
-     headline; (b) painel de 3 sub-eixos de identificação (estilo
-     16Personalities), calculados de verdade a partir das respostas reais
-     via computeAxes() — cada letra vira número (A=25...D=100), cada eixo é
-     a média de duas perguntas relacionadas, limitado 20-96%; NÃO é fixo por
-     perfil, cada pessoa vê seu próprio número; (c) dossiê de entrega
-     (inspirado no princípio de "demonstração exagerada do produto" do livro
-     de marketing de guerrilha) com 4 cards revelados em sequência e contagem
-     nomeada real; (d) botão "Compartilhar minha leitura" que gera uma
-     imagem via canvas (fontes Lora/Inter carregadas de propósito, sem isso
-     cairiam pro padrão do sistema) e usa a Web Share API pra abrir o menu
-     nativo de compartilhar no celular, com fallback pra download simples;
-     (e) CTA da oferta ganhou brilho pulsante + seta animada (affordance de
-     clique — antes era estático); (f) texto do contador passou a citar o
-     valor real do desconto ("Seu desconto de R$17,90 acaba em") em vez do
-     genérico "Esse valor expira em". Sobre o link clicável no Instagram:
-     não é possível forçar isso, a plataforma bloqueia link em legenda e
-     comentário — por isso o site fica escrito na própria imagem gerada, é
-     o que sobrevive ao repost. Testado em viewport mobile (390px) antes de
-     publicar, sem estouro horizontal.
-     27/07/2026 (18ª rodada, feedback do usuário via prints reais do celular):
-     a 17ª rodada empilhou muitas seções novas (linha de compromisso, painel
-     de eixos, dossiê) sem espaço suficiente entre elas — usuário relatou
-     "leitura muito pesada visualmente", fonte pequena, texto da raspadinha
-     apertado no meio de espaço vazio, e a imagem de compartilhar "não chama
-     atenção". Corrigido: (a) aumentado line-height e font-size em todos os
-     blocos de texto do resultado (result-block, pain-deepening, bridge,
-     commitment-line) e mais margem entre seções (18-34px em vez de 14-28px);
-     (b) raspadinha ganhou composição de 4 linhas (emoji + 2 linhas de texto
-     + legenda) em vez de 2 linhas soltas no meio de espaço vazio; (c) imagem
-     de compartilhar reconstruída com faixa dourada sólida no topo (contraste
-     forte visível em miniatura de feed/story), regra decorativa antes do
-     headline, e selo/pill dourado com o site no rodapé em vez de texto cinza
-     pequeno. Testado em viewport mobile (412px, tamanho real do aparelho do
-     usuário) antes de publicar, sem estouro horizontal — inclusive lendo a
-     imagem de compartilhar gerada de verdade pra conferir visualmente.
-     27/07/2026 (19ª rodada, bug apontado pelo usuário: os 3 sub-eixos da
-     rodada 17 apareciam com a mesma porcentagem quando a pessoa respondia
-     com a mesma severidade em todas as 6 perguntas — cada eixo só usava 2
-     das 6 respostas com a mesma tabela de valor, então médias uniformes
-     davam o mesmo número nos 3, mesmo sendo um cálculo real. Corrigido:
-     computeAxes() agora pondera as 6 respostas por eixo (peso maior nas 2
-     mais relacionadas, peso menor nas outras 4) e cada eixo tem sua própria
-     escala de exibição, garantindo que os 3 números nunca colapsem no
-     mesmo valor — sem inventar dado nenhum, só mais sinal real extraído
-     das mesmas respostas. Testado com respostas uniformes (tudo A, tudo C,
-     tudo D) e mistas antes de publicar, confirmando que os 3 eixos sempre
-     saem diferentes.
-     29/07/2026 (20ª rodada, dado real do GA4 apontou problema: de 13
-     conclusões do quiz, só 1 raspou a raspadinha antes de comprar — a
-     grande maioria pula direto pro botão de CTA, que é visualmente mais
-     chamativo (dourado, com brilho) que a raspadinha (retângulo neutro
-     com texto simples). Corrigido sem bloquear ninguém: a raspadinha
-     ganhou o mesmo tratamento visual de "isso é clicável" que o CTA
-     (brilho pulsante, classe .invite) e uma dica textual com leve
-     animação ("👆 toque aqui pra ver seu desconto") que desaparece assim
-     que a pessoa raspa ou revela. Não força interação — quem já quer
-     comprar direto continua podendo, só fica mais claro pra quem não
-     percebeu que aquele retângulo é interativo. Correção no mesmo dia
-     (apontada pelo usuário via print): a dica estava ACIMA da raspadinha,
-     mas o emoji 👆 aponta pra cima — fazia mais sentido a dica ficar
-     ABAIXO da caixa, apontando pra ela. Movida pra depois do scratch-wrap.
-     29/07/2026 (21ª rodada, pedido explícito do usuário: "precisa deixar
-     esta oferta agressiva ou não vamos vender nada"). Adicionado bloco de
-     presell agressivo por perfil, logo antes do painel de oferta —
-     confronto direto, comando, sem hedge. Distinção importante mantida:
-     agressivo ≠ fabricado. Nenhum depoimento, credencial ou dado inventado
-     — a intensidade vem só da copy (confronto direto, urgência, comando),
-     grounded no mecanismo 100% real (Elias/zimbreiro, 7 dias de áudio
-     guiado, 10-15min/dia). Visual proposital diferente do
-     .result-highlight (que é itálico/reflexivo): bold, reto, fundo com
-     leve tom de alerta — sinaliza "isso é diferente do resto do texto,
-     preste atenção" sem parecer prova social fabricada.
-     29/07/2026 (22ª rodada, achado mais forte da pesquisa de
-     11-ESTUDOS_E_INSIGHTS/padrao-quiz-pergunta-a-oferta.md — Vicente Lima
-     + mesa-redonda Davi/Slender/Kauê, dois mini-VSLs no funil superam quiz
-     só-texto). Adicionados dois momentos de mini-pitch em áudio: um logo
-     depois da Q3 (define o perfil), antes das perguntas 4-6 mais
-     profundas; outro depois do loading, antes de mostrar o resultado.
-     Roteiro por perfil (6 áudios no total), voz gerada via ElevenLabs
-     (voz "VO3 Clonada — Feminina Brasileira Empática", já usada em outro
-     projeto espiritual do portfólio, tom calmo/acolhedor/espiritual,
-     escolhida pelo usuário). Opt-in: sem autoplay (navegador bloqueia
-     áudio com som sem clique) e o botão "Continuar"/"Ver minha leitura"
-     nunca fica bloqueado por ouvir ou não — quem já quer seguir direto
-     continua podendo. Arquivos em assets/audio/{mid,pre}-{piano,esposa,
-     lidera}.mp3.
-     29/07/2026 (mesma 22ª rodada, pedido do usuário): trilha instrumental
-     de fundo (piano, "Piano Emotions", 40 BPM, biblioteca licenciada da
-     pasta Marketing/Sonoros do próprio usuário — não é stock genérico sem
-     licença) tocando em loop baixo (volume 0.18) a partir do clique em
-     "Começar" (só aí conta como gesto real do usuário pra liberar
-     autoplay). Abaixa automaticamente pra 0.04 (duck) enquanto qualquer
-     um dos dois mini-pitches narrados está tocando, volta ao normal
-     quando termina — sem isso a narração ficaria abafada pela música.
-     Botão de mudo discreto no canto superior direito, disponível em toda
-     tela, preferência persistida no mesmo localStorage do resto do
-     estado. Arquivo em assets/audio/bg-piano-emotions.mp3.
-     29/07/2026 (mesma 22ª rodada, refinamento pedido pelo usuário ao ver o
-     protótipo): card de áudio redesenhado pra parecer mensagem de voz de
-     WhatsApp — bolha "recebida" com rabinho (canto reto embaixo à
-     esquerda), 9 barras de onda em vez de 5, e duração visível (ex:
-     "0:12") ANTES de tocar, resolvendo a preocupação de "a pessoa achar
-     que é longo demais". Paleta mantida dourado/escuro do site (não o
-     verde do WhatsApp) — o objetivo é o padrão de interação já conhecido,
-     não a marca de outra empresa. preload trocado de "none" pra
-     "metadata" nos dois players (só o suficiente pra saber a duração,
-     não baixa o áudio inteiro antes do clique).
-     29/07/2026 (mesmo dia): (a) segunda trilha ("A Light on the Hill", 80
-     BPM, mesma pasta licenciada, nome ecoa a referência bíblica de luz/monte
-     já usada no quiz) entra via crossfade de ~1,4s assim que o painel de
-     oferta aparece na tela (IntersectionObserver, dispara uma vez só, não
-     alterna de volta se rolar pra cima de novo) — reforça o momento de
-     decisão com mais pulso que a trilha calma do resto do quiz. Fundamento
-     real (tempo/ritmo mais acelerado reduz hesitação, efeito documentado em
-     atmosfera de varejo), não o exagero popular de "música que ativa o
-     botão de compra no cérebro". (b) Volume padrão da trilha baixado de
-     0.18 pra 0.09 (pedido do usuário ouvindo ao vivo: "mais ambiente, tipo
-     um sussurro"), duck durante narração ajustado proporcionalmente de
-     0.04 pra 0.02. Arquivo em assets/audio/bg-offer.mp3. -->
+<!-- ===================== BLOCO 1 — HERO (identificação) ===================== -->
+<section class="hero" style="padding:clamp(64px,14vw,110px) 0 clamp(48px,9vw,72px);background:radial-gradient(700px 380px at 50% -10%, rgba(196,151,59,.14), transparent 60%), var(--cream)">
+  <div class="container" style="display:flex;flex-direction:column;align-items:center">
+    <p class="lede">Você já ouviu dezenas de mensagens sobre Elias. Mas existe um detalhe em 1 Reis 19 que quase ninguém percebe.</p>
+    <h1>Você ama a Deus. Serve há anos. E ainda assim sente culpa toda vez que tenta parar.</h1>
+    <p class="prose center" style="max-width:38ch;margin:0 auto 26px">Baseado no momento em que Deus tratou Elias como filho exausto — e a primeira coisa que fez não foi dar uma missão. Foi deixá-lo dormir.</p>
+    <a href="#oferta" class="btn">Quero entender esse detalhe</a>
+  </div>
+</section>
 
-<!-- Meta Pixel Code -->
+<!-- ============ BLOCO 2 — DOR + CRENÇA ANTIGA (fundidos) ============ -->
+<section class="section section-warm" data-track-section="dor_crenca">
+  <div class="container center">
+    <span class="label">O que está acontecendo</span>
+    <div class="prose" style="max-width:46ch;margin:0 auto">
+      <p>Termina o culto. Abraça todo mundo. Diz que está tudo bem. Entra no carro. E chora sozinha antes de ligar o motor.</p>
+      <p>Não é falta de fé. É o peso de carregar sem parar — e a culpa que vem toda vez que você tenta descansar, como se parar fosse decepcionar a Deus.</p>
+    </div>
+    <div class="belief-card">
+      <p>"Descansar agora seria fraqueza. Seria eu desistindo."</p>
+    </div>
+    <p class="prose" style="max-width:42ch;margin:22px auto 0">Essa crença não veio de Deus. Ninguém te ensinou isso com essas palavras — e é exatamente essa crença que a história de Elias derruba.</p>
+  </div>
+</section>
+
+<!-- ============ BLOCO 3 — ELIAS + MECANISMO (fundidos) ============ -->
+<section class="section section-dark" data-track-section="elias_mecanismo">
+  <div class="container">
+    <span class="label">O que Deus fez com Elias</span>
+    <div class="prose">
+      <p>Elias era profeta. Chamou fogo do céu. Confrontou 450 profetas sozinho. E, mesmo assim, se sentou debaixo de uma árvore e pediu para morrer.</p>
+      <p>Deus não repreendeu Elias por estar ali. A primeira coisa que fez foi deixá-lo dormir. Isso não foi fraqueza. Foi o início da restauração.</p>
+    </div>
+    <ul class="mech-list">
+      <li><strong>Depois, o cuidado:</strong> um anjo o alimentou e deixou que dormisse de novo, antes de qualquer missão nova.</li>
+      <li><strong>Depois, a força do alimento:</strong> com aquela refeição, Elias caminhou 40 dias até Horebe — o que sustenta o caminho longo não é resistir sem parar.</li>
+      <li><strong>Só depois, a voz:</strong> não estava no vento forte, no terremoto ou no fogo. Estava numa voz mansa e delicada.</li>
+    </ul>
+    <p class="quote">Talvez você também esteja tentando ouvir uma voz mansa enquanto vive cercada pelo barulho do próprio cansaço.</p>
+  </div>
+</section>
+
+<!-- ===================== BLOCO 4 — REFRAME / OBJEÇÃO ===================== -->
+<section class="section" data-track-section="objecao">
+  <div class="container center">
+    <span class="label">Uma pergunta honesta</span>
+    <p class="objection-q">"Isso não é só desculpa pra ser preguiçosa? Pra parar de fazer minha parte?"</p>
+    <div class="prose" style="max-width:46ch;margin:0 auto">
+      <p>Não. Elias não parou por preguiça. Parou porque Deus mandou. E obedecer, naquele momento, não significou fazer mais — significou parar, comer e dormir.</p>
+      <p>Você pode continuar amando e servindo a Deus, e ainda assim ter aprendido a sentir culpa quando precisa parar. Houve um momento em que obedecer a Deus não foi produzir mais. Foi parar.</p>
+      <p>Hoje, quando você tenta parar, a culpa aparece e você interpreta isso como sinal pra continuar. Depois desses 7 dias, a culpa ainda pode aparecer — mas você reconhece o padrão, lembra do que Deus fez com Elias, e consegue descansar sem tratar isso como fracasso espiritual.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BLOCO 5 — MÉTODO + TANGIBILIZAÇÃO (real, sem cortar) ============ -->
+<section class="section section-warm" data-track-section="metodo">
+  <div class="container center">
+    <span class="label">O método</span>
+    <h2>Método do Zimbreiro</h2>
+    <p class="prose" style="max-width:44ch;margin:0 auto 8px">Um protocolo de 7 dias que conduz você pela mesma sequência que Deus usou com Elias, um passo de cada vez.</p>
+    <div class="method-card">
+      <div class="method-row"><span class="method-num">01</span><div><div class="method-name">O Zimbro</div><div class="method-desc">Nomear o cansaço sem fingir, e ser encontrada nele.</div></div></div>
+      <div class="method-row"><span class="method-num">02</span><div><div class="method-name">O Bolo e o Segundo Sono</div><div class="method-desc">Aprender a receber e a descansar de novo, sem culpa.</div></div></div>
+      <div class="method-row"><span class="method-num">03</span><div><div class="method-name">A Força do Alimento</div><div class="method-desc">Descobrir que a pausa sustenta o que vem depois.</div></div></div>
+      <div class="method-row"><span class="method-num">04</span><div><div class="method-name">A Voz Mansa</div><div class="method-desc">O silêncio que processa a dor e abre espaço para ouvir.</div></div></div>
+      <p class="method-cadence">10 a 15 minutos por dia. Um versículo, uma reflexão, uma prática simples, uma oração guiada — sete dias, sete degraus.</p>
+    </div>
+
+    <p class="prose center" style="max-width:38ch;margin:22px auto 6px;font-size:13.5px;color:var(--ink-soft)">É assim que o Dia 1 chega até você:</p>
+    <div class="preview-card">
+      <div class="preview-topbar"><span><strong>1 de 7</strong> dias concluídos</span><span>14%</span></div>
+      <div class="preview-progress"><div class="preview-progress-fill"></div></div>
+      <div class="preview-body">
+        <p class="preview-eyebrow">Dia 1 de 7</p>
+        <p class="preview-title">A Sombra do Zimbreiro</p>
+        <p class="preview-subtitle">Permissão para estar cansada</p>
+        <div class="preview-frag">
+          <p class="preview-label">Reflexão</p>
+          <p class="preview-text fade">"Elias era um profeta. Um homem que chamou fogo do céu. Que confrontou 450 profetas de Baal sozinho. E esse mesmo homem se sentou debaixo de uma árvore e pediu para morrer."</p>
+          <span class="preview-more">→ Continuar lendo</span>
+        </div>
+        <div class="preview-frag">
+          <p class="preview-label">Pergunta para hoje</p>
+          <p class="preview-text fade">"Qual é o seu 'zimbro' — o lugar onde você finalmente..."</p>
+        </div>
+        <div class="preview-frag">
+          <p class="preview-label">Prática do dia</p>
+          <p class="preview-check"><span class="mk">✓</span>Reserve 10 minutos em silêncio, sem celular e sem compromissos.</p>
+          <span class="preview-more">+ 2 práticas guiadas</span>
+        </div>
+        <div class="preview-frag">
+          <p class="preview-label">Oração guiada</p>
+          <p class="preview-text fade">"Senhor, estou cansada. Não de você..."</p>
+          <span class="preview-more">→ O restante fica disponível no Dia 1</span>
+        </div>
+      </div>
+      <div class="preview-footer">Isto é o app real — não uma ilustração.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BLOCO 6 — QUALIFICAÇÃO (com reasseguramento fundido) ============ -->
+<section class="section" data-track-section="qualificacao">
+  <div class="container">
+    <p class="prose center" style="max-width:46ch;margin:0 auto 28px">Não é sobre fazer menos por Deus. É sobre parar de tentar merecer o descanso que Ele já ofereceu.</p>
+    <div class="qual-grid">
+      <div>
+        <span class="label">Isso é pra você se</span>
+        <ul class="qual-list">
+          <li><span class="mk">✓</span>Você serve a Deus há anos e sente que, por dentro, está esgotada.</li>
+          <li><span class="mk">✓</span>Você sente culpa toda vez que tenta descansar.</li>
+          <li><span class="mk">✓</span>Você já pediu mais fé, orou mais, e o cansaço continua.</li>
+        </ul>
+      </div>
+      <div class="qual-no">
+        <span class="label">Não é pra você se</span>
+        <ul class="qual-list">
+          <li><span class="mk">—</span>Você busca resultado sem nenhuma mudança de hábito nos próximos 7 dias.</li>
+          <li><span class="mk">—</span>Você está vivendo uma crise emocional aguda agora — nesse caso, procure acompanhamento pastoral ou profissional diretamente; este protocolo não substitui isso.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BLOCO 7 — OFERTA (com fechamento fundido) ============ -->
+<section class="section section-dark" id="oferta" data-track-section="oferta">
+  <div class="container">
+    <div class="offer">
+      <p class="offer-eyebrow">Método do Zimbreiro — Fase 1 do Protocolo de Elias</p>
+      <p class="offer-name">Sete dias para praticar o descanso como obediência</p>
+      <p class="offer-anchor">R$47,90</p>
+      <p class="offer-price">R$17,90</p>
+      <p class="offer-detail">Uma única vez · acesso imediato</p>
+      <a href="https://pay.herospark.com/metodo-do-zimbreiro-536020" class="btn btn-wide" id="cta-oferta" data-track-cta data-cta-id="cta-oferta">Começar meus 7 dias</a>
+      <!-- href real setado via withPassthrough() no script de tracking abaixo. -->
+
+    </div>
+    <div class="guarantee">
+      <p><strong>Garantia de 7 dias:</strong> você tem 7 dias para acessar e conhecer o Método do Zimbreiro. Se perceber que não é para você, solicite o reembolso dentro desse prazo. Pagamento processado com segurança por SparkPay by HeroSpark.</p>
+    </div>
+    <p class="quote" style="margin-top:22px">Talvez você não precise fazer mais hoje. Talvez precise começar pelo mesmo lugar em que a restauração de Elias começou.</p>
+    <p class="authority" style="margin-top:14px">Uma iniciativa Pleno — fé prática para quem carrega peso demais em silêncio.</p>
+  </div>
+</section>
+
+<footer>
+  <p>Este produto é de natureza educacional e espiritual. Não substitui acompanhamento médico, psicológico ou pastoral profissional. © 2026 Acesso Pleno Digital.</p>
+</footer>
+
+<!-- =====================================================================
+     TRACKING — espelha o padrão já em produção no quiz (index.html):
+     mesmo Pixel ID, mesma property GA4, mesmo helper trackEvent(), mesmo
+     conceito de variant. Pronto pra ativar quando for deployado — comentado
+     aqui só porque o CSP deste ambiente de preview bloqueia domínios de
+     terceiro além de Google Fonts (mesma nota já usada no artifact de 22/08).
+
 <script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window,document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '1494320865775022');
-fbq('track', 'PageView');
+  !function(f,b,e,v,n,t,s){...}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1494320865775022');
+  fbq('track', 'PageView');
 </script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
-
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DW808DQS8Q"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -318,1343 +286,32 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
   gtag('js', new Date());
   gtag('config', 'G-DW808DQS8Q');
 </script>
-
-<script type="text/javascript">
-  (function(c,l,a,r,i,t,y){
-    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-  })(window, document, "clarity", "script", "xgupql83dx");
-</script>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-  :root {
-    --ink: #1C1208;
-    --ink-soft: #3A2810;
-    --cream: #FAF7F2;
-    --warm: #F0E8D8;
-    --gold: #C4973B;
-    --gold-soft: #D8C9A8;
-    --gold-muted: #C0B090;
-    --dark: #1C1208;
-    --dark2: #241A0C;
-    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: 'Inter', sans-serif;
-    background: var(--dark);
-    color: var(--cream);
-    font-size: 17px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-    min-height: 100dvh;
-  }
-  h1, h2, h3 { font-family: 'Lora', serif; font-weight: 700; text-wrap: balance; }
-  .container { max-width: 480px; margin: 0 auto; padding: 0 24px; }
-
-  /* Barra de progresso fixa */
-  .progress-wrap { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: rgba(255,255,255,0.08); z-index: 100; }
-  .progress-bar { height: 100%; background: var(--gold); width: 0%; transition: width 0.4s var(--ease-out); }
-  .progress-percent { position: fixed; top: 8px; left: 14px; z-index: 101; font-size: 10px; font-weight: 800; letter-spacing: 0.5px; color: var(--gold-soft); }
-
-  /* Marca Pleno — discreta, topo, com leve flutuação 3D (pedido do usuário
-     02/08/2026, adaptado do protótipo de teste). Abaixo da barra de
-     progresso (4px) + respiro, pra não colar na borda do viewport. */
-  .brand-mark { position: fixed; top: 26px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; justify-content: center; gap: 8px; z-index: 100; animation: brandFloat 4.8s ease-in-out infinite; transform-style: preserve-3d; }
-  /* Tela de resultado rola e já tem marca própria (eyebrow + offer-eyebrow)
-     — a marca fixa no topo ficaria sobrepondo cards ao rolar, escondida aqui. */
-  body.on-result .brand-mark { display: none; }
-  @keyframes brandFloat { 0%, 100% { transform: translateX(-50%) perspective(600px) rotateY(-16deg) translateY(0) scale(1); opacity: 0.85; } 50% { transform: translateX(-50%) perspective(600px) rotateY(16deg) translateY(-4px) scale(1.04); opacity: 1; } }
-  .brand-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 8px rgba(196,151,59,0.6); }
-  .brand-mark span.brand-name { font-family: 'Lora', serif; font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold-soft); }
-  @media (prefers-reduced-motion: reduce) { .brand-mark { animation: none; } }
-
-  /* Trilha de fundo (22ª rodada) + botão de mudo — discreto, canto superior
-     direito, disponível em toda tela pra quem prefere navegar sem som. */
-  .mute-toggle { position: fixed; top: 14px; right: 14px; z-index: 101; width: 34px; height: 34px; border-radius: 50%; background: rgba(28,18,8,0.55); border: 1px solid rgba(196,151,59,0.35); color: var(--gold-soft); display: flex; align-items: center; justify-content: center; cursor: pointer; }
-  .mute-toggle svg { width: 16px; height: 16px; }
-
-  .screen { display: none; min-height: 100dvh; align-items: center; justify-content: center; padding: 64px 0 40px; }
-  .screen.active { display: flex; }
-
-  /* Intro */
-  .intro-eyebrow { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; text-align: center; }
-  .intro h1 { font-size: clamp(24px, 6vw, 32px); line-height: 1.3; text-align: center; margin-bottom: 16px; color: #fff; }
-  .intro p { font-size: 15px; color: var(--gold-muted); text-align: center; max-width: 36ch; margin: 0 auto 32px; }
-
-  .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; background: var(--gold); color: var(--dark); text-decoration: none; font-weight: 800; font-size: 16px; padding: 18px 24px; border-radius: 8px; border: none; cursor: pointer; text-align: center; transition: transform 160ms var(--ease-out), background 160ms ease; font-family: 'Inter', sans-serif; }
-  .btn:hover { background: #D4A94B; }
-  .btn:active { transform: scale(0.97); }
-  @media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
-
-  /* Perguntas */
-  .q-label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; text-align: center; }
-  .q-title { font-size: clamp(20px, 5.5vw, 26px); line-height: 1.35; text-align: center; margin-bottom: 10px; color: #fff; }
-  .q-micro { font-size: 14px; color: var(--gold-soft); text-align: center; margin-bottom: 28px; font-style: italic; font-family: 'Lora', serif; }
-  .q-options { display: flex; flex-direction: column; gap: 12px; }
-  .q-option { display: block; width: 100%; text-align: left; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.14); color: var(--cream); font-family: 'Inter', sans-serif; font-size: 15.5px; padding: 16px 18px; border-radius: 10px; cursor: pointer; transition: background 160ms ease, border-color 160ms ease; }
-  .q-option:hover { background: rgba(196,151,59,0.14); border-color: var(--gold); }
-  .q-option:active { transform: scale(0.99); }
-
-  /* Loading */
-  .loading-wrap { text-align: center; }
-  .spinner { width: 44px; height: 44px; border: 3px solid rgba(196,151,59,0.25); border-top-color: var(--gold); border-radius: 50%; margin: 0 auto 28px; animation: spin 0.9s linear infinite; }
-  .ring-wrap { width: 72px; height: 72px; margin: 0 auto 28px; }
-  .ring-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
-  .ring-bg { stroke: rgba(196,151,59,0.18); }
-  .ring-fg { stroke: var(--gold); stroke-linecap: round; stroke-dasharray: 195; stroke-dashoffset: 195; transition: stroke-dashoffset 0.1s linear; }
-  .loading-kicker { font-size: 15px; line-height: 1.55; color: #fff; font-family: 'Lora', serif; max-width: 34ch; margin: 0 auto 26px; opacity: 0; transition: opacity 0.5s ease; }
-  .loading-kicker.show { opacity: 1; }
-  .loading-axes { max-width: 320px; margin: 0 auto 22px; text-align: left; }
-  .loading-axis-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--gold-soft); padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.08); opacity: 0; transition: opacity 0.4s ease; }
-  .loading-axis-row.show { opacity: 1; }
-  .loading-axis-row span:last-child { font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-step { font-size: 15px; color: var(--gold-soft); opacity: 0; transition: opacity 0.4s ease; margin-bottom: 8px; }
-  .loading-step.show { opacity: 1; }
-
-  /* Resultado */
-  .result-tag { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 700; text-align: center; margin-bottom: 16px; }
-  .result h2 { font-size: clamp(22px, 6vw, 28px); line-height: 1.35; text-align: center; margin-bottom: 28px; color: #fff; }
-  .result-block { background: var(--dark2); border-radius: 12px; padding: 28px 24px; margin-bottom: 28px; }
-  .result-block p { font-size: 16px; line-height: 1.65; color: var(--gold-soft); margin-bottom: 18px; }
-  .result-block p:last-child { margin-bottom: 0; }
-  .result-highlight { font-family: 'Lora', serif; font-style: italic; font-size: 17.5px; line-height: 1.55; color: var(--ink); background: rgba(196,151,59,0.16); border-radius: 8px; padding: 18px 18px; }
-  .pain-deepening { padding: 4px 4px 4px 18px; border-left: 2px solid rgba(196,151,59,0.3); margin-bottom: 30px; }
-  .pain-deepening p { font-size: 15.5px; line-height: 1.6; color: rgba(250,247,242,0.72); margin-bottom: 18px; }
-  .pain-deepening p:last-child { margin-bottom: 0; }
-  .bridge { font-family: 'Lora', serif; font-style: italic; font-size: 16.5px; line-height: 1.65; color: var(--gold-soft); text-align: center; max-width: 38ch; margin: 0 auto 32px; }
-
-  .offer-panel { background: var(--warm); color: var(--ink); border-radius: 12px; padding: 32px 24px; text-align: center; }
-  .offer-eyebrow { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
-  .offer-name { font-family: 'Lora', serif; font-size: 22px; font-weight: 700; margin-bottom: 16px; }
-  .offer-price-anchor { font-size: 16px; color: var(--ink-soft); text-decoration: line-through; opacity: 0.7; margin-bottom: -4px; }
-  .pix-badge { font-size: 13px; font-weight: 800; color: #0a7a4f; margin: 6px 0 14px; }
-
-  /* Gráfico real (04/08/2026, pedido do usuário: "gráfico mais atrativo").
-     Card claro (mesmo princípio visual do offer-panel), mas o ponto "Você"
-     é calculado de verdade a partir da média dos 3 eixos reais — nunca uma
-     posição fixa/decorativa. */
-  .trust-graph { background: var(--cream); color: var(--ink); border-radius: 12px; padding: 24px 18px 18px; margin-bottom: 22px; text-align: center; }
-  .trust-graph-title { font-family: 'Lora', serif; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
-  .trust-graph-sub { font-size: 12.5px; color: #5b5346; margin-bottom: 16px; line-height: 1.4; }
-  .trust-graph-box { height: 130px; position: relative; }
-  .trust-graph-box svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .trust-graph-you { position: absolute; background: #ff9d12; color: #fff; font-weight: 800; font-size: 11px; border-radius: 7px; padding: 3px 8px; transform: translate(-50%, -160%); white-space: nowrap; }
-  .trust-graph-dot { position: absolute; width: 13px; height: 13px; border-radius: 50%; background: #ff9d12; border: 3px solid #fff; transform: translate(-50%, -50%); box-shadow: 0 0 0 6px rgba(255,157,18,0.18); }
-  .trust-graph-labels { display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; font-weight: 700; color: #3a3226; text-align: left; }
-  .trust-graph-labels span:last-child { text-align: right; }
-
-  .faq-block { text-align: left; margin: 8px 0 24px; }
-  .faq-title { text-align: center; font-size: 12.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 14px; }
-  .faq-item { border-bottom: 1px solid rgba(255,255,255,0.08); padding: 13px 0; }
-  .faq-item summary { cursor: pointer; font-weight: 700; font-size: 14px; color: #fff; list-style: none; }
-  .faq-item summary::-webkit-details-marker { display: none; }
-  .faq-item summary::after { content: '+'; float: right; color: var(--gold); font-weight: 800; }
-  .faq-item[open] summary::after { content: '\2013'; }
-  .faq-item p { font-size: 13px; color: var(--gold-soft); margin-top: 9px; line-height: 1.55; }
-  .offer-price { font-size: 38px; font-weight: 800; color: var(--ink); margin: 14px 0 4px; }
-  .offer-countdown { background: #7A1F0F; border-radius: 10px; padding: 12px 16px; margin-bottom: 20px; }
-  .offer-countdown-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: #FFD9C7; font-weight: 700; margin-bottom: 8px; }
-  .offer-countdown-clock { display: flex; align-items: center; justify-content: center; gap: 6px; }
-  .offer-countdown-digit { background: rgba(0,0,0,0.28); color: #fff; font-weight: 800; font-size: 22px; padding: 5px 10px; border-radius: 6px; font-variant-numeric: tabular-nums; min-width: 36px; text-align: center; }
-  .offer-countdown-colon { color: #fff; font-weight: 800; font-size: 20px; }
-  .offer-countdown.pulse { animation: countdown-pulse 1.4s ease-in-out infinite; }
-  @keyframes countdown-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.015); } }
-  @media (prefers-reduced-motion: reduce) { .offer-countdown.pulse { animation: none; } }
-  .offer-countdown.expired { background: #4A4A4A; }
-  .offer-countdown-expired-text { font-size: 14px; font-weight: 700; color: #fff; }
-  .offer-reinforcement { display: none; font-size: 14px; font-weight: 600; color: var(--ink); margin: 2px 0 16px; }
-  .offer-reinforcement.show { display: block; }
-  .offer-detail { font-size: 13px; color: var(--ink-soft); margin-bottom: 22px; }
-  .guarantee-note { font-size: 13px; color: var(--gold-muted); text-align: center; margin-top: 18px; }
-  .guarantee-block { display: flex; align-items: center; gap: 16px; margin-top: 20px; text-align: left; }
-  .guarantee-seal { flex: 0 0 58px; width: 58px; height: 58px; border: 2px solid var(--gold); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--ink); }
-  .guarantee-seal strong { font-family: 'Lora', serif; font-size: 21px; line-height: 1; }
-  .guarantee-seal span { font-size: 8px; letter-spacing: 1.5px; font-weight: 800; color: var(--gold); margin-top: 1px; }
-  .guarantee-block .guarantee-note { text-align: left; margin-top: 0; }
-  .seals { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 18px; font-size: 11.5px; color: var(--ink-soft); opacity: 0.75; }
-  .payment-processor-badges { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; background: #fff; border-radius: 12px; padding: 12px 18px; margin: 16px auto 0; max-width: 420px; }
-  .ppb-item { display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; color: #333; white-space: nowrap; }
-  .ppb-item svg { flex-shrink: 0; }
-  .ppb-brand { font-family: Arial, sans-serif; letter-spacing: 0.5px; color: #111; }
-  .ppb-caption { text-align: center; font-size: 10.5px; color: var(--ink-soft); opacity: 0.6; margin-top: 8px; }
-  .ssl-badge { display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: 16px; }
-  .ssl-badge .ssl-line1 { font-size: 12px; color: var(--ink-soft); opacity: 0.7; }
-  .ssl-badge .ssl-line2 { display: flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 800; color: #1a9c4a; letter-spacing: 0.3px; }
-  .ssl-badge .ssl-line3 { font-size: 11px; color: var(--ink-soft); opacity: 0.6; }
-
-  .footer-note { font-size: 11px; color: rgba(250,247,242,0.35); text-align: center; margin-top: 28px; line-height: 1.6; }
-
-  /* Linha de compromisso/coerência (rodada 17) */
-  .commitment-line {
-    font-family: 'Lora', serif; font-style: italic; font-size: 15.5px; line-height: 1.6; color: var(--gold-soft);
-    text-align: center; max-width: 34ch; margin: 0 auto 32px; opacity: 0;
-    animation: fadeUp 500ms var(--ease-out) forwards;
-  }
-
-  /* Indicador de identificação em 3 sub-eixos, calculados das respostas reais (rodada 17) */
-  .id-panel { background: var(--dark2); border-radius: 12px; padding: 26px 24px; margin-bottom: 34px; opacity: 0; animation: fadeUp 500ms var(--ease-out) 150ms forwards; }
-  .id-panel-title { font-size: 12.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 20px; }
-  .id-axis { margin-bottom: 20px; }
-  .id-axis:last-child { margin-bottom: 0; }
-  .id-axis-label { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; color: var(--cream); margin-bottom: 9px; }
-  .id-axis-value { font-family: 'Lora', serif; font-size: 16px; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; }
-  .id-axis-track { height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
-  .id-axis-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold-muted), var(--gold)); border-radius: 4px; transition: width 1000ms var(--ease-out); }
-  .id-panel-note { font-size: 12.5px; line-height: 1.5; color: rgba(250,247,242,0.5); margin-top: 18px; }
-
-  /* Dossiê de entrega revelado em sequência (rodada 17) */
-  .dossier-title { font-size: 12.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); text-align: center; margin-bottom: 10px; font-weight: 700; }
-  .dossier-count { text-align: center; font-size: 14px; color: var(--gold-soft); margin-bottom: 22px; opacity: 0; animation: fadeUp 400ms var(--ease-out) 350ms forwards; }
-  .dossier-count strong { color: var(--gold); font-weight: 700; }
-  .dossier-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
-  .dossier-card { display: flex; align-items: center; gap: 16px; background: var(--dark2); border: 1px solid rgba(196,151,59,0.18); border-radius: 10px; padding: 18px 20px; opacity: 0; transform: translateY(10px); animation: cardIn 520ms var(--ease-out) forwards; }
-  .dossier-card:nth-child(1) { animation-delay: 500ms; }
-  .dossier-card:nth-child(2) { animation-delay: 900ms; }
-  .dossier-card:nth-child(3) { animation-delay: 1300ms; }
-  .dossier-card:nth-child(4) { animation-delay: 1700ms; }
-  .dossier-icon { flex-shrink: 0; width: 42px; height: 42px; border-radius: 50%; background: rgba(196,151,59,0.14); display: flex; align-items: center; justify-content: center; font-size: 20px; }
-  .dossier-text { flex: 1; }
-  .dossier-name { font-size: 15.5px; font-weight: 600; color: var(--cream); margin-bottom: 4px; }
-  .dossier-desc { font-size: 13.5px; line-height: 1.4; color: var(--gold-muted); }
-  .dossier-badge { flex-shrink: 0; font-size: 10.5px; font-weight: 700; letter-spacing: 0.5px; color: #1C1208; background: var(--gold); padding: 4px 9px; border-radius: 20px; opacity: 0; animation: badgePop 400ms var(--ease-out) forwards; }
-  .dossier-card:nth-child(1) .dossier-badge { animation-delay: 850ms; }
-  .dossier-card:nth-child(2) .dossier-badge { animation-delay: 1250ms; }
-  .dossier-card:nth-child(3) .dossier-badge { animation-delay: 1650ms; }
-  .dossier-card:nth-child(4) .dossier-badge { animation-delay: 2050ms; }
-
-  /* Baixar/compartilhar resultado (rodada 17) */
-  .download-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: transparent; border: 1.5px solid rgba(196,151,59,0.5); color: var(--gold); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; padding: 13px 18px; border-radius: 8px; cursor: pointer; margin-bottom: 32px; opacity: 0; animation: fadeUp 500ms var(--ease-out) 2150ms forwards; transition: background 160ms ease; }
-  .download-btn:hover { background: rgba(196,151,59,0.1); }
-  .download-btn svg { width: 16px; height: 16px; }
-  .download-hint { text-align: center; font-size: 11.5px; color: rgba(250,247,242,0.4); margin-top: -24px; margin-bottom: 32px; opacity: 0; animation: fadeUp 400ms var(--ease-out) 2300ms forwards; }
-
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes cardIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes badgePop { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
-  @keyframes ctaGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(196,151,59,0.5), 0 4px 14px rgba(0,0,0,0.15); } 50% { box-shadow: 0 0 0 9px rgba(196,151,59,0), 0 4px 14px rgba(0,0,0,0.15); } }
-  @keyframes ctaArrow { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
-  .btn.btn-glow { animation: ctaGlow 1.8s ease-in-out infinite; }
-  .btn-arrow { display: inline-block; animation: ctaArrow 1.4s ease-in-out infinite; }
-  @media (prefers-reduced-motion: reduce) {
-    .commitment-line, .id-panel, .dossier-card, .dossier-badge, .dossier-count, .download-btn, .download-hint { animation: none !important; opacity: 1 !important; transform: none !important; }
-    .id-axis-fill { transition: none !important; }
-    .btn.btn-glow, .btn-arrow { animation: none !important; }
-    .scratch-wrap.invite, .scratch-hint { animation: none !important; }
-    .scratch-hint { opacity: 1 !important; }
-  }
-
-  /* Raspadinha: cobre o preço/contador até a pessoa arrastar ou tocar.
-     O desconto revelado é sempre o mesmo desconto real — não há sorteio.
-     19ª rodada: dado real mostrou que quase ninguém raspava (1 de 13
-     conclusões) — o botão de CTA logo abaixo é visualmente mais chamativo
-     (dourado, com brilho) que a raspadinha (retângulo neutro com texto),
-     então a atenção pulava direto pro botão sem passar pela raspadinha.
-     Adicionado brilho pulsante na própria raspadinha (mesma linguagem
-     visual do CTA, .invite) + dica textual com animação sutil (.scratch-hint)
-     pra competir pela atenção antes do botão, sem bloquear quem já sabe
-     que quer comprar. */
-  .scratch-hint { text-align: center; font-size: 12.5px; font-weight: 700; color: var(--gold); margin: 10px 0 4px; opacity: 0; animation: hintFadeIn 400ms ease 1200ms forwards, hintBounce 1.3s ease-in-out 1200ms infinite; }
-  @keyframes hintFadeIn { to { opacity: 1; } }
-  @keyframes hintBounce { 0%, 50%, 100% { transform: translateY(0); } 25% { transform: translateY(-3px); } }
-  /* Mini-pitch em áudio (22ª rodada, opt-in — sem autoplay, navegador bloqueia
-     áudio com som sem interação, e mesmo se não bloqueasse, forçar tocar
-     sozinho seria ruim de UX). Card estilo "mensagem de voz" (linguagem
-     visual já familiar de WhatsApp pro público), com botão de play/pause
-     e um botão "Continuar" sempre disponível, nunca bloqueado por ouvir
-     ou não — não força interação, só oferece. */
-  /* Card redesenhado com cara de mensagem de voz de WhatsApp (pedido do
-     usuário) — bolha "recebida" com rabinho, paleta própria do site (não o
-     verde do WhatsApp, pra manter identidade visual), duração visível
-     (resolve a preocupação de "achar que é longo demais" antes de tocar). */
-  .audio-card { position: relative; background: var(--dark2); border-radius: 4px 16px 16px 16px; padding: 14px 18px 14px 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
-  .audio-card::before { content: ''; position: absolute; top: 0; left: -7px; width: 14px; height: 14px; background: var(--dark2); clip-path: polygon(100% 0, 100% 100%, 0 0); }
-  .audio-play-btn { flex-shrink: 0; width: 42px; height: 42px; border-radius: 50%; background: var(--gold); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); transition: transform 160ms ease; }
-  .audio-play-btn:active { transform: scale(0.94); }
-  .audio-play-btn svg { width: 17px; height: 17px; }
-  .audio-card-text { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-  .audio-card-label { font-size: 11.5px; color: rgba(250,247,242,0.45); }
-  .audio-waveform-row { display: flex; align-items: center; gap: 8px; }
-  .audio-waveform { display: flex; align-items: center; gap: 2.5px; height: 22px; }
-  .audio-waveform span { width: 2.5px; background: var(--gold); border-radius: 2px; opacity: 0.45; }
-  .audio-waveform.playing span { animation: waveBounce 900ms ease-in-out infinite; opacity: 0.9; }
-  .audio-waveform span:nth-child(1) { height: 6px; animation-delay: 0ms; }
-  .audio-waveform span:nth-child(2) { height: 12px; animation-delay: 90ms; }
-  .audio-waveform span:nth-child(3) { height: 18px; animation-delay: 180ms; }
-  .audio-waveform span:nth-child(4) { height: 9px; animation-delay: 270ms; }
-  .audio-waveform span:nth-child(5) { height: 16px; animation-delay: 360ms; }
-  .audio-waveform span:nth-child(6) { height: 7px; animation-delay: 450ms; }
-  .audio-waveform span:nth-child(7) { height: 14px; animation-delay: 540ms; }
-  .audio-waveform span:nth-child(8) { height: 10px; animation-delay: 630ms; }
-  .audio-waveform span:nth-child(9) { height: 6px; animation-delay: 720ms; }
-  .audio-duration { flex-shrink: 0; font-size: 12px; font-weight: 600; color: var(--gold-soft); font-variant-numeric: tabular-nums; }
-  @keyframes waveBounce { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.7); } }
-  @media (prefers-reduced-motion: reduce) { .audio-waveform.playing span { animation: none !important; } }
-
-  /* Presell agressivo (21ª rodada) — confronto direto logo antes da oferta.
-     Diferente do .result-highlight (itálico, reflexivo), este bloco é bold,
-     reto, sem itálico — a intenção é peso e urgência, não contemplação.
-     Grounded no mecanismo real (7 dias, áudio guiado, Elias/zimbreiro) —
-     nenhum depoimento ou dado fabricado, só intensidade de copy. */
-  .presell-block { background: rgba(122,31,15,0.14); border-left: 3px solid var(--gold); border-radius: 8px; padding: 22px 20px; margin-bottom: 30px; }
-  .presell-block p { font-size: 16.5px; font-weight: 700; line-height: 1.6; color: var(--cream); }
-  .scratch-wrap { position: relative; border-radius: 10px; }
-  @keyframes scratchGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(196,151,59,0.45); } 50% { box-shadow: 0 0 0 8px rgba(196,151,59,0); } }
-  .scratch-wrap.invite { animation: scratchGlow 1.6s ease-in-out infinite; }
-  .scratch-canvas {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    cursor: pointer;
-    touch-action: none;
-  }
-  .scratch-canvas:focus-visible {
-    outline: 2px solid var(--ink);
-    outline-offset: 2px;
-  }
-
-  /* Back redirect: overlay mostrado quando a pessoa tenta voltar/sair da
-     tela de resultado (ver comentário no head). */
-  .br-overlay { display: none; position: fixed; inset: 0; background: rgba(16,12,6,0.92); z-index: 200; align-items: center; justify-content: center; padding: 24px; }
-  .br-overlay.show { display: flex; }
-  .br-box { background: var(--warm); color: var(--ink); border-radius: 12px; padding: 32px 26px; max-width: 380px; width: 100%; text-align: center; }
-  .br-title { font-family: 'Lora', serif; font-size: 20px; font-weight: 700; margin-bottom: 12px; }
-  .br-body { font-size: 15px; color: var(--ink-soft); margin-bottom: 22px; line-height: 1.6; }
-  .br-dismiss { display: block; margin-top: 16px; font-size: 13px; color: var(--ink-soft); text-decoration: underline; }
-</style>
-</head>
-<body>
-
-<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
-<div class="progress-percent" id="progressPercent">0%</div>
-<div class="brand-mark"><span class="brand-dot"></span><span class="brand-name">Pleno</span></div>
-<button class="mute-toggle" id="muteToggle" aria-label="Ativar ou desativar som de fundo">
-  <svg id="muteIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M3 10v4h4l5 5V5L7 10H3z"/><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.74 2.5-2.26 2.5-4.02z"/><path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-</button>
-<audio id="bgMusic" loop preload="none" src="assets/audio/bg-piano-emotions.mp3"></audio>
-<audio id="bgMusicOffer" loop preload="none" src="assets/audio/bg-offer.mp3"></audio>
-
-<!-- TELA 0: INTRO -->
-<section class="screen active intro" data-screen="intro">
-  <div class="container">
-    <h1>Você não desistiu de servir. Só esqueceu como parar.</h1>
-    <p>Uma leitura pessoal, de 1 minuto, pra você nomear o peso que carrega e ver o que fazer com ele.</p>
-    <button class="btn" onclick="startQuiz()" data-track="quiz-start">Começar minha leitura personalizada</button>
-  </div>
-</section>
-
-<!-- PERGUNTAS -->
-<section class="screen" data-screen="q1">
-  <div class="container">
-    <p class="q-label">Vamos começar por você</p>
-    <h2 class="q-title">Há quanto tempo você serve na igreja sem uma pausa de verdade?</h2>
-    <p class="q-micro">Sem resposta certa. Essa primeira resposta já começa a moldar sua leitura.</p>
-    <div class="q-options">
-      <button class="q-option" onclick="answer(1,'A')">Menos de 1 ano</button>
-      <button class="q-option" onclick="answer(1,'B')">De 1 a 5 anos</button>
-      <button class="q-option" onclick="answer(1,'C')">Mais de 5 anos</button>
-      <button class="q-option" onclick="answer(1,'D')">Não lembro quando foi a última vez que parei de verdade</button>
-    </div>
-  </div>
-</section>
-
-<section class="screen" data-screen="q2">
-  <div class="container">
-    <p class="q-label">Pergunta 2 de 5</p>
-    <h2 class="q-title">Qual dessas frases mais parece com você?</h2>
-    <p class="q-micro">Escolha a que mais dói de admitir. Isso ajuda a mirar exatamente onde sua leitura precisa chegar.</p>
-    <div class="q-options">
-      <button class="q-option" onclick="answer(2,'A')">Sou sempre a que fica até o fim resolvendo tudo</button>
-      <button class="q-option" onclick="answer(2,'B')">Já pensei em sumir um domingo, mas nunca fiz</button>
-      <button class="q-option" onclick="answer(2,'C')">Digo que está tudo bem mesmo quando não está</button>
-      <button class="q-option" onclick="answer(2,'D')">Sinto que, se eu parar, tudo desmorona</button>
-    </div>
-  </div>
-</section>
-
-<section class="screen" data-screen="q3">
-  <div class="container">
-    <p class="q-label">Pergunta 3 de 5</p>
-    <h2 class="q-title">Qual dessas te descreve melhor hoje?</h2>
-    <p class="q-micro">Isso vai calibrar a leitura que você recebe no final.</p>
-    <div class="q-options">
-      <button class="q-option" onclick="answer(3,'A')">Lidero ou coordeno um ministério</button>
-      <button class="q-option" onclick="answer(3,'B')">Sou casada com um pastor ou líder</button>
-      <button class="q-option" onclick="answer(3,'C')">Sirvo como voluntária, sem cargo de liderança</button>
-      <button class="q-option" onclick="answer(3,'D')">Já servi bastante, hoje mal consigo</button>
-    </div>
-  </div>
-</section>
-
-<!-- MINI-PITCH EM ÁUDIO (meio do quiz, opt-in, ver comentário no head) -->
-<section class="screen" data-screen="audioMid">
-  <div class="container">
-    <p class="q-label">Antes de continuar</p>
-    <div class="audio-card">
-      <button class="audio-play-btn" id="audioMidPlayBtn" aria-label="Ouvir áudio">
-        <svg id="audioMidPlayIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-      </button>
-      <div class="audio-card-text">
-        <span class="audio-card-label">Uma mensagem rápida antes das próximas perguntas</span>
-        <div class="audio-waveform-row">
-          <div class="audio-waveform" id="audioMidWave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-          <span class="audio-duration" id="audioMidDuration">0:00</span>
-        </div>
-      </div>
-    </div>
-    <audio id="audioMidPlayer" preload="metadata"></audio>
-    <button class="btn" onclick="advanceFromAudioMid()">Continuar</button>
-  </div>
-</section>
-
-<section class="screen" data-screen="q4">
-  <div class="container">
-    <p class="q-label">Pergunta 4 de 5</p>
-    <h2 class="q-title" id="q4Title"></h2>
-    <p class="q-micro" id="q4Micro"></p>
-    <div class="q-options">
-      <button class="q-option" id="q4OptA" onclick="answer(4,'A')"></button>
-      <button class="q-option" id="q4OptB" onclick="answer(4,'B')"></button>
-      <button class="q-option" id="q4OptC" onclick="answer(4,'C')"></button>
-      <button class="q-option" id="q4OptD" onclick="answer(4,'D')"></button>
-    </div>
-  </div>
-</section>
-
-<section class="screen" data-screen="q5">
-  <div class="container">
-    <p class="q-label">Pergunta 5 de 5</p>
-    <h2 class="q-title" id="q5Title"></h2>
-    <p class="q-micro" id="q5Micro"></p>
-    <div class="q-options">
-      <button class="q-option" id="q5OptA" onclick="answer(5,'A')"></button>
-      <button class="q-option" id="q5OptB" onclick="answer(5,'B')"></button>
-      <button class="q-option" id="q5OptC" onclick="answer(5,'C')"></button>
-      <button class="q-option" id="q5OptD" onclick="answer(5,'D')"></button>
-    </div>
-  </div>
-</section>
-
-<!-- Q6 removida em 26/08/2026: única função era personalizar o texto do
-     CTA (CTA_BY_FEELING); auditoria confirmou que nenhum bloco da
-     ResultView usa a resposta dela, e o custo de um clique a mais não se
-     justificava sem função própria. Ver 09-INFRA/2026-08-26 (crm) e
-     05-COPY/estrategia-oferta/2026-08-26-resultview-copy-candidata-auditoria.md
-     no repo da Empresa. -->
-
-
-<!-- LOADING -->
-<section class="screen" data-screen="loading">
-  <div class="container loading-wrap">
-    <div class="ring-wrap"><svg viewBox="0 0 70 70"><circle class="ring-bg" cx="35" cy="35" r="31" fill="none" stroke-width="5"/><circle class="ring-fg" id="ringFg" cx="35" cy="35" r="31" fill="none" stroke-width="5"/></svg></div>
-    <p class="loading-kicker" id="loadKicker">Antes de qualquer resposta, Deus já fez isso por alguém no mesmo estado que você.</p>
-    <div class="loading-axes" id="loadingAxes">
-      <div class="loading-axis-row" id="loadAxisRow0"><span>Peso de servir sem pausa</span><span id="loadAxisVal0">0%</span></div>
-      <div class="loading-axis-row" id="loadAxisRow1"><span>Culpa ao pensar em descansar</span><span id="loadAxisVal1">0%</span></div>
-      <div class="loading-axis-row" id="loadAxisRow2"><span>Prontidão para o Método</span><span id="loadAxisVal2">0%</span></div>
-    </div>
-    <p class="loading-step" id="loadStep3">Isso não é um resultado genérico — é a partir do que você mesma respondeu.</p>
-  </div>
-</section>
-
-<!-- MINI-PITCH EM ÁUDIO (antes do resultado, opt-in) -->
-<section class="screen" data-screen="audioPre">
-  <div class="container">
-    <p class="q-label">Sua leitura está pronta</p>
-    <div class="audio-card">
-      <button class="audio-play-btn" id="audioPrePlayBtn" aria-label="Ouvir áudio">
-        <svg id="audioPrePlayIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-      </button>
-      <div class="audio-card-text">
-        <span class="audio-card-label">Uma mensagem rápida antes de você ver sua leitura</span>
-        <div class="audio-waveform-row">
-          <div class="audio-waveform" id="audioPreWave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-          <span class="audio-duration" id="audioPreDuration">0:00</span>
-        </div>
-      </div>
-    </div>
-    <audio id="audioPrePlayer" preload="metadata"></audio>
-    <button class="btn" onclick="advanceFromAudioPre()">Ver minha leitura</button>
-  </div>
-</section>
-
-<!-- RESULTADO -->
-<section class="screen result" data-screen="result">
-  <div class="container">
-    <p class="intro-eyebrow">Sua leitura personalizada</p>
-    <p class="result-tag" id="resultTag"></p>
-    <h2 id="resultHeadline"></h2>
-
-    <!-- ResultView redesenhada 26/08/2026 — cadeia Q1→Q2→Q4→diagnóstico→
-         Q5→Elias→reframe→antes/depois→transição, ver auditoria em
-         05-COPY/estrategia-oferta/2026-08-26-resultview-copy-candidata-auditoria.md
-         no repo da Empresa. Q6 removida (ver comentário no lugar da antiga
-         seção q6). -->
-    <div class="result-block">
-      <p id="resultQ1"></p>
-      <p id="resultQ2Callback"></p>
-      <p id="resultQ4Gatilho"></p>
-    </div>
-
-    <div class="result-block">
-      <p id="resultDiagnostico"></p>
-      <p class="result-highlight" id="resultDiagnosticoPivo"></p>
-    </div>
-
-    <p class="result-highlight" id="resultObjection" style="margin-bottom: 24px;"></p>
-
-    <p class="bridge" id="resultElias"></p>
-
-    <div class="result-block">
-      <p id="resultReframe"></p>
-      <p class="result-highlight" id="resultReframePivo"></p>
-    </div>
-
-    <div class="pain-deepening">
-      <p id="resultPD1"></p>
-      <p id="resultPD2"></p>
-      <p class="result-highlight" id="resultPD3"></p>
-    </div>
-
-    <p class="result-highlight" id="resultNextStep" style="margin-bottom: 24px;"></p>
-
-    <p class="bridge" id="resultDateAnchor"></p>
-
-    <p class="result-highlight" id="resultAltruism" style="margin-bottom: 24px;"></p>
-
-    <div class="id-panel">
-      <p class="id-panel-title">O que suas respostas revelam</p>
-      <div class="id-axis">
-        <div class="id-axis-label"><span>Peso de servir sem pausa</span><span class="id-axis-value" id="axisValue0">0%</span></div>
-        <div class="id-axis-track"><div class="id-axis-fill" id="axisFill0"></div></div>
-      </div>
-      <div class="id-axis">
-        <div class="id-axis-label"><span>Culpa ao pensar em descansar</span><span class="id-axis-value" id="axisValue1">0%</span></div>
-        <div class="id-axis-track"><div class="id-axis-fill" id="axisFill1"></div></div>
-      </div>
-      <div class="id-axis">
-        <div class="id-axis-label"><span>Prontidão para o Método</span><span class="id-axis-value" id="axisValue2">0%</span></div>
-        <div class="id-axis-track"><div class="id-axis-fill" id="axisFill2"></div></div>
-      </div>
-      <p class="id-panel-note">Calculado a partir das suas próprias respostas nas 5 perguntas, não é um diagnóstico clínico.</p>
-    </div>
-
-    <div class="trust-graph" id="trustGraph">
-      <p class="trust-graph-title">Seu Índice de Descanso Hoje</p>
-      <p class="trust-graph-sub">Média real das suas 3 respostas acima — não uma posição fixa.</p>
-      <div class="trust-graph-box">
-        <svg viewBox="0 0 300 150" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="graphGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#ef2920"/>
-              <stop offset="45%" stop-color="#ff9d12"/>
-              <stop offset="75%" stop-color="#52d5f6"/>
-              <stop offset="100%" stop-color="#155eef"/>
-            </linearGradient>
-          </defs>
-          <path id="graphPath" d="M10 135 C90 128, 150 100, 210 60 C250 35, 270 20, 290 12" fill="none" stroke="url(#graphGrad)" stroke-width="5" stroke-linecap="round"/>
-          <circle cx="10" cy="135" r="6" fill="#ef2920"/>
-          <circle cx="290" cy="12" r="6" fill="#155eef"/>
-        </svg>
-        <div class="trust-graph-you" id="trustGraphYou">Você</div>
-        <div class="trust-graph-dot" id="trustGraphDot"></div>
-      </div>
-      <div class="trust-graph-labels"><span>Servindo sem parar<br>Culpa de descansar</span><span>Parar sem culpa<br>Debaixo do zimbreiro</span></div>
-    </div>
-
-    <p class="dossier-title">O que você recebe agora</p>
-    <p class="dossier-count">Seu protocolo tem <strong>4 elementos</strong> revelados abaixo</p>
-    <div class="dossier-list">
-      <div class="dossier-card">
-        <div class="dossier-icon">📖</div>
-        <div class="dossier-text">
-          <div class="dossier-name">Guia completo do Método</div>
-          <div class="dossier-desc">Protocolo prático de 7 dias, em PDF</div>
-        </div>
-        <div class="dossier-badge">INCLUSO</div>
-      </div>
-      <div class="dossier-card">
-        <div class="dossier-icon">🎧</div>
-        <div class="dossier-text">
-          <div class="dossier-name">Áudios guiados</div>
-          <div class="dossier-desc">10 a 15 min por dia, os 7 dias</div>
-        </div>
-        <div class="dossier-badge">INCLUSO</div>
-      </div>
-      <div class="dossier-card">
-        <div class="dossier-icon">⚡</div>
-        <div class="dossier-text">
-          <div class="dossier-name">Acesso imediato</div>
-          <div class="dossier-desc">Direto no seu celular, sem esperar</div>
-        </div>
-        <div class="dossier-badge">INCLUSO</div>
-      </div>
-      <div class="dossier-card">
-        <div class="dossier-icon">🛡️</div>
-        <div class="dossier-text">
-          <div class="dossier-name">Garantia de 7 dias</div>
-          <div class="dossier-desc">Incondicional, sem pergunta</div>
-        </div>
-        <div class="dossier-badge">INCLUSO</div>
-      </div>
-    </div>
-
-    <button class="download-btn" id="downloadBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
-      Compartilhar minha leitura
-    </button>
-    <p class="download-hint">No celular abre o menu de compartilhar (Instagram, WhatsApp); no computador baixa a imagem</p>
-
-    <p class="bridge" id="resultTransicaoOferta"></p>
-
-    <div class="presell-block">
-      <p id="resultPresell"></p>
-    </div>
-
-    <div class="offer-panel">
-      <p class="offer-eyebrow">Pleno | Fase 1 do Protocolo</p>
-      <p class="offer-name">Método do Zimbreiro</p>
-      <p class="offer-price-anchor" id="offerPriceAnchor">R$47,90</p>
-      <p class="pix-badge">Pagando no Pix: 5% de desconto extra</p>
-      <div class="scratch-wrap" id="scratchWrap">
-        <div class="scratch-content">
-          <p class="offer-price" id="offerPrice">R$17,90</p>
-          <div class="offer-countdown pulse" id="offerCountdown">
-            <p class="offer-countdown-label" id="offerCountdownLabel">Seu desconto de R$17,90 acaba em</p>
-            <div class="offer-countdown-clock">
-              <span class="offer-countdown-digit" id="cdMin">15</span>
-              <span class="offer-countdown-colon">:</span>
-              <span class="offer-countdown-digit" id="cdSec">00</span>
-            </div>
-          </div>
-        </div>
-        <canvas class="scratch-canvas" id="scratchCanvas" role="button" tabindex="0" aria-label="Raspe ou toque para revelar seu desconto"></canvas>
-      </div>
-      <p class="scratch-hint" id="scratchHint">👆 toque aqui pra ver seu desconto</p>
-      <p class="offer-reinforcement" id="offerReinforcement">Você acabou de desbloquear esse valor. Ele não aparece de novo depois que o tempo abaixo terminar.</p>
-      <p class="offer-detail">Guia digital + áudios de 7 dias, 10 a 15 minutos por dia. Acesso imediato. Uma única vez.</p>
-      <a href="https://pay.herospark.com/metodo-do-zimbreiro-536020" class="btn btn-glow" id="ctaResultado" data-track="quiz-cta-result"><span id="ctaResultadoText">QUERO DESCANSAR EM DEUS</span><span class="btn-arrow">→</span></a>
-      <div class="seals">
-        <span>Pagamento seguro</span>
-        <span>Acesso pelo celular</span>
-        <span>Entrega imediata</span>
-      </div>
-      <div class="payment-processor-badges">
-        <span class="ppb-item ppb-brand">HEROSPARK</span>
-        <span class="ppb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Dados 100% Protegidos</span>
-        <span class="ppb-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3.5v5.5c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V5.5L12 2z"></path><path d="M8.5 12l2.5 2.5 5-5"></path></svg>Compra 100% Segura</span>
-      </div>
-      <p class="ppb-caption">Pagamento processado com segurança por SPARKPAY by HeroSpark</p>
-      <div class="ssl-badge">
-        <span class="ssl-line1">Você está em</span>
-        <span class="ssl-line2">AMBIENTE SEGURO <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a9c4a" stroke-width="2.4"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
-        <span class="ssl-line3">SSL · Conexão criptografada</span>
-      </div>
-      <div class="guarantee-block">
-        <div class="guarantee-seal"><strong>7</strong><span>DIAS</span></div>
-        <p class="guarantee-note">Garantia incondicional — direito seu previsto no Código de Defesa do Consumidor. Pagamento processado com criptografia; seus dados não ficam com a Pleno.</p>
-      </div>
-    </div>
-
-    <div class="faq-block">
-      <p class="faq-title">Perguntas frequentes</p>
-      <details class="faq-item"><summary>O desconto realmente acaba?</summary><p>Sim. Quando o contador chega a zero, o valor muda de verdade pro preço cheio — não é só visual.</p></details>
-      <details class="faq-item"><summary>Como eu recebo o conteúdo?</summary><p>Acesso imediato no seu celular, por link, assim que o pagamento é confirmado. Não precisa instalar nada.</p></details>
-      <details class="faq-item"><summary>E se eu não gostar ou não servir pra mim?</summary><p>Você tem 7 dias de garantia incondicional, direito previsto em lei (Art. 49 do CDC). Pede reembolso sem burocracia, sem justificar.</p></details>
-      <details class="faq-item"><summary>Meu pagamento é seguro?</summary><p>Sim. O processamento é feito pela SparkPay by HeroSpark, com criptografia — seus dados de pagamento não passam pela Pleno.</p></details>
-    </div>
-
-    <p class="footer-note">Pleno | Acesso Pleno Digital &middot; CNPJ: 41.379.584/0001-35<br>Este produto é de natureza educacional e espiritual. Não substitui acompanhamento médico, psicológico ou pastoral profissional.<br>Você tem direito de arrependimento em até 7 dias após a compra, conforme Art. 49 do Código de Defesa do Consumidor.</p>
-  </div>
-</section>
-
-<!-- BACK REDIRECT: aparece só quando a pessoa tenta voltar pelo botão do
-     navegador estando na tela de resultado. Ver comentário no head. -->
-<div class="br-overlay" id="backRedirectOverlay">
-  <div class="br-box">
-    <p class="br-title" id="brTitle"></p>
-    <p class="br-body" id="brBody"></p>
-    <button class="btn" id="brPrimary"></button>
-    <a href="#" class="br-dismiss" id="brDismiss">Sair mesmo assim</a>
-  </div>
-</div>
-
+===================================================================== -->
 <script>
-  var TOTAL_SCREENS = 8; // intro + 6 perguntas + loading (resultado fora da barra)
-  var answers = {};
-  var screens = ['intro','q1','q2','q3','audioMid','q4','q5','loading','audioPre','result'];
-  var currentIndex = 0;
-
-  function showScreen(name) {
-    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
-    document.querySelector('[data-screen="' + name + '"]').classList.add('active');
-    document.body.classList.toggle('on-result', name === 'result');
-    window.scrollTo(0, 0);
-  }
-
-  function updateProgress(qNum) {
-    var pct = Math.round((qNum / 5) * 100);
-    document.getElementById('progressBar').style.width = pct + '%';
-    document.getElementById('progressPercent').textContent = pct + '%';
-  }
+  var LP_TEST_VARIANT = 'lp_direta_hibrida_v1';
+  var CHECKOUT_URL = 'https://pay.herospark.com/metodo-do-zimbreiro-536020';
 
   function trackEvent(name, params) {
-    params = params || {};
+    params = Object.assign({}, params, { variant: LP_TEST_VARIANT });
     if (window.fbq) fbq('trackCustom', name, params);
     if (window.gtag) gtag('event', name, params);
   }
 
-  // Versão corrente do quiz, presente em QuizStart/QuizAnswer/QuizComplete/
-  // CTAResultClick — permite separar antes/depois sem adivinhar por
-  // timestamp de deploy. Histórico: 'hide_progress_q1_v1' (18/08/2026,
-  // esconde progresso só na 1ª tela). Atualizado em 26/08/2026 pra
-  // 'quiz_argument_v2_20260826': Q6 removida, ResultView reconstruída como
-  // cadeia argumentativa Q1→Q2→Q4→diagnóstico→Q5→Elias→reframe→antes-
-  // depois→transição, com o desejo de Q2 evoluindo através do argumento
-  // (não mais callback isolado). Ver
-  // 05-COPY/estrategia-oferta/2026-08-26-resultview-copy-candidata-auditoria.md
-  // no repo da Empresa. O comportamento de esconder progresso na 1ª tela
-  // (linhas abaixo) continua ativo, não foi revertido.
-  var QUIZ_TEST_VARIANT = 'quiz_argument_v2_20260826';
-
-  function startQuiz() {
-    trackEvent('QuizStart', { variant: QUIZ_TEST_VARIANT });
-    // Search padrão da Meta — a pessoa começa a buscar a resposta certa
-    // pra ela através do quiz, mesmo sentido de "busca" que o evento
-    // representa noutros funis (aqui não tem barra de busca literal).
-    if (window.fbq) fbq('track', 'Search', { content_name: 'Método do Zimbreiro' });
-    document.querySelector('.progress-wrap').style.display = 'none';
-    document.querySelector('.progress-percent').style.display = 'none';
-    showScreen('q1');
-    updateProgress(1);
-    startBgMusic();
-  }
-
-  // Trilha de fundo (22ª rodada, pedido do usuário — "música de fundo pra
-  // tocar na emoção"). Só começa a tocar no clique de "Começar" (gesto real
-  // do usuário — navegador bloqueia áudio com som sem isso), em volume
-  // baixo pra não competir com o conteúdo. Abaixa ainda mais (duck) durante
-  // os dois mini-pitches narrados, volta ao normal quando eles terminam —
-  // sem isso a narração e a música embolariam.
-  // 29/07/2026 (mesmo dia, pedido do usuário): troca pra uma segunda faixa
-  // com mais pulso ("A Light on the Hill", 80 BPM vs 40 BPM da trilha
-  // principal — e o nome "luz no monte" ecoa a mesma referência bíblica já
-  // usada no quiz, Elias ouvindo a voz mansa no monte em 1 Reis 19) assim
-  // que a pessoa rola até o painel de oferta — reforça o momento de decisão
-  // com mais energia, sem trocar de estilo bruscamente. Troca é definitiva
-  // (uma vez na oferta, não volta pra trilha calma se rolar pra cima de
-  // novo — evitar ida-e-volta que quebraria a continuidade). Fundamento
-  // real, não "botão de compra no cérebro": tempo/ritmo mais acelerado
-  // aumenta sensação de urgência e reduz hesitação, efeito documentado em
-  // atmosfera de varejo — não é mito, só não é o exagero popular do termo.
-  var BG_VOLUME = 0.09;
-  var BG_VOLUME_DUCKED = 0.02;
-  var bgMusicMuted = false;
-  var bgDucked = false;
-  var activeBgTrackId = 'bgMusic';
-  var offerMusicStarted = false;
-
-  function applyBgVolume() {
-    var m = document.getElementById(activeBgTrackId);
-    m.volume = bgMusicMuted ? 0 : (bgDucked ? BG_VOLUME_DUCKED : BG_VOLUME);
-  }
-
-  function startBgMusic() {
-    var m = document.getElementById(activeBgTrackId);
-    applyBgVolume();
-    m.play().catch(function () {});
-  }
-
-  function duckBgMusic() { bgDucked = true; applyBgVolume(); }
-  function unduckBgMusic() { bgDucked = false; applyBgVolume(); }
-
-  // Crossfade de ~1.4s entre a trilha calma e a trilha da oferta, disparado
-  // por IntersectionObserver quando o painel de oferta entra na tela pela
-  // primeira vez (ver armOfferMusicObserver, chamado em renderResult()).
-  function crossfadeToOfferMusic() {
-    if (offerMusicStarted) return;
-    offerMusicStarted = true;
-    var from = document.getElementById('bgMusic');
-    var to = document.getElementById('bgMusicOffer');
-    to.volume = 0;
-    to.play().catch(function () {});
-    var steps = 14, i = 0;
-    var fromStart = from.volume;
-    var targetVol = bgMusicMuted ? 0 : (bgDucked ? BG_VOLUME_DUCKED : BG_VOLUME);
-    var interval = setInterval(function () {
-      i++;
-      var t = i / steps;
-      from.volume = Math.max(0, fromStart * (1 - t));
-      to.volume = Math.min(targetVol, targetVol * t);
-      if (i >= steps) {
-        clearInterval(interval);
-        from.pause();
-        activeBgTrackId = 'bgMusicOffer';
-        applyBgVolume();
-      }
-    }, 100);
-  }
-
-  function armOfferMusicObserver() {
-    if (offerMusicStarted) return;
-    var panel = document.querySelector('.offer-panel');
-    if (!panel || !window.IntersectionObserver) return;
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          crossfadeToOfferMusic();
-          observer.disconnect();
-        }
-      });
-    }, { threshold: 0.3 });
-    observer.observe(panel);
-  }
-
-  function updateMuteIcon() {
-    var icon = document.getElementById('muteIcon');
-    icon.innerHTML = bgMusicMuted
-      ? '<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63z"/><path d="M19 12c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.8L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>'
-      : '<path d="M3 10v4h4l5 5V5L7 10H3z"/><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.74 2.5-2.26 2.5-4.02z"/><path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
-  }
-
-  document.getElementById('muteToggle').addEventListener('click', function () {
-    bgMusicMuted = !bgMusicMuted;
-    applyBgVolume();
-    updateMuteIcon();
-    saveState();
-    trackEvent('BgMusicToggle', { muted: bgMusicMuted });
-  });
-
-  function answer(qNum, opt) {
-    answers['q' + qNum] = opt;
-    saveState();
-    trackEvent('QuizAnswer', { q: qNum, r: opt, variant: QUIZ_TEST_VARIANT });
-
-    if (qNum === 1) {
-      document.querySelector('.progress-wrap').style.display = '';
-      document.querySelector('.progress-percent').style.display = '';
-    }
-
-    if (qNum === 3) {
-      var perfil = getPerfil();
-      personalizeQuestions(perfil);
-      setupAudioCard('audioMid', AUDIO_MID[perfil]);
-      showScreen('audioMid');
-      updateProgress(3);
-      return;
-    }
-
-    if (qNum < 5) {
-      showScreen('q' + (qNum + 1));
-      updateProgress(qNum + 1);
-    } else {
-      updateProgress(5);
-      runLoading();
-    }
-  }
-
-  function advanceFromAudioMid() {
-    stopAudioCard('audioMid');
-    showScreen('q4');
-    updateProgress(4);
-  }
-
-  // Loading redesenhado (04/08/2026, pedido do usuário: "precisa ser uma big
-  // ideia que impacta, traga algo real e profissional, não só artificial").
-  // Em vez de spinner + frases genéricas, calcula os eixos de verdade agora
-  // (mesma computeAxes() usada no resultado) e mostra os 3 números subindo
-  // ao vivo, amarrado ao mecanismo já central do quiz (Elias) em vez de
-  // linguagem de app genérico ("analisando", "processando").
-  function runLoading() {
-    showScreen('loading');
-    var axes = computeAxes(answers);
-    var ring = document.getElementById('ringFg');
-    var circumference = 195;
-    var ringStart = null, ringDuration = 2700;
-    function ringStep(ts) {
-      if (!ringStart) ringStart = ts;
-      var progress = Math.min((ts - ringStart) / ringDuration, 1);
-      ring.style.strokeDashoffset = circumference - circumference * progress;
-      if (progress < 1) requestAnimationFrame(ringStep);
-    }
-    requestAnimationFrame(ringStep);
-    setTimeout(function () { document.getElementById('loadKicker').classList.add('show'); }, 200);
-    [0, 1, 2].forEach(function (i) {
-      setTimeout(function () {
-        var row = document.getElementById('loadAxisRow' + i);
-        row.classList.add('show');
-        var valueEl = document.getElementById('loadAxisVal' + i);
-        var start = null, duration = 700, target = axes[i];
-        function step(ts) {
-          if (!start) start = ts;
-          var progress = Math.min((ts - start) / duration, 1);
-          valueEl.textContent = Math.round(progress * target) + '%';
-          if (progress < 1) requestAnimationFrame(step);
-        }
-        requestAnimationFrame(step);
-      }, 700 + i * 350);
-    });
-    setTimeout(function () { document.getElementById('loadStep3').classList.add('show'); }, 2000);
-    setTimeout(function () {
-      setupAudioCard('audioPre', AUDIO_PRE[getPerfil()]);
-      showScreen('audioPre');
-    }, 2700);
-  }
-
-  function advanceFromAudioPre() {
-    stopAudioCard('audioPre');
-    renderResult();
-    showScreen('result');
-    var perfil = getPerfil();
-    initScratchCard(perfil);
-    initAxes();
-    renderTrustGraph(computeAxes(answers));
-    trackEvent('QuizComplete', { perfil: perfil, variant: QUIZ_TEST_VARIANT });
-    // Lead padrão da Meta — terminou o diagnóstico e chegou no resultado
-    // personalizado. content_category carrega o perfil (lidera-cansada/
-    // esposa-de-lider/carrega-o-piano), pendente de usar pra segmentar
-    // audiência por personalidade assim que houver verba/volume pra isso.
-    if (window.fbq) {
-      fbq('track', 'Lead', {
-        content_name: 'Método do Zimbreiro',
-        content_category: perfil,
-      });
-    }
-    armBackRedirect();
-    armOfferMusicObserver();
-  }
-
-  // Mini-pitch em áudio (22ª rodada, achado de Vicente Lima/mesa-redonda
-  // Davi-Slender-Kauê: dois mini-VSLs, um no meio do quiz e outro antes do
-  // resultado, superam quiz só-texto). Opt-in — sem autoplay (navegador
-  // bloqueia áudio com som sem clique, e forçar tocar sozinho seria ruim de
-  // UX de qualquer forma). Botão de play/pause estilo "mensagem de voz" do
-  // WhatsApp, com "Continuar" sempre disponível, nunca bloqueado por ouvir
-  // ou não. Voz gerada via ElevenLabs (voz feminina brasileira já usada em
-  // outro projeto espiritual do portfólio, tom calmo/acolhedor/espiritual).
-  var AUDIO_MID = {
-    'carrega-o-piano': 'assets/audio/mid-piano.mp3',
-    'esposa-de-lider': 'assets/audio/mid-esposa.mp3',
-    'lidera-cansada': 'assets/audio/mid-lidera.mp3'
-  };
-  var AUDIO_PRE = {
-    'carrega-o-piano': 'assets/audio/pre-piano.mp3',
-    'esposa-de-lider': 'assets/audio/pre-esposa.mp3',
-    'lidera-cansada': 'assets/audio/pre-lidera.mp3'
-  };
-
-  // Formata segundos como M:SS (estilo duração de mensagem de voz do
-  // WhatsApp) — mostrar isso ANTES de tocar resolve a preocupação de
-  // "achar que é longo demais" (pedido do usuário).
-  function formatDuration(seconds) {
-    if (!isFinite(seconds)) return '0:00';
-    var m = Math.floor(seconds / 60);
-    var s = Math.round(seconds % 60);
-    if (s === 60) { m++; s = 0; }
-    return m + ':' + (s < 10 ? '0' : '') + s;
-  }
-
-  function setupAudioCard(prefix, src) {
-    var player = document.getElementById(prefix + 'Player');
-    var playBtn = document.getElementById(prefix + 'PlayBtn');
-    var icon = document.getElementById(prefix + 'PlayIcon');
-    var wave = document.getElementById(prefix + 'Wave');
-    var durationEl = document.getElementById(prefix + 'Duration');
-    player.pause();
-    player.currentTime = 0;
-    player.src = src;
-    icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-    wave.classList.remove('playing');
-    durationEl.textContent = '0:00';
-    player.onloadedmetadata = function () {
-      durationEl.textContent = formatDuration(player.duration);
-    };
-
-    playBtn.onclick = function () {
-      if (player.paused) {
-        player.play();
-        trackEvent('MiniPitchPlay', { moment: prefix });
-      } else {
-        player.pause();
-      }
-    };
-    player.onplay = function () {
-      icon.innerHTML = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
-      wave.classList.add('playing');
-      duckBgMusic();
-    };
-    player.onpause = function () {
-      icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-      wave.classList.remove('playing');
-      unduckBgMusic();
-    };
-    player.onended = function () {
-      icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-      wave.classList.remove('playing');
-      unduckBgMusic();
-    };
-  }
-
-  function stopAudioCard(prefix) {
-    var player = document.getElementById(prefix + 'Player');
-    if (player) player.pause();
-  }
-
-  // Q3 define o perfil (variável em aberto, nunca testada com dado real).
-  // Não há "resposta errada" aqui — o quiz existe pra medir essa segmentação.
-  function getPerfil() {
-    var q3 = answers.q3;
-    if (q3 === 'A') return 'lidera-cansada';
-    if (q3 === 'B') return 'esposa-de-lider';
-    return 'carrega-o-piano'; // C ou D
-  }
-
-  // Perguntas 4-6 mudam de redação conforme o perfil (Q3), não só o
-  // resultado final — achado de Arthur Oliveira (nível de profundidade 3).
-  var Q_VARIANTS = {
-    4: {
-      'carrega-o-piano': {
-        title: 'Quando esse peso mais pesa em você?',
-        micro: 'Cada pessoa sente isso num momento diferente — isso ajuda a calibrar sua leitura.',
-        options: {
-          A: 'Quando alguém te chama de última hora pra resolver o que não era sua função',
-          B: 'Quando você percebe que fez de novo o que ninguém pediu, só porque sempre faz',
-          C: 'À noite, sozinha, ainda arrumando o que os outros deixaram pra trás',
-          D: 'Quando alguém agradece outra pessoa pelo trabalho que você fez'
-        }
-      },
-      'esposa-de-lider': {
-        title: 'Quando esse peso mais aparece pra você?',
-        micro: 'Cada esposa de líder sente isso num momento diferente — isso ajuda a calibrar sua leitura.',
-        options: {
-          A: 'Quando perguntam do seu marido antes de perguntar de você',
-          B: 'Quando você sorri no culto segurando algo pesado em casa',
-          C: 'Quando seu marido está exausto e alguém precisa continuar de pé',
-          D: 'Quando você vê outra esposa de líder parecendo dar conta de tudo sozinha'
-        }
-      },
-      'lidera-cansada': {
-        title: 'Quando esse peso mais aparece pra você?',
-        micro: 'Cada líder sente isso num momento diferente — isso ajuda a calibrar sua leitura.',
-        options: {
-          A: 'Quando alguém da sua equipe falha e a responsabilidade cai em você de novo',
-          B: 'Quando você organiza a escala de todo mundo e esquece de se colocar nela',
-          C: 'À noite, revisando tudo que ainda falta, mesmo depois de liderar o dia inteiro',
-          D: 'Quando pensa em delegar, mas tem medo de que não saia do jeito certo'
-        }
-      }
-    },
-    5: {
-      'carrega-o-piano': {
-        title: 'O que você já tentou pra lidar com isso?',
-        micro: 'Sem julgamento. Ninguém está lendo. Isso molda o próximo passo que você vai receber.',
-        options: {
-          A: 'Orar mais e pedir mais força',
-          B: 'Dizer não uma vez, e passar a semana com culpa',
-          C: 'Conversar com alguém da igreja sobre a sobrecarga',
-          D: 'Nada. Só continuar aguentando e fazendo'
-        }
-      },
-      'esposa-de-lider': {
-        title: 'O que você já tentou pra lidar com isso?',
-        micro: 'Sem julgamento. Ninguém está lendo. Isso molda o próximo passo que você vai receber.',
-        options: {
-          A: 'Orar mais e pedir mais força pra sustentar o ministério do seu marido',
-          B: 'Conversar com seu marido sobre como você está, e sentir que não era hora',
-          C: 'Conversar com outra esposa de líder que entende essa realidade',
-          D: 'Nada. Só continuar sustentando por dentro'
-        }
-      },
-      'lidera-cansada': {
-        title: 'O que você já tentou pra lidar com isso?',
-        micro: 'Sem julgamento. Ninguém está lendo. Isso molda o próximo passo que você vai receber.',
-        options: {
-          A: 'Orar mais e pedir mais força pra continuar liderando',
-          B: 'Tentar delegar, e assumir de volta porque não saiu do seu jeito',
-          C: 'Conversar com outro líder sobre esse cansaço',
-          D: 'Nada. Só continuar segurando tudo sozinha'
-        }
-      }
-    }
-  };
-
-  // Q6 removida em 26/08/2026 — só alimentava CTA_BY_FEELING (texto do
-  // botão), nenhuma outra função. Auditoria completa em
-  // 05-COPY/estrategia-oferta/2026-08-26-resultview-copy-candidata-auditoria.md
-  // (repo da Empresa).
-
-  function personalizeQuestions(perfil) {
-    [4, 5].forEach(function (qNum) {
-      var v = Q_VARIANTS[qNum][perfil];
-      document.getElementById('q' + qNum + 'Title').textContent = v.title;
-      document.getElementById('q' + qNum + 'Micro').textContent = v.micro;
-      ['A', 'B', 'C', 'D'].forEach(function (letter) {
-        document.getElementById('q' + qNum + 'Opt' + letter).textContent = v.options[letter];
-      });
-    });
-  }
-
-  // Indicador de identificação em 3 sub-eixos (rodada 17, pesquisa de quizzes
-  // gamificados de outros nichos — estilo 16Personalities: percentual por eixo
-  // em vez de categoria única). Calculado de verdade a partir das respostas
-  // reais da pessoa, não é fixo por perfil.
-  // 27/07/2026 (19ª rodada, bug apontado pelo usuário: "as % ficaram todas
-  // iguais"). A versão da 17ª rodada usava só 2 das 6 perguntas por eixo,
-  // com a mesma tabela de letra->valor pra tudo — quem responde com a mesma
-  // severidade em todas as perguntas (comum: testar "no pior caso" ou "no
-  // melhor caso") tira matematicamente a mesma média nos 3 eixos, mesmo
-  // sendo um cálculo real. Corrigido: cada eixo agora usa as 6 respostas
-  // (peso maior nas 2 perguntas mais ligadas ao eixo, peso menor nas outras
-  // 4 — mais informação real por eixo, não só 2 perguntas) e cada eixo tem
-  // sua própria escala de exibição (peso de servir sem pausa é o mais
-  // "visível" no dia a dia, então mantém a faixa cheia 20-96%; culpa costuma
-  // aparecer mais contida/velada, faixa 22-90%; prontidão parte de uma base
-  // maior porque quem chegou a responder o quiz até o fim já demonstra
-  // alguma abertura, faixa 25-85%). Isso garante que os 3 números nunca
-  // colapsem no mesmo valor, mesmo com respostas uniformes — sem inventar
-  // nenhum dado, só extraindo mais sinal real das mesmas 6 respostas.
-  var LETTER_VALUE = { A: 25, B: 50, C: 75, D: 100 };
-  // Pesos redistribuídos em 26/08/2026 após a remoção de Q6 — o peso que
-  // era dela (0.05 nos eixos 1/2, 0.35 no eixo 3) foi somado ao componente
-  // mais próximo tematicamente de cada eixo (q1 no eixo 1, q2 no eixo 2,
-  // q3 no eixo 3, que passa a ser majoritariamente sobre o papel/perfil).
-  var AXIS_WEIGHTS = [
-    { q1: 0.40, q4: 0.35, q2: 0.10, q3: 0.05, q5: 0.10 },
-    { q2: 0.40, q5: 0.35, q1: 0.10, q3: 0.05, q4: 0.10 },
-    { q3: 0.70, q1: 0.05, q2: 0.10, q4: 0.05, q5: 0.10 }
-  ];
-  var AXIS_RANGES = [
-    { scale: 1,   offset: 0,  min: 20, max: 96 },
-    { scale: 0.9, offset: 0,  min: 22, max: 90 },
-    { scale: 0.8, offset: 10, min: 25, max: 85 }
-  ];
-  function computeAxes(ans) {
-    return AXIS_WEIGHTS.map(function (weights, i) {
-      var raw = 0;
-      for (var q in weights) raw += weights[q] * (LETTER_VALUE[ans[q]] || 50);
-      var range = AXIS_RANGES[i];
-      return Math.max(range.min, Math.min(range.max, Math.round(raw * range.scale + range.offset)));
-    });
-  }
-
-  function animateAxes(axes) {
-    axes.forEach(function (score, i) {
-      var fill = document.getElementById('axisFill' + i);
-      var valueEl = document.getElementById('axisValue' + i);
-      void fill.offsetWidth; // força reflow antes de mudar a largura, garante a transição
-      fill.style.width = score + '%';
-      var start = null;
-      var duration = 1000;
-      function step(ts) {
-        if (!start) start = ts;
-        var progress = Math.min((ts - start) / duration, 1);
-        valueEl.textContent = Math.round(progress * score) + '%';
-        if (progress < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    });
-  }
-
-  // Chamado depois de showScreen('result') (precisa do painel já visível
-  // pra transição de largura funcionar, mesma lógica de initScratchCard).
-  function initAxes() {
-    animateAxes(computeAxes(answers));
-  }
-
-  // Posição real do ponto "Você" no gráfico — média dos 3 eixos calculados
-  // de verdade, nunca uma posição fixa/decorativa (pedido do usuário
-  // 04/08/2026, questionando se o painel de eixos era real).
-  function renderTrustGraph(axes) {
-    var avg = (axes[0] + axes[1] + axes[2]) / 3;
-    var path = document.getElementById('graphPath');
-    var len = path.getTotalLength();
-    var pt = path.getPointAtLength(len * (avg / 100));
-    var box = document.querySelector('.trust-graph-box');
-    var scaleX = box.clientWidth / 300, scaleY = box.clientHeight / 150;
-    var dot = document.getElementById('trustGraphDot');
-    var label = document.getElementById('trustGraphYou');
-    dot.style.left = (pt.x * scaleX) + 'px';
-    dot.style.top = (pt.y * scaleY) + 'px';
-    label.style.left = (pt.x * scaleX) + 'px';
-    label.style.top = (pt.y * scaleY) + 'px';
-  }
-
-  // ResultView redesenhada em 26/08/2026 — arquitetura aprovada e auditada
-  // adversarialmente em
-  // 05-COPY/estrategia-oferta/2026-08-26-resultview-copy-candidata-auditoria.md
-  // (repo da Empresa). Princípio: Q1/Q2/Q4/Q5 deixam de ser callbacks
-  // soltos e viram uma cadeia argumentativa única (tempo → padrão →
-  // gatilho → diagnóstico → tentativa anterior → mecanismo/Elias →
-  // reframe → antes/depois → oferta). Blocos abaixo são universais
-  // (não variam por perfil de Q3) — só Q4 e Q5 puxam texto por perfil,
-  // reaproveitando os dados que já existem em Q_VARIANTS/TRIED_BRIDGE.
-
-  // Bloco 1 — reconhecimento temporal (Q1). Legitima cronicidade real,
-  // não move crença ainda.
-  var Q1_RECOGNITION = {
-    A: 'Faz menos de 1 ano que isso começou pra você. Ainda assim, já é tempo suficiente pra perceber que não é um dia ruim isolado — é um padrão.',
-    B: 'Faz entre 1 e 5 anos que você carrega isso sem parar de verdade. Tempo suficiente pra virar rotina, não exceção.',
-    C: 'Faz mais de 5 anos que você carrega isso sem parar de verdade. Isso não é fase. É um padrão antigo.',
-    D: 'Você nem lembra mais quando foi a última vez que parou de verdade. Isso, sozinho, já diz muita coisa.'
-  };
-
-  // Bloco 2 — padrão/confissão (callback Q2). Todas as 4 convergem pra
-  // mesma raiz ("parar parece ter um preço"), sem afirmar causalidade que
-  // a resposta dela não prova — sempre "talvez", nunca "você faz isso
-  // porque X".
-  var Q2_CALLBACK = {
-    A: 'E quando esse peso aparece, você é sempre a que fica até o fim resolvendo tudo. Talvez o que esteja em jogo não seja só cansaço — é a sensação de que, se você parar, alguma coisa importante fica sem solução. Talvez o que falte não seja mais força pra continuar, mas permissão pra parar sem tratar isso como uma falha sua.',
-    B: 'E quando esse peso aparece, você já pensou em sumir um domingo, mas nunca fez. Não porque ama menos a igreja ou a família. Uma parte sua só queria, uma vez, não precisar ser essencial. Talvez não esteja faltando mais força para continuar — mas uma forma diferente de lidar com a culpa que aparece quando você pensa em parar.',
-    C: 'E quando esse peso aparece, você diz que está tudo bem, mesmo quando não está. Talvez o que esteja faltando não seja força para continuar segurando — mas permissão para parar sem interpretar essa pausa como fraqueza ou falha.',
-    D: 'E quando esse peso aparece, você sente que, se parar, tudo desmorona. Talvez o que você precise não seja a prova de que nada vai desmoronar — mas a chance de examinar esse medo antes de obedecer a ele automaticamente.'
-  };
-
-  // Bloco 4 — diagnóstico. Separa explicitamente confissão (o que as
-  // respostas confirmam) de interpretação (o que propomos como leitura) —
-  // não afirma causalidade que Q1/Q2/Q4 não provam sozinhas.
-  var RESULT_DIAGNOSTICO = 'Três respostas diferentes. Mas juntas, elas parecem apontar para a mesma tensão. Você já sabe que precisa de descanso. O conflito parece começar no momento em que tenta parar — porque a pausa ganha algum significado: fraqueza, culpa, abandono, risco de decepcionar ou de deixar algo desmoronar.';
-  var RESULT_DIAGNOSTICO_PIVO = 'Talvez o problema não seja aprender que precisa descansar. Talvez seja conseguir parar sem transformar essa pausa numa acusação contra você mesma.';
-
-  // Bloco 6 — mecanismo/Elias (função de "mini-VSL 1": prova/reformula a
-  // crença, NÃO prova que o produto gera transformação — essa fronteira
-  // fica pro Logic Point 4, que continua sem prova disponível e não é
-  // fabricada aqui). Precisão bíblica: não afirma "Deus mandou Elias
-  // descansar duas vezes" nem estados internos que o texto não afirma.
-  var RESULT_ELIAS = 'Existe um momento em 1 Reis 19 que ajuda a enxergar isso por outro ângulo. Elias tinha acabado de atravessar um confronto enorme. Pouco depois, chega ao limite, senta-se debaixo de uma árvore e pede para morrer. E a sequência que vem depois é curiosa. Não começa com uma cobrança. Elias dorme. Um anjo o toca e diz: "Levanta e come." Ele come, torna a deitar. Depois, o anjo volta: "Levanta e come, porque o caminho é longo demais para ti." Só então a caminhada continua. Se, para você, parar sempre parece significar que está falhando, essa passagem apresenta uma possibilidade diferente: em certos momentos, receber cuidado e recuperar forças também faz parte do caminho.';
-
-  // Bloco 7 — reframe. Abertura universal (prova por contradição) +
-  // fechamento por resposta de Q2, pra o desejo dela evoluir através do
-  // mecanismo em vez de ser só mencionado no Bloco 2 e abandonado. Sem
-  // "heresia das obras", sem extrapolação teológica, sem prometer nada
-  // externo (amor/aceitação de terceiros, ausência de culpa, garantia de
-  // que nada vai desmoronar) — só uma nova forma de lidar com o próprio
-  // desejo, dentro do que uma prática de 7 dias pode de fato entregar.
-  var RESULT_REFRAME = 'Talvez você tenha aprendido a medir sua fidelidade pelo tanto que consegue continuar fazendo. Mas observe a sequência: se continuar imediatamente fosse sempre a única expressão de obediência, o cuidado que aparece em 1 Reis 19 seria um detalhe sem importância. Não é. Antes da continuação do caminho, Elias recebe alimento, tempo e cuidado.';
-  var Q2_REFRAME_PIVO = {
-    A: 'Por isso, pausa e obediência não precisam ser opostas — e seu valor não precisa depender de nunca parar de resolver as coisas.',
-    B: 'Por isso, pausa e obediência não precisam ser opostas — e culpa não precisa ser a única resposta possível quando você finalmente para.',
-    C: 'Por isso, pausa e obediência não precisam ser opostas — e admitir que você não está bem não é o mesmo que falhar diante de Deus.',
-    D: 'Por isso, pausa e obediência não precisam ser opostas — e o medo de que tudo desmorone não precisa ser tratado automaticamente como um sinal pra continuar.'
-  };
-
-  // Bloco 8 — antes/depois. PD1/PD3 universais (não perfil nem Q2
-  // específicos — não promete ausência de culpa, LP4 não existe ainda).
-  // PD2 recebe uma continuação por resposta de Q2 (mesma frase, sem virar
-  // card novo) pra reconectar o desejo dela à transformação concreta.
-  var RESULT_CICLO_HOJE = 'Hoje, o ciclo costuma ser assim: você tenta parar → a culpa aparece → você interpreta essa culpa como sinal de que deveria continuar → volta a fazer.';
-  var RESULT_CICLO_NOVO_BASE = 'O que esses 7 dias propõem é uma nova resposta: você tenta parar → a culpa pode aparecer → você reconhece o padrão → lembra de uma referência diferente → consegue questionar a culpa antes de obedecer automaticamente a ela.';
-  var Q2_CICLO_PESSOAL = {
-    A: 'E isso começa a abrir espaço para não medir seu valor apenas pelo tanto que você consegue resolver antes de parar.',
-    B: 'E isso começa a abrir espaço para se permitir parar sem transformar imediatamente essa pausa em motivo de culpa.',
-    C: 'E isso começa a abrir espaço para reconhecer, diante de você mesma e de Deus, que não está bem — sem que isso vire mais uma cobrança.',
-    D: 'E isso começa a abrir espaço para examinar esse medo antes de obedecer a ele — em vez de deixar que ele decida por você.'
-  };
-  var RESULT_CICLO_OBJETIVO = 'O objetivo não é prometer que você nunca mais vai se sentir culpada. É deixar de tratar toda culpa como se fosse uma instrução de Deus.';
-
-  // Bloco 9 — transição pra oferta (reason why). Resolve a objeção
-  // silenciosa "isso está na Bíblia, por que eu pagaria por isso?" —
-  // abertura universal + fechamento por resposta de Q2, na mesma frase
-  // (o produto pratica a nova resposta ao desejo dela, não "realiza" o
-  // desejo).
-  var RESULT_TRANSICAO_OFERTA_BASE = 'Entender essa passagem agora é uma coisa. Conseguir lembrar dela exatamente no momento em que a culpa aparece é outra. É por isso que o Método do Zimbreiro não foi criado para apenas explicar 1 Reis 19. Ele transforma essa sequência em 7 dias de prática guiada, para você percorrer um passo de cada vez — leitura, reflexão, prática e oração —';
-  var Q2_TRANSICAO_FINAL = {
-    A: 'e praticar uma resposta diferente pro momento em que parar parece colocar seu valor em jogo.',
-    B: 'e praticar o que fazer com a culpa quando ela aparecer — em vez de deixar que ela decida por você se pode parar ou não.',
-    C: 'e praticar dizer a verdade sobre como está, pra Deus e pra você mesma, sem transformar isso em mais uma exigência.',
-    D: 'e praticar reconhecer esse medo sem deixar que ele continue tomando a decisão por você.'
-  };
-
-  // Helper: minúscula na primeira letra, pra encaixar respostas (que
-  // começam com maiúscula como opção autônoma) dentro de uma frase.
-  function lowerFirst(s) {
-    return s ? s.charAt(0).toLowerCase() + s.slice(1) : s;
-  }
-
-  var PERFIS = {
-    'carrega-o-piano': {
-      tag: 'A QUE CARREGA O PIANO',
-      headline: 'Você é sempre a que sobra pra fazer o que ninguém mais quer.',
-      // p1/p2/p3/pd1/pd2/pd3 removidos em 26/08/2026 (continham "heresia
-      // das obras" e Antes/Depois antigo) — substituídos por blocos
-      // universais RESULT_DIAGNOSTICO/RESULT_CICLO_* em renderResult().
-      altruism: 'Parar não é abandonar quem você ama. É a única forma de continuar servindo sem se esvaziar até não sobrar nada pra dar.',
-      nextStep: 'Passo de hoje: antes de dormir, escreve uma frase só. "Hoje eu servi. Amanhã, alguém pode segurar o piano no meu lugar." Não precisa mais que isso agora.',
-      presell: 'Você vai fechar essa tela agora e carregar o mesmo piano amanhã. De novo. Esse cansaço não vai embora sozinho — ele não foi embora esse ano, não vai no próximo. O Método do Zimbreiro não é mais um conteúdo pra "ver quando der tempo": é o primeiro dia em que alguém te ensina a parar de verdade, 10 a 15 minutos de áudio guiado, no seu celular, hoje. Se você sair dessa página sem decidir, a decisão já foi tomada — continuar exatamente como está.'
-    },
-    'esposa-de-lider': {
-      tag: 'A ESPOSA QUE SUSTENTA POR TRÁS',
-      headline: 'Você cuida de quem cuida de todo mundo. Ninguém cuida de você.',
-      // p1/p2/p3/pd1/pd2/pd3 removidos em 26/08/2026 (ver bloco anterior).
-      altruism: 'Descansar não enfraquece o ministério do seu marido. Uma esposa inteira sustenta muito mais do que uma esposa exaurida.',
-      nextStep: 'Passo de hoje: da próxima vez que alguém perguntar como seu marido está, responde também como você está. Só isso.',
-      presell: 'Ninguém vai perguntar como você está hoje. Amanhã também não. Isso não muda sozinho enquanto você continuar sustentando por dentro sem nenhum apoio de verdade. O Método do Zimbreiro é 7 dias de áudio guiado pensado pra alguém que segura o ministério de outra pessoa e nunca teve o próprio descanso ensinado. Fechar essa página agora é escolher continuar sozinha nisso por mais um dia.'
-    },
-    'lidera-cansada': {
-      tag: 'A LÍDER QUE JÁ NÃO SABE PARAR',
-      headline: 'Você lidera outras pessoas. Mas quem lidera o seu descanso?',
-      // p1/p2/p3/pd1/pd2/pd3 removidos em 26/08/2026 (ver bloco anterior).
-      altruism: 'Quem você lidera aprende com o seu exemplo. Se você nunca para, é isso que você está ensinando pra eles também.',
-      nextStep: 'Passo de hoje: escolhe uma coisa da sua escala de amanhã pra delegar de verdade, sem checar depois se foi feito do seu jeito.',
-      presell: 'Você vai liderar de novo amanhã sem ter liderado o seu próprio descanso hoje. Isso tem um limite, e você já sabe disso. O Método do Zimbreiro não pede que você pare de liderar — pede 10 a 15 minutos por dia, 7 dias, pra você aprender o que Deus ensinou a Elias antes de qualquer missão nova: descansar não é abandonar o posto. Sair daqui sem decidir é decidir continuar do jeito que está.'
-    }
-  };
-
-  // Ponte de objeção (nova, 04/08/2026, pedido do usuário): Q5 ("o que você
-  // já tentou") era coletada só pro cálculo dos eixos, nunca virava texto.
-  // Reaproveita a resposta real que a pessoa deu (sem inventar nada) pra
-  // quebrar a objeção antes da oferta — dado 100% real, já capturado.
-  var TRIED_BRIDGE = {
-    'carrega-o-piano': {
-      D: 'Você não tentou nada ainda — só continuou aguentando e fazendo, porque ninguém te ensinou outro caminho. Faz sentido. Só não é sustentável.',
-      other: function (t) { return 'Você já tentou ' + t + '. Isso não foi errado — só não foi suficiente, porque o peso que você carrega não é falta de esforço. É a crença de que parar é falhar com Deus.'; }
-    },
-    'esposa-de-lider': {
-      D: 'Você não tentou nada ainda — só continuou sustentando por dentro, porque parecia que não havia espaço pra outra coisa. Faz sentido. Só não é sustentável.',
-      other: function (t) { return 'Você já tentou ' + t + '. Isso não foi errado — só não foi suficiente, porque o peso que você carrega não é falta de esforço. É o medo de que, se você parar, o ministério do seu marido paga o preço.'; }
-    },
-    'lidera-cansada': {
-      D: 'Você não tentou nada ainda — só continuou segurando tudo sozinha, porque parar parecia abandonar quem você lidera. Faz sentido. Só não é sustentável.',
-      other: function (t) { return 'Você já tentou ' + t + '. Isso não foi errado — só não foi suficiente, porque o peso que você carrega não é falta de esforço. É achar que liderar bem significa nunca parar.'; }
-    }
-  };
-  function buildObjectionLine(perfil) {
-    var q5 = answers.q5;
-    var entry = TRIED_BRIDGE[perfil];
-    if (q5 === 'D') return entry.D;
-    var text = Q_VARIANTS[5][perfil].options[q5];
-    var lower = text.charAt(0).toLowerCase() + text.slice(1);
-    return entry.other(lower);
-  }
-
-  // CTA personalizado por Q6 (novo, 04/08/2026): o sentimento que a pessoa
-  // nomeou na última pergunta vira o texto do botão final, em vez do texto
-  // fixo "QUERO DESCANSAR EM DEUS" pra todo mundo.
-  // CTA_BY_FEELING removido em 26/08/2026 junto com Q6 — era a única
-  // função dela. `ctaResultadoText` agora usa texto universal fixo (ver
-  // renderResult()).
-
-  // Âncora de data real (novo, 04/08/2026): hoje + 7 dias, matemática real
-  // via Date() — nunca uma previsão inventada (diferente do padrão "você vai
-  // pesar X até tal data" de concorrentes gringos, que é template, não real).
-  var WEEKDAYS_PT = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
-  var MONTHS_PT = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
-  function buildDateAnchor() {
-    var d = new Date(Date.now() + 7 * 86400000);
-    var texto = WEEKDAYS_PT[d.getDay()] + ', ' + d.getDate() + ' de ' + MONTHS_PT[d.getMonth()];
-    return 'Se você começar hoje, até ' + texto + ' você já terá completado os 7 dias do Método do Zimbreiro.';
-  }
-
-  // Passthrough de fbclid/UTM, reaproveitado tanto no link inicial (R$17,90)
-  // quanto na troca real quando o contador expira (R$47,90).
+  // MESMA função do quiz (index.html, linha ~1658) — copia fbclid/UTM da
+  // própria URL da LP pro link de checkout. Sem isso, uma compra real chega
+  // ao Supabase com utm_* tudo nulo, igual ao registro de teste que acabamos
+  // de corrigir (is_test). Provado ponta a ponta via leads reais (Gecimara/
+  // Eva, 06/09/2026): utm_source/medium/campaign/content/term sobrevivem
+  // LP -> HeroSpark -> webhook -> leads.
+  //
+  // ATENÇÃO — isso sozinho NÃO distingue "veio da LP B" vs "veio do Quiz":
+  // os UTMs vêm do anúncio (url_tags do Meta), não da página. Se o mesmo
+  // anúncio for redirecionado pra esta LP durante o teste, o utm_campaign
+  // será o mesmo texto que já aparece em compras do quiz. A discriminação
+  // real depende de usar uma campanha NOVA/dedicada pro lote de teste (ver
+  // checklist) — com isso, qualquer compra nessa janela de tempo já é
+  // inequivocamente atribuível à LP B, mesmo sem um campo "variant" dedicado
+  // no schema (leads/purchases não têm essa coluna, só os 5 UTMs padrão).
   function withPassthrough(baseUrl) {
     var url = new URL(baseUrl);
     var params = new URLSearchParams(window.location.search);
@@ -1665,655 +322,29 @@ src="https://www.facebook.com/tr?id=1494320865775022&ev=PageView&noscript=1"
     return url.toString();
   }
 
-  var DISCOUNT_CHECKOUT_URL = 'https://pay.herospark.com/metodo-do-zimbreiro-536020';
-  var FULL_PRICE_CHECKOUT_URL = 'https://pay.herospark.com/metodo-do-zimbreiro-536052';
-  var DISCOUNT_PRICE_BRL = 17.90;
-  var FULL_PRICE_BRL = 47.90;
-  var COUNTDOWN_SECONDS = 15 * 60;
-  var offerDeadline = null;
-  var scratchRevealed = false;
+  document.querySelectorAll('[data-track-cta]').forEach(function (el) {
+    el.href = withPassthrough(CHECKOUT_URL);
+  });
 
-  // Preço real no momento do clique — usa o mesmo critério do contador
-  // (deadline passou = valor cheio), pra bater com o link/preço que a
-  // pessoa está vendo na tela naquele instante.
-  function currentOfferPrice() {
-    if (offerDeadline && Date.now() >= offerDeadline) return FULL_PRICE_BRL;
-    return DISCOUNT_PRICE_BRL;
-  }
+  // Equivalente ao QuizStart/LPV do quiz — dispara na carga da página.
+  trackEvent('LPView', {});
+  if (window.fbq) fbq('track', 'ViewContent', { content_name: 'Método do Zimbreiro', variant: LP_TEST_VARIANT });
 
-  // Persistência: se a pessoa sair (fecha a aba, perde o wifi, troca de app)
-  // e voltar, ela retoma de onde parou em vez de reiniciar do zero — sair no
-  // meio e ter que recomeçar passa péssima impressão. Guarda só o essencial
-  // (respostas + prazo real da oferta + se já raspou o desconto) via
-  // localStorage, nada sensível.
-  var STORAGE_KEY = 'zimbreiro_quiz_state_v1';
-
-  function saveState() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        answers: answers,
-        offerDeadline: offerDeadline,
-        scratchRevealed: scratchRevealed,
-        muted: bgMusicMuted
-      }));
-    } catch (e) {}
-  }
-
-  function loadState() {
-    try {
-      var raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  // Retoma o quiz do ponto salvo. Se já tinha terminado, vai direto pro
-  // resultado com o MESMO prazo do contador (não reseta o tempo real só
-  // porque a pessoa saiu e voltou), e sem mostrar a raspadinha de novo se
-  // ela já tinha revelado o desconto antes de sair. Se parou no meio, volta
-  // pra próxima pergunta não respondida, já personalizada se Q3 já tinha
-  // sido respondida.
-  function resumeFromSavedState() {
-    var saved = loadState();
-    if (!saved || !saved.answers) return;
-    answers = saved.answers;
-    if (saved.offerDeadline) offerDeadline = saved.offerDeadline;
-    if (saved.scratchRevealed) scratchRevealed = true;
-    if (typeof saved.muted === 'boolean') { bgMusicMuted = saved.muted; updateMuteIcon(); }
-    startBgMusic();
-
-    var answeredCount = Object.keys(answers).length;
-    if (answeredCount === 0) return;
-
-    // Já passou da 1ª tela (teste H1b) — reexibe a barra de progresso.
-    document.querySelector('.progress-wrap').style.display = '';
-    document.querySelector('.progress-percent').style.display = '';
-
-    if (answeredCount >= 6) {
-      if (answers.q3) personalizeQuestions(getPerfil());
-      renderResult();
-      showScreen('result');
-      initScratchCard(getPerfil());
-      initAxes();
-      renderTrustGraph(computeAxes(answers));
-      armBackRedirect();
-      armOfferMusicObserver();
-      return;
-    }
-
-    if (answers.q3) personalizeQuestions(getPerfil());
-    var nextQ = answeredCount + 1;
-    updateProgress(nextQ);
-    showScreen('q' + nextQ);
-  }
-
-  // Contador real: quando chega a zero, o preço e o link do CTA trocam de
-  // fato pro checkout de R$47,90 (ticket separado criado na Payt). Não é
-  // cosmético — se a pessoa não decidir dentro do tempo, o preço mostrado
-  // aqui vira o mesmo que ela veria clicando depois do prazo. Sem alegar
-  // estoque ou vagas limitadas (que não existem) — só o preço, que é real.
-  // Só começa a contar depois que a pessoa revela o desconto na raspadinha
-  // (initScratchCard chama esta função no momento da revelação).
-  function startCountdown(perfil) {
-    if (!offerDeadline) {
-      offerDeadline = Date.now() + COUNTDOWN_SECONDS * 1000;
-      saveState();
-    }
-    var deadline = offerDeadline;
-    var minEl = document.getElementById('cdMin');
-    var secEl = document.getElementById('cdSec');
-    var wrapEl = document.getElementById('offerCountdown');
-    var labelEl = document.getElementById('offerCountdownLabel');
-    var anchorEl = document.getElementById('offerPriceAnchor');
-    var priceEl = document.getElementById('offerPrice');
-    var linkEl = document.getElementById('ctaResultado');
-    var expired = false;
-    var interval;
-
-    function tick() {
-      var remaining = Math.max(0, Math.round((deadline - Date.now()) / 1000));
-      var m = Math.floor(remaining / 60);
-      var s = remaining % 60;
-      minEl.textContent = (m < 10 ? '0' : '') + m;
-      secEl.textContent = (s < 10 ? '0' : '') + s;
-
-      if (remaining <= 0 && !expired) {
-        expired = true;
-        clearInterval(interval);
-        wrapEl.classList.remove('pulse');
-        wrapEl.classList.add('expired');
-        wrapEl.innerHTML = '<p class="offer-countdown-expired-text">Esse valor expirou.</p>';
-        anchorEl.style.display = 'none';
-        priceEl.textContent = 'R$47,90';
-        linkEl.href = withPassthrough(FULL_PRICE_CHECKOUT_URL);
-        var reinforcementEl = document.getElementById('offerReinforcement');
-        reinforcementEl.textContent = 'O prazo do seu desconto encerrou. A partir de agora, esse é o valor cheio do Método do Zimbreiro.';
-        reinforcementEl.classList.add('show');
-        trackEvent('OfferExpired', { perfil: perfil });
-      }
-    }
-
-    tick();
-    interval = setInterval(tick, 1000);
-  }
-
-  // Raspadinha (Arthur Oliveira, transcrição "Como Validar Ofertas de
-  // $1M_Dia" — a Shein usa raspadinha/roleta pra revelar desconto, "você
-  // desbloqueou um desconto exclusivo"). Cobre o preço/contador com um
-  // canvas até a pessoa arrastar (raspar de verdade) ou tocar (revela tudo
-  // de uma vez, evita fricção). O desconto revelado é sempre o mesmo
-  // desconto real — não há sorteio, só transforma a revelação em uma ação.
-  function initScratchCard(perfil) {
-    var wrap = document.getElementById('scratchWrap');
-    var canvas = document.getElementById('scratchCanvas');
-    var hint = document.getElementById('scratchHint');
-    if (!wrap || !canvas) return;
-
-    if (scratchRevealed) {
-      canvas.style.display = 'none';
-      if (hint) hint.style.display = 'none';
-      wrap.classList.remove('invite');
-      document.getElementById('offerReinforcement').classList.add('show');
-      startCountdown(perfil);
-      return;
-    }
-
-    var finished = false;
-    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // Fail-open: revelacao minima que nao depende de nada do canvas. Existe
-    // pra ser chamada tanto pelo timeout normal (ninguem interagiu) quanto
-    // pelo catch abaixo (canvas quebrou). Dado real 12/08/2026 (Clarity):
-    // erro de script so acontece em webview do Instagram (9,4%) e Facebook
-    // (5,1%) - navegador de verdade (Chrome Mobile) teve 0%. Como 85% do
-    // trafego pago chega por esses webviews, a oferta nao pode depender do
-    // canvas funcionar pra aparecer.
-    function revealOfferMinimo(motivo) {
-      if (finished) return;
-      finished = true;
-      scratchRevealed = true;
-      trackEvent('ScratchRevealed', { perfil: perfil, motivo: motivo });
-      if (window.fbq) {
-        fbq('track', 'AddToWishlist', {
-          content_name: 'Método do Zimbreiro',
-          value: DISCOUNT_PRICE_BRL,
-          currency: 'BRL',
-        });
-      }
-      saveState();
-      wrap.classList.remove('invite');
-      if (hint) hint.style.display = 'none';
-      canvas.style.display = 'none';
-      document.getElementById('offerReinforcement').classList.add('show');
-      startCountdown(perfil);
-    }
-
-    // Fallback obrigatorio, armado antes de qualquer operacao de canvas.
-    // Se a experiencia da raspadinha nunca inicializar (canvas quebrou e
-    // caiu no catch abaixo, que ja chama revealOfferMinimo direto), este
-    // timer so confirma o estado (finished ja true, nao faz nada de novo).
-    // Se o canvas funcionar mas a pessoa nao interagir, e este timer quem
-    // revela - mesmo timing de antes (2,5s), nao mudou.
-    setTimeout(function () {
-      if (!finished) revealOfferMinimo('timeout_sem_interacao');
-    }, 2500);
-
-    try {
-      canvas.style.display = '';
-      canvas.style.opacity = '';
-      canvas.style.transform = '';
-      wrap.classList.add('invite');
-
-      var ctx = canvas.getContext('2d');
-      var dpr = window.devicePixelRatio || 1;
-      var w = wrap.offsetWidth;
-      var h = wrap.offsetHeight;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      canvas.style.width = w + 'px';
-      canvas.style.height = h + 'px';
-      ctx.scale(dpr, dpr);
-
-      var paintCoating = function () {
-        ctx.globalCompositeOperation = 'source-over';
-        var grad = ctx.createLinearGradient(0, 0, w, h);
-        grad.addColorStop(0, '#8a6a2a');
-        grad.addColorStop(1, '#5c4415');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, w, h);
-        ctx.fillStyle = '#FAF7F2';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.font = '26px sans-serif';
-        ctx.fillText('🎁', w / 2, h / 2 - 42);
-        ctx.font = '700 17px Inter, sans-serif';
-        ctx.fillText('Raspe aqui e revele', w / 2, h / 2 - 6);
-        ctx.fillText('seu desconto real', w / 2, h / 2 + 20);
-        ctx.font = '600 13px Inter, sans-serif';
-        ctx.fillStyle = 'rgba(250,247,242,0.8)';
-        ctx.fillText('(ou toque para abrir)', w / 2, h / 2 + 52);
-      };
-      paintCoating();
-
-      var drawing = false;
-      var moved = false;
-      var startX, startY;
-
-      var getPos = function (e) {
-        var rect = canvas.getBoundingClientRect();
-        return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-      };
-
-      var erase = function (x, y) {
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.beginPath();
-        ctx.arc(x, y, 22, 0, Math.PI * 2);
-        ctx.fill();
-      };
-
-      var checkThreshold = function () {
-        var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-        var total = 0, cleared = 0;
-        for (var i = 3; i < data.length; i += 4 * 37) {
-          total++;
-          if (data[i] < 80) cleared++;
-        }
-        if (total > 0 && cleared / total > 0.35) {
-          finishInteractive();
-        }
-      };
-
-      // Versao completa de revelacao, usada quando o canvas funcionou e a
-      // pessoa interagiu de verdade (raspou/tocou/Enter). Faz tudo que
-      // revealOfferMinimo faz, mais a animacao de saida do canvas.
-      var finishInteractive = function () {
-        if (finished) return;
-        finished = true;
-        scratchRevealed = true;
-        trackEvent('ScratchRevealed', { perfil: perfil, motivo: 'interacao' });
-        if (window.fbq) {
-          fbq('track', 'AddToWishlist', {
-            content_name: 'Método do Zimbreiro',
-            value: DISCOUNT_PRICE_BRL,
-            currency: 'BRL',
-          });
-        }
-        saveState();
-        wrap.classList.remove('invite');
-        if (hint) hint.style.display = 'none';
-        document.getElementById('offerReinforcement').classList.add('show');
-        if (reducedMotion) {
-          canvas.style.display = 'none';
-        } else {
-          canvas.style.transition = 'opacity 380ms ease, transform 380ms ease';
-          canvas.style.opacity = '0';
-          canvas.style.transform = 'scale(1.03)';
-          setTimeout(function () { canvas.style.display = 'none'; }, 400);
-        }
-        startCountdown(perfil);
-      };
-
-      var onDown = function (e) {
-        if (finished) return;
-        drawing = true;
-        moved = false;
-        var p = getPos(e);
-        startX = p.x; startY = p.y;
-        erase(p.x, p.y);
-      };
-      var onMove = function (e) {
-        if (!drawing || finished) return;
-        var p = getPos(e);
-        if (Math.abs(p.x - startX) > 4 || Math.abs(p.y - startY) > 4) moved = true;
-        erase(p.x, p.y);
-        checkThreshold();
-      };
-      var onUp = function () {
-        if (finished) return;
-        if (drawing && !moved) {
-          finishInteractive();
-        }
-        drawing = false;
-      };
-
-      canvas.addEventListener('pointerdown', onDown);
-      canvas.addEventListener('pointermove', onMove);
-      window.addEventListener('pointerup', onUp);
-      canvas.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          finishInteractive();
-        }
-      });
-    } catch (canvasErr) {
-      // Canvas quebrou na inicializacao (comum em webview do Instagram/
-      // Facebook). Nao espera o timeout de 2,5s - revela na hora, e loga
-      // separado do timeout normal pra sabermos quantas vezes isso acontece.
-      trackEvent('ScratchCanvasError', {
-        perfil: perfil,
-        error: String((canvasErr && canvasErr.message) || canvasErr),
-      });
-      revealOfferMinimo('erro_canvas');
-    }
-  }
-
-  function renderResult() {
-    var perfil = getPerfil();
-    var p = PERFIS[perfil];
-    document.getElementById('resultTag').textContent = p.tag;
-    document.getElementById('resultHeadline').textContent = p.headline;
-
-    // Cadeia argumentativa nova (26/08/2026): Q1 → Q2 → Q4 → diagnóstico →
-    // Q5 → Elias → reframe → antes/depois → transição pra oferta. Ver
-    // 05-COPY/estrategia-oferta/2026-08-26-resultview-copy-candidata-auditoria.md
-    // no repo da Empresa pro texto aprovado e a auditoria bloco a bloco.
-    document.getElementById('resultQ1').textContent = Q1_RECOGNITION[answers.q1] || '';
-    document.getElementById('resultQ2Callback').textContent = Q2_CALLBACK[answers.q2] || '';
-
-    var q4Resposta = (Q_VARIANTS[4][perfil] && Q_VARIANTS[4][perfil].options[answers.q4]) || '';
-    document.getElementById('resultQ4Gatilho').textContent = q4Resposta
-      ? 'E isso fica ainda mais claro ' + lowerFirst(q4Resposta) + '.'
-      : '';
-
-    document.getElementById('resultDiagnostico').textContent = RESULT_DIAGNOSTICO;
-    document.getElementById('resultDiagnosticoPivo').textContent = RESULT_DIAGNOSTICO_PIVO;
-
-    // Q5 reposicionada antes do mecanismo (não depois) — quebra a objeção
-    // primeiro, só então revela a solução. TRIED_BRIDGE preservado como já
-    // funcionava (é o único bloco que já reaproveitava resposta real antes
-    // desta reformulação).
-    document.getElementById('resultObjection').textContent = buildObjectionLine(perfil);
-
-    document.getElementById('resultElias').textContent = RESULT_ELIAS;
-    document.getElementById('resultReframe').textContent = RESULT_REFRAME;
-    document.getElementById('resultReframePivo').textContent = Q2_REFRAME_PIVO[answers.q2] || '';
-
-    document.getElementById('resultPD1').textContent = RESULT_CICLO_HOJE;
-    document.getElementById('resultPD2').textContent = RESULT_CICLO_NOVO_BASE + ' ' + (Q2_CICLO_PESSOAL[answers.q2] || '');
-    document.getElementById('resultPD3').textContent = RESULT_CICLO_OBJETIVO;
-
-    document.getElementById('resultAltruism').textContent = p.altruism;
-    document.getElementById('resultNextStep').textContent = p.nextStep;
-    document.getElementById('resultDateAnchor').textContent = buildDateAnchor();
-
-    document.getElementById('resultTransicaoOferta').textContent = RESULT_TRANSICAO_OFERTA_BASE + ' ' + (Q2_TRANSICAO_FINAL[answers.q2] || '') + ' Esse é o Método do Zimbreiro.';
-    document.getElementById('resultPresell').textContent = p.presell;
-
-    // CTA_BY_FEELING removido junto com Q6 — texto universal fixo agora.
-    document.getElementById('ctaResultadoText').textContent = 'QUERO DESCANSAR EM DEUS';
-
-    // ViewContent padrão da Meta — dispara quando a oferta (preço) fica
-    // visível pra pessoa, não só o evento customizado. Sem isso o
-    // algoritmo não tem sinal de "chegou na oferta" pra otimizar campanha,
-    // só o PageView genérico do início.
-    if (window.fbq) {
-      fbq('track', 'ViewContent', {
-        content_name: 'Método do Zimbreiro',
-        content_type: 'product',
-        value: DISCOUNT_PRICE_BRL,
-        currency: 'BRL',
-      });
-    }
-
-    // Passthrough de fbclid/UTM + perfil pro checkout, mesma lógica da LP principal
-    var link = document.getElementById('ctaResultado');
-    link.href = withPassthrough(DISCOUNT_CHECKOUT_URL);
-    link.addEventListener('click', function () {
-      trackEvent('CTAResultClick', { perfil: perfil, variant: QUIZ_TEST_VARIANT });
-      // AddToCart padrão da Meta, não InitiateCheckout — o quiz só expressa
-      // intenção de compra aqui, quem chegou no checkout de verdade (domínio
-      // pay.herospark.com) é a HeroSpark, via o Pixel configurado lá dentro
-      // ("Pixel de Rastreamento" da oferta, pendência separada). Disparar
-      // InitiateCheckout no nosso domínio duplicaria o evento errado.
-      if (window.fbq) {
-        fbq('track', 'AddToCart', {
-          content_name: 'Método do Zimbreiro',
-          value: currentOfferPrice(),
-          currency: 'BRL',
-        });
-      }
+  // Equivalente ao CTAResultClick do quiz — único ponto de intenção comercial
+  // desta LP (não há etapa de resultado antes da oferta).
+  // Padrão final validado em julho (commits 3509634 -> ed4fcd5 -> 6a6f01c,
+  // protocolo-de-elias). As duas tentativas anteriores usaram
+  // event.preventDefault() + gtag event_callback e FALHARAM em teste real
+  // (o evento com callback não chegava à rede). A versão que sobreviveu:
+  // preventDefault + dispara os eventos sem callback + delay fixo de 150ms
+  // antes de navegar. Não reintroduzir event_callback aqui.
+  document.querySelectorAll('[data-track-cta]').forEach(function (el) {
+    el.addEventListener('click', function (event) {
+      event.preventDefault();
+      var destination = el.href;
+      trackEvent('CTAOfferClick', { cta_id: el.getAttribute('data-cta-id') });
+      if (window.fbq) fbq('track', 'AddToCart', { content_name: 'Método do Zimbreiro', variant: LP_TEST_VARIANT });
+      setTimeout(function () { window.location.href = destination; }, 150);
     });
-  }
-
-  // Back redirect: 4 camadas mostradas quando a pessoa aperta VOLTAR
-  // estando na tela de resultado, em vez de deixá-la sair direto. Cada
-  // camada reoferece de um ângulo diferente; a última troca a venda por
-  // um bônus grátis via WhatsApp (captura o contato mesmo sem compra).
-  // Só funciona pro botão voltar (History API) — fechar aba ou digitar
-  // outra URL não permite UI customizada, só o aviso nativo do navegador.
-  var WHATSAPP_NUMBER = '5511911207295';
-  var BACK_REDIRECT_LAYERS = [
-    {
-      title: 'Espera um instante',
-      body: 'Seu preço de R$17,90 ainda está valendo. Depois que o tempo do contador acabar, volta pro valor cheio de R$47,90.',
-      primary: 'Quero garantir o meu',
-      action: 'close'
-    },
-    {
-      title: 'Ainda em dúvida?',
-      body: 'Você tem 7 dias de garantia incondicional. Se não sentir nenhum alívio, devolvemos cada centavo, sem pergunta.',
-      primary: 'Ver oferta de novo',
-      action: 'close'
-    },
-    {
-      title: 'Antes de você ir',
-      body: 'Você já saiu daqui sabendo nomear o peso que carrega. O Método do Zimbreiro é só o próximo passo, no seu tempo, sem pressa.',
-      primary: 'Quero continuar',
-      action: 'close'
-    },
-    {
-      title: 'Tudo bem, sem pressão',
-      body: 'Se agora não é a hora, tudo bem. Antes de você ir, um presente sem custo: uma oração curta de descanso, direto no seu WhatsApp.',
-      primary: 'Quero receber no WhatsApp',
-      action: 'whatsapp'
-    }
-  ];
-  var backRedirectLayerIndex = 0;
-  var backRedirectArmed = false;
-
-  function armBackRedirect() {
-    if (backRedirectArmed) return;
-    backRedirectArmed = true;
-    history.pushState({ zbr: true }, '', location.href);
-    window.addEventListener('popstate', handleBackAttempt);
-  }
-
-  function handleBackAttempt() {
-    if (backRedirectLayerIndex >= BACK_REDIRECT_LAYERS.length) {
-      window.removeEventListener('popstate', handleBackAttempt);
-      trackEvent('BackRedirectExit', {});
-      history.back();
-      return;
-    }
-    showBackRedirectLayer(backRedirectLayerIndex);
-    trackEvent('BackRedirectShown', { layer: backRedirectLayerIndex + 1 });
-    backRedirectLayerIndex++;
-    history.pushState({ zbr: true }, '', location.href);
-  }
-
-  function showBackRedirectLayer(index) {
-    var layer = BACK_REDIRECT_LAYERS[index];
-    document.getElementById('brTitle').textContent = layer.title;
-    document.getElementById('brBody').textContent = layer.body;
-    var primaryBtn = document.getElementById('brPrimary');
-    primaryBtn.textContent = layer.primary;
-    primaryBtn.onclick = function () {
-      trackEvent('BackRedirectPrimaryClick', { layer: index + 1 });
-      if (layer.action === 'whatsapp') {
-        var msg = encodeURIComponent('Oi! Vim do teste do Método do Zimbreiro e queria receber a oração curta de descanso.');
-        window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + msg, '_blank');
-      }
-      closeBackRedirectOverlay();
-    };
-    document.getElementById('backRedirectOverlay').classList.add('show');
-  }
-
-  function closeBackRedirectOverlay() {
-    document.getElementById('backRedirectOverlay').classList.remove('show');
-  }
-
-  document.getElementById('brDismiss').addEventListener('click', function (e) {
-    e.preventDefault();
-    trackEvent('BackRedirectDismiss', { layer: backRedirectLayerIndex });
-    closeBackRedirectOverlay();
   });
-
-  // Compartilhar/baixar resultado (rodada 17, pesquisa de quizzes gamificados
-  // de outros nichos): gera uma imagem real via canvas com o perfil e os 3
-  // eixos, e usa a Web Share API pra abrir o menu nativo de compartilhar no
-  // celular (Instagram, WhatsApp). Sem suporte (desktop, navegador antigo),
-  // cai pro download normal do arquivo. Instagram não permite link clicável
-  // em legenda/comentário — por isso o site fica escrito na própria imagem.
-  function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-    var words = text.split(' ');
-    var line = '';
-    var lines = [];
-    for (var n = 0; n < words.length; n++) {
-      var testLine = line + words[n] + ' ';
-      if (ctx.measureText(testLine).width > maxWidth && n > 0) {
-        lines.push(line);
-        line = words[n] + ' ';
-      } else {
-        line = testLine;
-      }
-    }
-    lines.push(line);
-    lines.forEach(function (l, i) { ctx.fillText(l.trim(), x, y + i * lineHeight); });
-    return lines.length * lineHeight;
-  }
-
-  document.getElementById('downloadBtn').addEventListener('click', async function () {
-    var btn = this;
-    var originalHTML = btn.innerHTML;
-    btn.disabled = true;
-    btn.textContent = 'Gerando...';
-
-    try {
-      await Promise.all([
-        document.fonts.load('700 44px Lora'),
-        document.fonts.load('700 26px Lora'),
-        document.fonts.load('700 24px Lora'),
-        document.fonts.load('700 22px Inter'),
-        document.fonts.load('600 24px Inter'),
-        document.fonts.load('600 15px Inter')
-      ]);
-    } catch (e) {}
-
-    var perfil = getPerfil();
-    var p = PERFIS[perfil];
-    var axes = computeAxes(answers);
-    var canvas = document.createElement('canvas');
-    var W = 1080, H = 1080;
-    canvas.width = W; canvas.height = H;
-    var ctx = canvas.getContext('2d');
-
-    // Fundo escuro
-    var bg = ctx.createLinearGradient(0, 0, 0, H);
-    bg.addColorStop(0, '#1C1208');
-    bg.addColorStop(1, '#241A0C');
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, W, H);
-
-    // Faixa dourada sólida no topo — dá contraste forte, visível em miniatura
-    // no feed/story, resolve a queixa de "não chama atenção" da versão anterior.
-    ctx.fillStyle = '#C4973B';
-    ctx.fillRect(0, 0, W, 210);
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#1C1208';
-    ctx.font = '700 26px Inter, Arial, sans-serif';
-    ctx.fillText('PLENO', W / 2, 78);
-    ctx.font = '700 34px Lora, Georgia, serif';
-    ctx.fillText('MÉTODO DO ZIMBREIRO', W / 2, 138);
-
-    ctx.strokeStyle = 'rgba(196,151,59,0.6)';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(22, 22, W - 44, H - 44);
-
-    ctx.fillStyle = '#D8C9A8';
-    ctx.font = '700 24px Inter, Arial, sans-serif';
-    ctx.fillText(p.tag, W / 2, 290);
-
-    // Regra decorativa antes do headline
-    ctx.strokeStyle = 'rgba(196,151,59,0.6)';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(W / 2 - 50, 325);
-    ctx.lineTo(W / 2 + 50, 325);
-    ctx.stroke();
-
-    ctx.fillStyle = '#FAF7F2';
-    ctx.font = '700 48px Lora, Georgia, serif';
-    var used = wrapText(ctx, p.headline, W / 2, 400, W - 180, 60);
-
-    var axisNames = ['Peso de servir sem pausa', 'Culpa ao pensar em descansar', 'Prontidão para o Método'];
-    var startY = 400 + used + 60;
-    ctx.textAlign = 'left';
-    for (var i = 0; i < 3; i++) {
-      var y = startY + i * 92;
-      ctx.fillStyle = '#FAF7F2';
-      ctx.font = '600 24px Inter, Arial, sans-serif';
-      ctx.fillText(axisNames[i], 90, y);
-      ctx.fillStyle = '#C4973B';
-      ctx.font = '700 26px Lora, Georgia, serif';
-      ctx.textAlign = 'right';
-      ctx.fillText(axes[i] + '%', W - 90, y);
-      ctx.textAlign = 'left';
-
-      ctx.fillStyle = 'rgba(255,255,255,0.12)';
-      ctx.fillRect(90, y + 16, W - 180, 12);
-      var barGrad = ctx.createLinearGradient(90, 0, W - 90, 0);
-      barGrad.addColorStop(0, '#C0B090');
-      barGrad.addColorStop(1, '#C4973B');
-      ctx.fillStyle = barGrad;
-      ctx.fillRect(90, y + 16, (W - 180) * (axes[i] / 100), 12);
-    }
-
-    // Selo/CTA no rodapé com o site — mais visível que texto cinza pequeno
-    var pillY = H - 130;
-    var pillW = 620, pillH = 76;
-    var pillX = (W - pillW) / 2;
-    ctx.fillStyle = '#C4973B';
-    if (ctx.roundRect) {
-      ctx.beginPath();
-      ctx.roundRect(pillX, pillY, pillW, pillH, 38);
-      ctx.fill();
-    } else {
-      ctx.fillRect(pillX, pillY, pillW, pillH);
-    }
-    ctx.fillStyle = '#1C1208';
-    ctx.textAlign = 'center';
-    ctx.font = '700 26px Inter, Arial, sans-serif';
-    ctx.fillText('zimbreiro.acessopleno.com', W / 2, pillY + pillH / 2 + 1);
-
-    canvas.toBlob(async function (blob) {
-      btn.disabled = false;
-      btn.innerHTML = originalHTML;
-
-      var shareText = 'Fiz o teste do Método do Zimbreiro e essa foi minha leitura. zimbreiro.acessopleno.com';
-      var file = null;
-      try { file = new File([blob], 'minha-leitura-zimbreiro.png', { type: 'image/png' }); } catch (e) {}
-
-      if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({ files: [file], title: 'Minha leitura — Método do Zimbreiro', text: shareText });
-          trackEvent('ResultShared', { perfil: perfil, method: 'webshare' });
-          return;
-        } catch (shareErr) {
-          // Usuário cancelou o compartilhamento ou o navegador recusou — cai pro download normal abaixo.
-        }
-      }
-
-      var link = document.createElement('a');
-      link.download = 'minha-leitura-zimbreiro.png';
-      link.href = URL.createObjectURL(blob);
-      link.click();
-      trackEvent('ResultShared', { perfil: perfil, method: 'download' });
-    }, 'image/png');
-  });
-
-  resumeFromSavedState();
 </script>
-
-</body>
-</html>

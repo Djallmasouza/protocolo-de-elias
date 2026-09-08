@@ -144,6 +144,22 @@ h2{font-size:clamp(25px,4vw,34px);line-height:1.15;margin-bottom:18px;text-align
 
 footer{padding:30px 24px 44px;text-align:center;font-size:11.5px;color:var(--gold-muted);background:var(--dark-deep)}
 footer p{max-width:56ch;margin:0 auto;line-height:1.7}
+
+/* GRAFICOS ABSTRATOS - simbolos reais do conteudo, sem pessoas/fotos */
+.hero-visual{max-width:380px;margin:0 auto 28px;opacity:.95}
+.movement-row{display:flex;gap:0;align-items:center;flex-wrap:wrap;padding:36px 0;border-bottom:1px solid var(--line)}
+.movement-row:last-child{border-bottom:0}
+.movement-row .m-icon{flex:0 0 160px;display:flex;justify-content:center;color:var(--bordo)}
+.movement-row .m-text{flex:1 1 320px;padding:0 8px}
+.movement-row.reverse{flex-direction:row-reverse}
+.band-dark .movement-row .m-icon{color:var(--gold-soft)}
+.m-icon svg{width:110px;height:110px}
+.quote-mark{font-family:var(--disp);font-size:110px;line-height:.5;color:var(--gold-soft);opacity:.3;display:block;text-align:center;margin-bottom:-10px}
+.preview-wrap{position:relative;max-width:340px;margin:0 auto}
+.progress-ring{position:absolute;top:-14px;right:-8px;width:64px;height:64px;background:var(--cream);border-radius:50%;box-shadow:0 6px 16px -4px rgba(28,18,8,.25);display:flex;align-items:center;justify-content:center;transform:rotate(-6deg)}
+.progress-ring span{font-family:var(--disp);font-weight:700;font-size:13px;color:var(--bordo);text-align:center;line-height:1.1}
+.offer-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(250,247,242,.2);padding:8px 14px;font-size:12px;color:var(--gold-soft);margin-bottom:18px}
+@media(max-width:680px){.movement-row,.movement-row.reverse{flex-direction:column;text-align:center}.movement-row .m-icon{flex:0 0 auto;margin-bottom:12px}}
 </style>
 
 <!-- Meta Pixel -->
@@ -166,6 +182,14 @@ gtag('config','G-DW808DQS8Q');
 <!-- HERO -->
 <section class="hero">
   <div class="wrap">
+    <svg class="hero-visual" viewBox="0 0 600 300" fill="none" aria-hidden="true">
+      <defs><radialGradient id="hg" cx="50%" cy="30%" r="65%"><stop offset="0%" stop-color="#C4973B" stop-opacity="0.4"/><stop offset="100%" stop-color="#C4973B" stop-opacity="0"/></radialGradient></defs>
+      <rect width="600" height="300" fill="url(#hg)"/>
+      <path d="M0 260 Q150 240 300 258 T600 258 V300 H0 Z" fill="#1A1209"/>
+      <ellipse cx="300" cy="252" rx="150" ry="12" fill="#000" opacity="0.35"/>
+      <path d="M300 80 C258 108 244 146 258 174 C234 170 220 188 234 206 C220 213 227 231 249 231 L351 231 C373 231 380 213 366 206 C380 188 366 170 342 174 C356 146 342 108 300 80 Z" fill="#D8C9A8" opacity="0.85"/>
+      <line x1="300" y1="231" x2="300" y2="256" stroke="#D8C9A8" stroke-width="5" opacity="0.85"/>
+    </svg>
     <p class="lede">Você já ouviu dezenas de mensagens sobre Elias. Mas existe um detalhe em 1 Reis 19 que quase ninguém percebe.</p>
     <h1>Você ama a Deus. Serve há anos. E ainda assim sente culpa toda vez que tenta parar.</h1>
     <p class="prose">Baseado no momento em que Deus tratou Elias como filho exausto — e a primeira coisa que fez não foi dar uma missão. Foi deixá-lo dormir.</p>
@@ -187,29 +211,34 @@ gtag('config','G-DW808DQS8Q');
 <!-- CRENCA ANTIGA (bordo callout) -->
 <section class="band band-bordo">
   <div class="wrap belief-callout">
+    <span class="quote-mark">&#8220;</span>
     <p class="big">"Descansar agora seria fraqueza. Seria eu desistindo."</p>
     <p class="prose">Essa crença não veio de Deus. Ninguém te ensinou isso com essas palavras — e é exatamente essa crença que a história de Elias derruba.</p>
   </div>
 </section>
 
-<!-- ELIAS -->
+<!-- ELIAS + MOVIMENTOS (sequencia alternada, simbolos abstratos reais) -->
 <section class="band band-dark" data-track-section="elias_mecanismo">
-  <div class="wrap narrow center">
-    <span class="eyebrow">O que Deus fez com Elias</span>
-    <div class="prose">
-      <p>Elias era profeta. Chamou fogo do céu. Confrontou 450 profetas sozinho. E, mesmo assim, se sentou debaixo de uma árvore e pediu para morrer.</p>
-      <p>Deus não repreendeu Elias por estar ali. A primeira coisa que fez foi deixá-lo dormir. Isso não foi fraqueza. Foi o início da restauração.</p>
+  <div class="wrap">
+    <span class="eyebrow center" style="display:block">O que Deus fez com Elias</span>
+    <div class="movement-row">
+      <div class="m-icon"><svg viewBox="0 0 200 200" fill="currentColor"><ellipse cx="100" cy="175" rx="65" ry="7" opacity="0.15"/><path d="M100 45 C72 65 62 92 72 112 C58 108 48 122 58 136 C48 142 53 156 66 156 L134 156 C147 156 152 142 142 136 C152 122 142 108 128 112 C138 92 128 65 100 45 Z" opacity="0.9"/><line x1="100" y1="156" x2="100" y2="174" stroke="currentColor" stroke-width="4"/></svg></div>
+      <div class="m-text prose narrow" style="margin:0">
+        <p>Elias era profeta. Chamou fogo do céu. Confrontou 450 profetas sozinho. E, mesmo assim, se sentou debaixo de uma árvore e pediu para morrer.</p>
+        <p>Deus não repreendeu Elias por estar ali. A primeira coisa que fez foi deixá-lo dormir. Isso não foi fraqueza. Foi o início da restauração.</p>
+      </div>
     </div>
-  </div>
-</section>
-
-<!-- MOVIMENTOS (cards) -->
-<section class="band band-gray">
-  <div class="wrap center">
-    <div class="movement-grid">
-      <div class="movement-card"><span class="movement-num">·</span><div><p class="movement-desc"><strong>Depois, o cuidado:</strong> um anjo o alimentou e deixou que dormisse de novo, antes de qualquer missão nova.</p></div></div>
-      <div class="movement-card"><span class="movement-num">·</span><div><p class="movement-desc"><strong>Depois, a força do alimento:</strong> com aquela refeição, Elias caminhou 40 dias até Horebe — o que sustenta o caminho longo não é resistir sem parar.</p></div></div>
-      <div class="movement-card"><span class="movement-num">·</span><div><p class="movement-desc"><strong>Só depois, a voz:</strong> não estava no vento forte, no terremoto ou no fogo. Estava numa voz mansa e delicada.</p></div></div>
+    <div class="movement-row reverse">
+      <div class="m-icon"><svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="3"><ellipse cx="70" cy="118" rx="42" ry="26" fill="currentColor" opacity="0.85" stroke="none"/><path d="M128 88 L148 88 L143 138 Q138 148 128 148 L120 148 Q112 138 108 88" fill="none"/><line x1="108" y1="88" x2="148" y2="88"/></svg></div>
+      <div class="m-text prose narrow" style="margin:0"><p><strong>Depois, o cuidado:</strong> um anjo o alimentou e deixou que dormisse de novo, antes de qualquer missão nova.</p></div>
+    </div>
+    <div class="movement-row">
+      <div class="m-icon"><svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"><path d="M30 150 L75 70 L110 110 L170 40" opacity="0.35"/><path d="M20 165 Q65 135 100 152 Q140 172 180 145" stroke-dasharray="1 14"/></svg></div>
+      <div class="m-text prose narrow" style="margin:0"><p><strong>Depois, a força do alimento:</strong> com aquela refeição, Elias caminhou 40 dias até Horebe — o que sustenta o caminho longo não é resistir sem parar.</p></div>
+    </div>
+    <div class="movement-row reverse">
+      <div class="m-icon"><svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="100" cy="100" r="16" fill="currentColor" stroke="none" opacity="0.9"/><circle cx="100" cy="100" r="38" opacity="0.5"/><circle cx="100" cy="100" r="60" opacity="0.3"/><circle cx="100" cy="100" r="82" opacity="0.15"/></svg></div>
+      <div class="m-text prose narrow" style="margin:0"><p><strong>Só depois, a voz:</strong> não estava no vento forte, no terremoto ou no fogo. Estava numa voz mansa e delicada.</p></div>
     </div>
     <p class="quote">Talvez você também esteja tentando ouvir uma voz mansa enquanto vive cercada pelo barulho do próprio cansaço.</p>
   </div>
@@ -246,6 +275,8 @@ gtag('config','G-DW808DQS8Q');
       </div>
       <div>
         <p class="prose center" style="font-size:13.5px;margin-bottom:14px">É assim que o Dia 1 chega até você:</p>
+        <div class="preview-wrap">
+        <div class="progress-ring"><span>1/7<br>14%</span></div>
         <div class="preview-card">
           <div class="preview-topbar"><span><strong>1 de 7</strong> dias concluídos</span><span>14%</span></div>
           <div class="preview-progress"><div class="preview-progress-fill"></div></div>
@@ -259,6 +290,7 @@ gtag('config','G-DW808DQS8Q');
             <div class="preview-frag"><p class="preview-label">Oração guiada</p><p class="preview-text fade">"Senhor, estou cansada. Não de você..."</p><span class="preview-more">→ O restante fica disponível no Dia 1</span></div>
           </div>
           <div class="preview-footer">Isto é o app real — não uma ilustração.</div>
+        </div>
         </div>
       </div>
     </div>
@@ -294,6 +326,7 @@ gtag('config','G-DW808DQS8Q');
 <section class="band offer-band" id="oferta" data-track-section="oferta">
   <div class="wrap">
     <div class="offer">
+      <span class="offer-tag">Dia 1 de 7</span>
       <p class="offer-eyebrow">Método do Zimbreiro — Fase 1 do Protocolo de Elias</p>
       <p class="offer-name">Sete dias para praticar o descanso como obediência</p>
       <p class="offer-anchor">R$47,90</p>

@@ -46,6 +46,23 @@ function withPassthrough(baseUrl){var url=new URL(baseUrl);var params=new URLSea
 document.querySelectorAll('[data-track-cta]').forEach(function(el){el.href=withPassthrough(CHECKOUT_URL)});
 trackEvent('LPView',{});
 if(window.fbq)fbq('track','ViewContent',{content_name:'Método do Zimbreiro',variant:LP_TEST_VARIANT});
+(function(){
+  var fired={25:false,50:false,75:false,90:false};
+  var metaStandard={25:'Search',50:'AddToWishlist'};
+  function checkScroll(){
+    var doc=document.documentElement;
+    var pct=(window.scrollY+window.innerHeight)/doc.scrollHeight*100;
+    [25,50,75,90].forEach(function(t){
+      if(!fired[t]&&pct>=t){
+        fired[t]=true;
+        trackEvent('Scroll'+t,{});
+        if(metaStandard[t]&&window.fbq)fbq('track',metaStandard[t],{content_name:'Método do Zimbreiro',variant:LP_TEST_VARIANT});
+      }
+    });
+  }
+  document.addEventListener('scroll',checkScroll,{passive:true});
+  checkScroll();
+})();
 document.querySelectorAll('[data-track-cta]').forEach(function(el){el.addEventListener('click',function(event){event.preventDefault();var destination=el.href;trackEvent('CTAOfferClick',{cta_id:el.getAttribute('data-cta-id')});if(window.fbq)fbq('track','AddToCart',{content_name:'Método do Zimbreiro',variant:LP_TEST_VARIANT});setTimeout(function(){window.location.href=destination},150)})});
 </script>
 </body>

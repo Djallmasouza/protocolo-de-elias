@@ -2,53 +2,6 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<!--
-BUG CORRIGIDO EM PRODUÇÃO (07/09/2026) — causa raiz provada no DOM, não
-hipótese, em zimbreiro.acessopleno.com ao vivo, testado em 7 tamanhos de
-viewport (1366x768 a 2560x1440): sem gap/altura fantasma no box model em
-nenhum deles (footer bate exatamente no fim do viewport ao rolar até o
-fim real, gap ~0px sempre). Duas causas reais, confirmadas via inspeção,
-não uma:
-1. Arquivo sem <!DOCTYPE html>/<html>/<head>/<body> — servido cru pelo
-   Cloudflare Pages, navegador renderiza em Quirks Mode (confirmado via
-   document.compatMode === 'BackCompat' ao vivo).
-2. Sem <meta name="color-scheme"> e sem background explícito em <html>
-   (confirmado: meta ausente, html bg computado = transparente). Em
-   sistema/navegador com tema escuro, o Chrome pode preencher qualquer
-   área fora do que a página pintou explicitamente (overscroll/rubber-
-   band ao rolar com inércia além do fim real, comum em touchpad/mouse
-   com scroll suave) com o cinza escuro padrão do tema do SO, em vez de
-   branco/creme — exatamente a área vazia reportada, sem precisar de
-   altura extra no documento.
-Fix: wrapper padrão de documento (sai do Quirks Mode) + color-scheme:light
-declarado + background explícito em html (redundância de segurança,
-garante a cor correta mesmo em qualquer caminho de renderização). Nenhuma
-copy, arquitetura ou tracking alterados.
-
-LP B — candidata híbrida enxuta pro teste LP × Quiz (Método do Zimbreiro).
-Fonte: 2026-08-22-zimbreiro-pagina-nova-artifact.html (15 blocos) condensado
-pra 7, mantendo só a cadeia mínima aprovada: identificação → Elias → reframe
-→ mecanismo → tangibilização → oferta.
-
-Cortado (não fundido, removido mesmo — não estava na cadeia mínima):
-"ponte" (Mateus 11:28 isolado) e "antes/depois" (shift cards) — nenhum dos
-dois é indispensável pra vender o mecanismo, ambos custavam um bloco inteiro.
-
-Fundido:
-- Dor + Crença Antiga → 1 bloco.
-- Movimentos 2+3+4 (Bolo/Alimento/Voz Mansa) → comprimidos em lista de 1
-  linha cada dentro do bloco Elias/Mecanismo, fechando na citação da voz mansa.
-- Reasseguramento → virou a frase de abertura do bloco Qualificação.
-- Acesso final → fundido no bloco Oferta (mesmo CTA, sem 2º bloco/botão).
-
-Removido tecnicamente: .reveal/IntersectionObserver (fade-in ao rolar) — o
-mesmo padrão que já tinha sido eliminado permanentemente de LP do Zimbreiro
-em 16/07/2026 por revelar de forma inconsistente em tráfego pago real
-(ver memória project-zimbreiro-teste-ticket.md). Conteúdo sempre visível.
-
-STATUS: rascunho local, NÃO deployado, NÃO commitado no repo, NÃO ligado a
-nenhuma campanha. Falta decisão sobre orçamento/ativação do teste A/B.
--->
 <title>Método do Zimbreiro</title>
 <meta name="description" content="Um protocolo bíblico de 7 dias para descansar sem culpa, baseado no que Deus fez com Elias.">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,328 +10,43 @@ nenhuma campanha. Falta decisão sobre orçamento/ativação do teste A/B.
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    color-scheme: light;
-    --ink:#1C1208; --ink-soft:#3A2810; --cream:#FAF7F2; --warm:#F0E8D8;
-    --gold:#C4973B; --gold-soft:#D8C9A8; --gold-muted:#C0B090;
-    --dark-deep:#100C06; --line: rgba(28,18,8,0.12);
-    --ease: cubic-bezier(.23,1,.32,1);
-    --disp:"Lora",Georgia,serif; --sans:"Inter",system-ui,sans-serif;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;min-width:0}
-  html{-webkit-text-size-adjust:100%;background:var(--cream)}
-  body{background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-  img,svg{max-width:100%}
-  h1,h2,h3{font-family:var(--disp);font-weight:600;text-wrap:balance;letter-spacing:-.01em;color:var(--ink)}
-  .container{max-width:640px;margin:0 auto;padding:0 24px}
-  .section{padding:clamp(48px,9vw,80px) 0}
-  .section-warm{background:var(--warm)}
-  .section-dark{background:var(--dark-deep);color:var(--cream)}
-  .section-dark h2,.section-dark h3{color:var(--cream)}
-  .label{font-family:var(--sans);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:14px;display:block}
-  .section-dark .label{color:var(--gold-soft)}
-  p{margin-bottom:16px;max-width:60ch}
-  p:last-child{margin-bottom:0}
-  .prose p{color:var(--ink-soft)}
-  .section-dark .prose p{color:var(--gold-soft)}
-  h1{font-size:clamp(28px,5.2vw,42px);line-height:1.15;text-align:center;max-width:16ch;margin:0 auto 18px}
-  h2{font-size:clamp(23px,3.6vw,30px);line-height:1.2;margin-bottom:20px}
-  .center{text-align:center}
-  .center h2{max-width:20ch;margin-left:auto;margin-right:auto}
-  .lede{font-family:var(--disp);font-style:italic;font-size:clamp(17px,3vw,20px);color:var(--gold);max-width:32ch;line-height:1.55;margin:0 auto 22px;text-align:center}
-  .quote{font-family:var(--disp);font-style:italic;color:var(--ink-soft);font-size:clamp(17px,2.6vw,19px);line-height:1.6;max-width:38ch;margin:20px auto;text-align:center;position:relative;padding:0 8px}
-  .section-dark .quote{color:var(--gold-soft)}
-  .btn{font-family:var(--sans);font-weight:700;font-size:15px;letter-spacing:.01em;background:var(--gold);color:var(--dark-deep);border:0;border-radius:3px;padding:16px 30px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:transform .18s var(--ease),background .18s}
-  .btn:hover{background:var(--gold-soft);transform:translateY(-1px)}
-  .btn-wide{width:100%;justify-content:center;padding:18px 24px;font-size:16px}
-  .belief-card{background:var(--warm);border-left:3px solid var(--gold);border-radius:2px;padding:26px 28px;max-width:460px;margin:24px auto 0}
-  .belief-card p{font-family:var(--disp);font-style:italic;font-size:18px;color:var(--ink);margin:0}
-  .objection-q{font-family:var(--disp);font-style:italic;font-size:19px;color:var(--gold);text-align:center;max-width:34ch;margin:0 auto 22px}
-  .mech-list{list-style:none;max-width:480px;margin:20px auto 0;text-align:left}
-  .mech-list li{padding:8px 0;font-size:14.5px;color:var(--ink-soft);border-bottom:1px solid var(--line)}
-  .section-dark .mech-list li{color:var(--gold-soft);border-color:rgba(250,247,242,.14)}
-  .mech-list li:last-child{border-bottom:0}
-  .mech-list strong{color:inherit;font-weight:700}
-  .method-card{background:var(--cream);border:1px solid var(--line);border-radius:6px;padding:32px;max-width:480px;margin:28px auto 0}
-  .method-row{display:flex;gap:14px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line)}
-  .method-row:last-of-type{border-bottom:0}
-  .method-num{font-family:var(--disp);color:var(--gold);font-weight:700;font-size:14px;flex-shrink:0;width:20px}
-  .method-name{font-weight:700}
-  .method-desc{color:var(--ink-soft);font-size:14.5px}
-  .method-cadence{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);color:var(--ink-soft);font-size:14px;text-align:center}
-  .preview-card{background:var(--cream);border:1px solid var(--line);border-radius:10px;max-width:440px;margin:20px auto 0;overflow:hidden;box-shadow:0 1px 2px rgba(28,18,8,.04),0 8px 24px rgba(28,18,8,.06)}
-  .preview-topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--warm);border-bottom:1px solid var(--line);font-size:12.5px;color:var(--ink-soft)}
-  .preview-topbar strong{color:var(--ink);font-weight:700}
-  .preview-progress{height:4px;background:var(--line)}
-  .preview-progress-fill{height:100%;width:14%;background:var(--gold)}
-  .preview-body{padding:24px 22px 22px}
-  .preview-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin:0 0 4px}
-  .preview-title{font-family:var(--disp);font-weight:700;font-size:19px;color:var(--ink);margin:0}
-  .preview-subtitle{font-family:var(--disp);font-style:italic;font-size:14px;color:var(--ink-soft);margin:2px 0 18px}
-  .preview-frag{margin-bottom:16px}
-  .preview-frag:last-child{margin-bottom:0}
-  .preview-label{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--gold-muted);margin:0 0 4px}
-  .preview-text{font-size:14px;color:var(--ink-soft);line-height:1.55;margin:0;position:relative}
-  .preview-text.fade{-webkit-mask-image:linear-gradient(to bottom,black 60%,transparent 100%);mask-image:linear-gradient(to bottom,black 60%,transparent 100%)}
-  .preview-more{font-size:12.5px;color:var(--gold);font-weight:600;margin-top:4px;display:inline-block}
-  .preview-check{font-size:14px;color:var(--ink-soft);margin:0 0 4px;display:flex;gap:8px}
-  .preview-check .mk{color:var(--gold);flex-shrink:0}
-  .preview-footer{padding:14px 22px;background:var(--warm);border-top:1px solid var(--line);text-align:center;font-size:12.5px;color:var(--ink-soft)}
-  .qual-grid{display:grid;grid-template-columns:1fr;gap:28px;max-width:480px;margin:0 auto}
-  @media(min-width:640px){.qual-grid{grid-template-columns:1fr 1fr}}
-  .qual-list{list-style:none}
-  .qual-list li{display:flex;gap:10px;padding:8px 0;font-size:14.5px;color:var(--ink-soft)}
-  .qual-list .mk{flex-shrink:0;width:18px}
-  .qual-yes .mk{color:var(--gold)}
-  .qual-no .mk{color:var(--ink-soft)}
-  .offer{background:var(--dark-deep);color:var(--cream);border-radius:8px;max-width:420px;margin:0 auto;padding:36px 30px;text-align:center}
-  .offer-eyebrow{font-family:var(--sans);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-soft)}
-  .offer-name{font-family:var(--disp);font-size:22px;font-weight:700;margin:8px 0 20px}
-  .offer-anchor{text-decoration:line-through;color:var(--gold-muted);font-size:16px;opacity:.7}
-  .offer-price{font-family:var(--disp);font-size:40px;font-weight:700;color:var(--cream);margin:2px 0 4px}
-  .offer-detail{font-size:13px;color:var(--gold-soft);margin-bottom:22px}
-  .guarantee{max-width:420px;margin:22px auto 0;text-align:center;padding:20px;border:1px solid rgba(250,247,242,.16);border-radius:6px}
-  .guarantee p{font-size:14px;color:var(--gold-soft);margin:0}
-  .guarantee strong{color:var(--cream)}
-  .authority{text-align:center;font-size:13px;font-style:italic;color:var(--gold-muted);font-family:var(--disp)}
-  footer{padding:28px 24px 40px;text-align:center;font-size:11.5px;color:var(--gold-muted);background:var(--dark-deep)}
-  footer p{max-width:52ch;margin:0 auto;line-height:1.7}
+:root{color-scheme:light;--ink:#1C1208;--ink-soft:#3A2810;--cream:#FAF7F2;--warm:#F0E8D8;--gold:#C4973B;--gold-soft:#D8C9A8;--gold-muted:#C0B090;--dark-deep:#100C06;--line:rgba(28,18,8,.12);--ease:cubic-bezier(.23,1,.32,1);--disp:"Lora",Georgia,serif;--sans:"Inter",system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;min-width:0}html{-webkit-text-size-adjust:100%;background:var(--cream)}body{background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}img,svg{max-width:100%}h1,h2,h3{font-family:var(--disp);font-weight:600;text-wrap:balance;letter-spacing:-.01em;color:var(--ink)}.container{max-width:640px;margin:0 auto;padding:0 24px}.section{padding:clamp(48px,9vw,80px) 0}.section-warm{background:var(--warm)}.section-dark{background:var(--dark-deep);color:var(--cream)}.section-dark h2,.section-dark h3{color:var(--cream)}.label{font-family:var(--sans);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:14px;display:block}.section-dark .label{color:var(--gold-soft)}p{margin-bottom:16px;max-width:60ch}p:last-child{margin-bottom:0}.prose p{color:var(--ink-soft)}.section-dark .prose p{color:var(--gold-soft)}h1{font-size:clamp(28px,5.2vw,42px);line-height:1.15;text-align:center;max-width:16ch;margin:0 auto 18px}h2{font-size:clamp(23px,3.6vw,30px);line-height:1.2;margin-bottom:20px}.center{text-align:center}.center h2{max-width:20ch;margin-left:auto;margin-right:auto}.lede{font-family:var(--disp);font-style:italic;font-size:clamp(17px,3vw,20px);color:var(--gold);max-width:32ch;line-height:1.55;margin:0 auto 22px;text-align:center}.quote{font-family:var(--disp);font-style:italic;color:var(--ink-soft);font-size:clamp(17px,2.6vw,19px);line-height:1.6;max-width:38ch;margin:20px auto;text-align:center;position:relative;padding:0 8px}.section-dark .quote{color:var(--gold-soft)}.btn{font-family:var(--sans);font-weight:700;font-size:15px;letter-spacing:.01em;background:var(--gold);color:var(--dark-deep);border:0;border-radius:3px;padding:16px 30px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:transform .18s var(--ease),background .18s}.btn:hover{background:var(--gold-soft);transform:translateY(-1px)}.btn-wide{width:100%;justify-content:center;padding:18px 24px;font-size:16px}.belief-card{background:var(--warm);border-left:3px solid var(--gold);border-radius:2px;padding:26px 28px;max-width:460px;margin:24px auto 0}.belief-card p{font-family:var(--disp);font-style:italic;font-size:18px;color:var(--ink);margin:0}.objection-q{font-family:var(--disp);font-style:italic;font-size:19px;color:var(--gold);text-align:center;max-width:34ch;margin:0 auto 22px}.mech-list{list-style:none;max-width:480px;margin:20px auto 0;text-align:left}.mech-list li{padding:8px 0;font-size:14.5px;color:var(--ink-soft);border-bottom:1px solid var(--line)}.section-dark .mech-list li{color:var(--gold-soft);border-color:rgba(250,247,242,.14)}.mech-list li:last-child{border-bottom:0}.mech-list strong{color:inherit;font-weight:700}.method-card{background:var(--cream);border:1px solid var(--line);border-radius:6px;padding:32px;max-width:480px;margin:28px auto 0}.method-row{display:flex;gap:14px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line)}.method-row:last-of-type{border-bottom:0}.method-num{font-family:var(--disp);color:var(--gold);font-weight:700;font-size:14px;flex-shrink:0;width:20px}.method-name{font-weight:700}.method-desc{color:var(--ink-soft);font-size:14.5px}.method-cadence{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);color:var(--ink-soft);font-size:14px;text-align:center}.preview-card{background:var(--cream);border:1px solid var(--line);border-radius:10px;max-width:440px;margin:20px auto 0;overflow:hidden;box-shadow:0 1px 2px rgba(28,18,8,.04),0 8px 24px rgba(28,18,8,.06)}.preview-topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--warm);border-bottom:1px solid var(--line);font-size:12.5px;color:var(--ink-soft)}.preview-topbar strong{color:var(--ink);font-weight:700}.preview-progress{height:4px;background:var(--line)}.preview-progress-fill{height:100%;width:14%;background:var(--gold)}.preview-body{padding:24px 22px 22px}.preview-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin:0 0 4px}.preview-title{font-family:var(--disp);font-weight:700;font-size:19px;color:var(--ink);margin:0}.preview-subtitle{font-family:var(--disp);font-style:italic;font-size:14px;color:var(--ink-soft);margin:2px 0 18px}.preview-frag{margin-bottom:16px}.preview-frag:last-child{margin-bottom:0}.preview-label{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--gold-muted);margin:0 0 4px}.preview-text{font-size:14px;color:var(--ink-soft);line-height:1.55;margin:0;position:relative}.preview-text.fade{-webkit-mask-image:linear-gradient(to bottom,black 60%,transparent 100%);mask-image:linear-gradient(to bottom,black 60%,transparent 100%)}.preview-more{font-size:12.5px;color:var(--gold);font-weight:600;margin-top:4px;display:inline-block}.preview-check{font-size:14px;color:var(--ink-soft);margin:0 0 4px;display:flex;gap:8px}.preview-check .mk{color:var(--gold);flex-shrink:0}.preview-footer{padding:14px 22px;background:var(--warm);border-top:1px solid var(--line);text-align:center;font-size:12.5px;color:var(--ink-soft)}.qual-grid{display:grid;grid-template-columns:1fr;gap:28px;max-width:480px;margin:0 auto}@media(min-width:640px){.qual-grid{grid-template-columns:1fr 1fr}}.qual-list{list-style:none}.qual-list li{display:flex;gap:10px;padding:8px 0;font-size:14.5px;color:var(--ink-soft)}.qual-list .mk{flex-shrink:0;width:18px}.qual-yes .mk{color:var(--gold)}.qual-no .mk{color:var(--ink-soft)}.offer{background:var(--dark-deep);color:var(--cream);border-radius:8px;max-width:420px;margin:0 auto;padding:36px 30px;text-align:center}.offer-eyebrow{font-family:var(--sans);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-soft)}.offer-name{font-family:var(--disp);font-size:22px;font-weight:700;margin:8px 0 20px}.offer-anchor{text-decoration:line-through;color:var(--gold-muted);font-size:16px;opacity:.7}.offer-price{font-family:var(--disp);font-size:40px;font-weight:700;color:var(--cream);margin:2px 0 4px}.offer-detail{font-size:13px;color:var(--gold-soft);margin-bottom:22px}.guarantee{max-width:420px;margin:22px auto 0;text-align:center;padding:20px;border:1px solid rgba(250,247,242,.16);border-radius:6px}.guarantee p{font-size:14px;color:var(--gold-soft);margin:0}.guarantee strong{color:var(--cream)}.authority{text-align:center;font-size:13px;font-style:italic;color:var(--gold-muted);font-family:var(--disp)}footer{padding:28px 24px 40px;text-align:center;font-size:11.5px;color:var(--gold-muted);background:var(--dark-deep)}footer p{max-width:52ch;margin:0 auto;line-height:1.7}
 </style>
-</head>
-<body>
 
-<!-- ===================== BLOCO 1 — HERO (identificação) ===================== -->
-<section class="hero" style="padding:clamp(64px,14vw,110px) 0 clamp(48px,9vw,72px);background:radial-gradient(700px 380px at 50% -10%, rgba(196,151,59,.14), transparent 60%), var(--cream)">
-  <div class="container" style="display:flex;flex-direction:column;align-items:center">
-    <p class="lede">Você já ouviu dezenas de mensagens sobre Elias. Mas existe um detalhe em 1 Reis 19 que quase ninguém percebe.</p>
-    <h1>Você ama a Deus. Serve há anos. E ainda assim sente culpa toda vez que tenta parar.</h1>
-    <p class="prose center" style="max-width:38ch;margin:0 auto 26px">Baseado no momento em que Deus tratou Elias como filho exausto — e a primeira coisa que fez não foi dar uma missão. Foi deixá-lo dormir.</p>
-    <a href="#oferta" class="btn">Quero entender esse detalhe</a>
-  </div>
-</section>
-
-<!-- ============ BLOCO 2 — DOR + CRENÇA ANTIGA (fundidos) ============ -->
-<section class="section section-warm" data-track-section="dor_crenca">
-  <div class="container center">
-    <span class="label">O que está acontecendo</span>
-    <div class="prose" style="max-width:46ch;margin:0 auto">
-      <p>Termina o culto. Abraça todo mundo. Diz que está tudo bem. Entra no carro. E chora sozinha antes de ligar o motor.</p>
-      <p>Não é falta de fé. É o peso de carregar sem parar — e a culpa que vem toda vez que você tenta descansar, como se parar fosse decepcionar a Deus.</p>
-    </div>
-    <div class="belief-card">
-      <p>"Descansar agora seria fraqueza. Seria eu desistindo."</p>
-    </div>
-    <p class="prose" style="max-width:42ch;margin:22px auto 0">Essa crença não veio de Deus. Ninguém te ensinou isso com essas palavras — e é exatamente essa crença que a história de Elias derruba.</p>
-  </div>
-</section>
-
-<!-- ============ BLOCO 3 — ELIAS + MECANISMO (fundidos) ============ -->
-<section class="section section-dark" data-track-section="elias_mecanismo">
-  <div class="container">
-    <span class="label">O que Deus fez com Elias</span>
-    <div class="prose">
-      <p>Elias era profeta. Chamou fogo do céu. Confrontou 450 profetas sozinho. E, mesmo assim, se sentou debaixo de uma árvore e pediu para morrer.</p>
-      <p>Deus não repreendeu Elias por estar ali. A primeira coisa que fez foi deixá-lo dormir. Isso não foi fraqueza. Foi o início da restauração.</p>
-    </div>
-    <ul class="mech-list">
-      <li><strong>Depois, o cuidado:</strong> um anjo o alimentou e deixou que dormisse de novo, antes de qualquer missão nova.</li>
-      <li><strong>Depois, a força do alimento:</strong> com aquela refeição, Elias caminhou 40 dias até Horebe — o que sustenta o caminho longo não é resistir sem parar.</li>
-      <li><strong>Só depois, a voz:</strong> não estava no vento forte, no terremoto ou no fogo. Estava numa voz mansa e delicada.</li>
-    </ul>
-    <p class="quote">Talvez você também esteja tentando ouvir uma voz mansa enquanto vive cercada pelo barulho do próprio cansaço.</p>
-  </div>
-</section>
-
-<!-- ===================== BLOCO 4 — REFRAME / OBJEÇÃO ===================== -->
-<section class="section" data-track-section="objecao">
-  <div class="container center">
-    <span class="label">Uma pergunta honesta</span>
-    <p class="objection-q">"Isso não é só desculpa pra ser preguiçosa? Pra parar de fazer minha parte?"</p>
-    <div class="prose" style="max-width:46ch;margin:0 auto">
-      <p>Não. Elias não parou por preguiça. Parou porque Deus mandou. E obedecer, naquele momento, não significou fazer mais — significou parar, comer e dormir.</p>
-      <p>Você pode continuar amando e servindo a Deus, e ainda assim ter aprendido a sentir culpa quando precisa parar. Houve um momento em que obedecer a Deus não foi produzir mais. Foi parar.</p>
-      <p>Hoje, quando você tenta parar, a culpa aparece e você interpreta isso como sinal pra continuar. Depois desses 7 dias, a culpa ainda pode aparecer — mas você reconhece o padrão, lembra do que Deus fez com Elias, e consegue descansar sem tratar isso como fracasso espiritual.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ BLOCO 5 — MÉTODO + TANGIBILIZAÇÃO (real, sem cortar) ============ -->
-<section class="section section-warm" data-track-section="metodo">
-  <div class="container center">
-    <span class="label">O método</span>
-    <h2>Método do Zimbreiro</h2>
-    <p class="prose" style="max-width:44ch;margin:0 auto 8px">Um protocolo de 7 dias que conduz você pela mesma sequência que Deus usou com Elias, um passo de cada vez.</p>
-    <div class="method-card">
-      <div class="method-row"><span class="method-num">01</span><div><div class="method-name">O Zimbro</div><div class="method-desc">Nomear o cansaço sem fingir, e ser encontrada nele.</div></div></div>
-      <div class="method-row"><span class="method-num">02</span><div><div class="method-name">O Bolo e o Segundo Sono</div><div class="method-desc">Aprender a receber e a descansar de novo, sem culpa.</div></div></div>
-      <div class="method-row"><span class="method-num">03</span><div><div class="method-name">A Força do Alimento</div><div class="method-desc">Descobrir que a pausa sustenta o que vem depois.</div></div></div>
-      <div class="method-row"><span class="method-num">04</span><div><div class="method-name">A Voz Mansa</div><div class="method-desc">O silêncio que processa a dor e abre espaço para ouvir.</div></div></div>
-      <p class="method-cadence">10 a 15 minutos por dia. Um versículo, uma reflexão, uma prática simples, uma oração guiada — sete dias, sete degraus.</p>
-    </div>
-
-    <p class="prose center" style="max-width:38ch;margin:22px auto 6px;font-size:13.5px;color:var(--ink-soft)">É assim que o Dia 1 chega até você:</p>
-    <div class="preview-card">
-      <div class="preview-topbar"><span><strong>1 de 7</strong> dias concluídos</span><span>14%</span></div>
-      <div class="preview-progress"><div class="preview-progress-fill"></div></div>
-      <div class="preview-body">
-        <p class="preview-eyebrow">Dia 1 de 7</p>
-        <p class="preview-title">A Sombra do Zimbreiro</p>
-        <p class="preview-subtitle">Permissão para estar cansada</p>
-        <div class="preview-frag">
-          <p class="preview-label">Reflexão</p>
-          <p class="preview-text fade">"Elias era um profeta. Um homem que chamou fogo do céu. Que confrontou 450 profetas de Baal sozinho. E esse mesmo homem se sentou debaixo de uma árvore e pediu para morrer."</p>
-          <span class="preview-more">→ Continuar lendo</span>
-        </div>
-        <div class="preview-frag">
-          <p class="preview-label">Pergunta para hoje</p>
-          <p class="preview-text fade">"Qual é o seu 'zimbro' — o lugar onde você finalmente..."</p>
-        </div>
-        <div class="preview-frag">
-          <p class="preview-label">Prática do dia</p>
-          <p class="preview-check"><span class="mk">✓</span>Reserve 10 minutos em silêncio, sem celular e sem compromissos.</p>
-          <span class="preview-more">+ 2 práticas guiadas</span>
-        </div>
-        <div class="preview-frag">
-          <p class="preview-label">Oração guiada</p>
-          <p class="preview-text fade">"Senhor, estou cansada. Não de você..."</p>
-          <span class="preview-more">→ O restante fica disponível no Dia 1</span>
-        </div>
-      </div>
-      <div class="preview-footer">Isto é o app real — não uma ilustração.</div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ BLOCO 6 — QUALIFICAÇÃO (com reasseguramento fundido) ============ -->
-<section class="section" data-track-section="qualificacao">
-  <div class="container">
-    <p class="prose center" style="max-width:46ch;margin:0 auto 28px">Não é sobre fazer menos por Deus. É sobre parar de tentar merecer o descanso que Ele já ofereceu.</p>
-    <div class="qual-grid">
-      <div>
-        <span class="label">Isso é pra você se</span>
-        <ul class="qual-list">
-          <li><span class="mk">✓</span>Você serve a Deus há anos e sente que, por dentro, está esgotada.</li>
-          <li><span class="mk">✓</span>Você sente culpa toda vez que tenta descansar.</li>
-          <li><span class="mk">✓</span>Você já pediu mais fé, orou mais, e o cansaço continua.</li>
-        </ul>
-      </div>
-      <div class="qual-no">
-        <span class="label">Não é pra você se</span>
-        <ul class="qual-list">
-          <li><span class="mk">—</span>Você busca resultado sem nenhuma mudança de hábito nos próximos 7 dias.</li>
-          <li><span class="mk">—</span>Você está vivendo uma crise emocional aguda agora — nesse caso, procure acompanhamento pastoral ou profissional diretamente; este protocolo não substitui isso.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ BLOCO 7 — OFERTA (com fechamento fundido) ============ -->
-<section class="section section-dark" id="oferta" data-track-section="oferta">
-  <div class="container">
-    <div class="offer">
-      <p class="offer-eyebrow">Método do Zimbreiro — Fase 1 do Protocolo de Elias</p>
-      <p class="offer-name">Sete dias para praticar o descanso como obediência</p>
-      <p class="offer-anchor">R$47,90</p>
-      <p class="offer-price">R$17,90</p>
-      <p class="offer-detail">Uma única vez · acesso imediato</p>
-      <a href="https://pay.herospark.com/metodo-do-zimbreiro-536020" class="btn btn-wide" id="cta-oferta" data-track-cta data-cta-id="cta-oferta">Começar meus 7 dias</a>
-      <!-- href real setado via withPassthrough() no script de tracking abaixo. -->
-
-    </div>
-    <div class="guarantee">
-      <p><strong>Garantia de 7 dias:</strong> você tem 7 dias para acessar e conhecer o Método do Zimbreiro. Se perceber que não é para você, solicite o reembolso dentro desse prazo. Pagamento processado com segurança por SparkPay by HeroSpark.</p>
-    </div>
-    <p class="prose center" style="max-width:40ch;margin:22px auto 0">Ao confirmar, o acesso é liberado na hora, direto no seu celular.</p>
-    <p class="quote" style="margin-top:14px">Talvez você não precise fazer mais hoje. Talvez precise começar pelo mesmo lugar em que a restauração de Elias começou.</p>
-    <p class="authority" style="margin-top:14px">Uma iniciativa Pleno — fé prática para quem carrega peso demais em silêncio.</p>
-  </div>
-</section>
-
-<footer>
-  <p>Este produto é de natureza educacional e espiritual. Não substitui acompanhamento médico, psicológico ou pastoral profissional. © 2026 Acesso Pleno Digital.</p>
-</footer>
-
-<!-- =====================================================================
-     TRACKING — espelha o padrão já em produção no quiz (index.html):
-     mesmo Pixel ID, mesma property GA4, mesmo helper trackEvent(), mesmo
-     conceito de variant. Pronto pra ativar quando for deployado — comentado
-     aqui só porque o CSP deste ambiente de preview bloqueia domínios de
-     terceiro além de Google Fonts (mesma nota já usada no artifact de 22/08).
-
+<!-- Meta Pixel -->
 <script>
-  !function(f,b,e,v,n,t,s){...}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '1494320865775022');
-  fbq('track', 'PageView');
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','1494320865775022');
+fbq('track','PageView');
 </script>
+<!-- GA4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DW808DQS8Q"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-DW808DQS8Q');
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments)}
+gtag('js',new Date());
+gtag('config','G-DW808DQS8Q');
 </script>
-===================================================================== -->
+</head>
+<body>
+<section class="hero" style="padding:clamp(64px,14vw,110px) 0 clamp(48px,9vw,72px);background:radial-gradient(700px 380px at 50% -10%,rgba(196,151,59,.14),transparent 60%),var(--cream)"><div class="container" style="display:flex;flex-direction:column;align-items:center"><p class="lede">Você já ouviu dezenas de mensagens sobre Elias. Mas existe um detalhe em 1 Reis 19 que quase ninguém percebe.</p><h1>Você ama a Deus. Serve há anos. E ainda assim sente culpa toda vez que tenta parar.</h1><p class="prose center" style="max-width:38ch;margin:0 auto 26px">Baseado no momento em que Deus tratou Elias como filho exausto — e a primeira coisa que fez não foi dar uma missão. Foi deixá-lo dormir.</p><a href="#oferta" class="btn">Quero entender esse detalhe</a></div></section>
+<section class="section section-warm" data-track-section="dor_crenca"><div class="container center"><span class="label">O que está acontecendo</span><div class="prose" style="max-width:46ch;margin:0 auto"><p>Termina o culto. Abraça todo mundo. Diz que está tudo bem. Entra no carro. E chora sozinha antes de ligar o motor.</p><p>Não é falta de fé. É o peso de carregar sem parar — e a culpa que vem toda vez que você tenta descansar, como se parar fosse decepcionar a Deus.</p></div><div class="belief-card"><p>"Descansar agora seria fraqueza. Seria eu desistindo."</p></div><p class="prose" style="max-width:42ch;margin:22px auto 0">Essa crença não veio de Deus. Ninguém te ensinou isso com essas palavras — e é exatamente essa crença que a história de Elias derruba.</p></div></section>
+<section class="section section-dark" data-track-section="elias_mecanismo"><div class="container"><span class="label">O que Deus fez com Elias</span><div class="prose"><p>Elias era profeta. Chamou fogo do céu. Confrontou 450 profetas sozinho. E, mesmo assim, se sentou debaixo de uma árvore e pediu para morrer.</p><p>Deus não repreendeu Elias por estar ali. A primeira coisa que fez foi deixá-lo dormir. Isso não foi fraqueza. Foi o início da restauração.</p></div><ul class="mech-list"><li><strong>Depois, o cuidado:</strong> um anjo o alimentou e deixou que dormisse de novo, antes de qualquer missão nova.</li><li><strong>Depois, a força do alimento:</strong> com aquela refeição, Elias caminhou 40 dias até Horebe — o que sustenta o caminho longo não é resistir sem parar.</li><li><strong>Só depois, a voz:</strong> não estava no vento forte, no terremoto ou no fogo. Estava numa voz mansa e delicada.</li></ul><p class="quote">Talvez você também esteja tentando ouvir uma voz mansa enquanto vive cercada pelo barulho do próprio cansaço.</p></div></section>
+<section class="section" data-track-section="objecao"><div class="container center"><span class="label">Uma pergunta honesta</span><p class="objection-q">"Isso não é só desculpa pra ser preguiçosa? Pra parar de fazer minha parte?"</p><div class="prose" style="max-width:46ch;margin:0 auto"><p>Não. Elias não parou por preguiça. Parou porque Deus mandou. E obedecer, naquele momento, não significou fazer mais — significou parar, comer e dormir.</p><p>Você pode continuar amando e servindo a Deus, e ainda assim ter aprendido a sentir culpa quando precisa parar. Houve um momento em que obedecer a Deus não foi produzir mais. Foi parar.</p><p>Hoje, quando você tenta parar, a culpa aparece e você interpreta isso como sinal pra continuar. Depois desses 7 dias, a culpa ainda pode aparecer — mas você reconhece o padrão, lembra do que Deus fez com Elias, e consegue descansar sem tratar isso como fracasso espiritual.</p></div></div></section>
+<section class="section section-warm" data-track-section="metodo"><div class="container center"><span class="label">O método</span><h2>Método do Zimbreiro</h2><p class="prose" style="max-width:44ch;margin:0 auto 8px">Um protocolo de 7 dias que conduz você pela mesma sequência que Deus usou com Elias, um passo de cada vez.</p><div class="method-card"><div class="method-row"><span class="method-num">01</span><div><div class="method-name">O Zimbro</div><div class="method-desc">Nomear o cansaço sem fingir, e ser encontrada nele.</div></div></div><div class="method-row"><span class="method-num">02</span><div><div class="method-name">O Bolo e o Segundo Sono</div><div class="method-desc">Aprender a receber e a descansar de novo, sem culpa.</div></div></div><div class="method-row"><span class="method-num">03</span><div><div class="method-name">A Força do Alimento</div><div class="method-desc">Descobrir que a pausa sustenta o que vem depois.</div></div></div><div class="method-row"><span class="method-num">04</span><div><div class="method-name">A Voz Mansa</div><div class="method-desc">O silêncio que processa a dor e abre espaço para ouvir.</div></div></div><p class="method-cadence">10 a 15 minutos por dia. Um versículo, uma reflexão, uma prática simples, uma oração guiada — sete dias, sete degraus.</p></div><p class="prose center" style="max-width:38ch;margin:22px auto 6px;font-size:13.5px;color:var(--ink-soft)">É assim que o Dia 1 chega até você:</p><div class="preview-card"><div class="preview-topbar"><span><strong>1 de 7</strong> dias concluídos</span><span>14%</span></div><div class="preview-progress"><div class="preview-progress-fill"></div></div><div class="preview-body"><p class="preview-eyebrow">Dia 1 de 7</p><p class="preview-title">A Sombra do Zimbreiro</p><p class="preview-subtitle">Permissão para estar cansada</p><div class="preview-frag"><p class="preview-label">Reflexão</p><p class="preview-text fade">"Elias era um profeta. Um homem que chamou fogo do céu. Que confrontou 450 profetas de Baal sozinho. E esse mesmo homem se sentou debaixo de uma árvore e pediu para morrer."</p><span class="preview-more">→ Continuar lendo</span></div><div class="preview-frag"><p class="preview-label">Pergunta para hoje</p><p class="preview-text fade">"Qual é o seu 'zimbro' — o lugar onde você finalmente..."</p></div><div class="preview-frag"><p class="preview-label">Prática do dia</p><p class="preview-check"><span class="mk">✓</span>Reserve 10 minutos em silêncio, sem celular e sem compromissos.</p><span class="preview-more">+ 2 práticas guiadas</span></div><div class="preview-frag"><p class="preview-label">Oração guiada</p><p class="preview-text fade">"Senhor, estou cansada. Não de você..."</p><span class="preview-more">→ O restante fica disponível no Dia 1</span></div></div><div class="preview-footer">Isto é o app real — não uma ilustração.</div></div></div></section>
+<section class="section" data-track-section="qualificacao"><div class="container"><p class="prose center" style="max-width:46ch;margin:0 auto 28px">Não é sobre fazer menos por Deus. É sobre parar de tentar merecer o descanso que Ele já ofereceu.</p><div class="qual-grid"><div><span class="label">Isso é pra você se</span><ul class="qual-list"><li><span class="mk">✓</span>Você serve a Deus há anos e sente que, por dentro, está esgotada.</li><li><span class="mk">✓</span>Você sente culpa toda vez que tenta descansar.</li><li><span class="mk">✓</span>Você já pediu mais fé, orou mais, e o cansaço continua.</li></ul></div><div class="qual-no"><span class="label">Não é pra você se</span><ul class="qual-list"><li><span class="mk">—</span>Você busca resultado sem nenhuma mudança de hábito nos próximos 7 dias.</li><li><span class="mk">—</span>Você está vivendo uma crise emocional aguda agora — nesse caso, procure acompanhamento pastoral ou profissional diretamente; este protocolo não substitui isso.</li></ul></div></div></div></section>
+<section class="section section-dark" id="oferta" data-track-section="oferta"><div class="container"><div class="offer"><p class="offer-eyebrow">Método do Zimbreiro — Fase 1 do Protocolo de Elias</p><p class="offer-name">Sete dias para praticar o descanso como obediência</p><p class="offer-anchor">R$47,90</p><p class="offer-price">R$17,90</p><p class="offer-detail">Uma única vez · acesso imediato</p><a href="https://pay.herospark.com/metodo-do-zimbreiro-536020" class="btn btn-wide" id="cta-oferta" data-track-cta data-cta-id="cta-oferta">Começar meus 7 dias</a></div><div class="guarantee"><p><strong>Garantia de 7 dias:</strong> você tem 7 dias para acessar e conhecer o Método do Zimbreiro. Se perceber que não é para você, solicite o reembolso dentro desse prazo. Pagamento processado com segurança por SparkPay by HeroSpark.</p></div><p class="prose center" style="max-width:40ch;margin:22px auto 0">Ao confirmar, o acesso é liberado na hora, direto no seu celular.</p><p class="quote" style="margin-top:14px">Talvez você não precise fazer mais hoje. Talvez precise começar pelo mesmo lugar em que a restauração de Elias começou.</p><p class="authority" style="margin-top:14px">Uma iniciativa Pleno — fé prática para quem carrega peso demais em silêncio.</p></div></section>
+<footer><p>Este produto é de natureza educacional e espiritual. Não substitui acompanhamento médico, psicológico ou pastoral profissional. © 2026 Acesso Pleno Digital.</p></footer>
 <script>
-  var LP_TEST_VARIANT = 'lp_direta_hibrida_v1';
-  var CHECKOUT_URL = 'https://pay.herospark.com/metodo-do-zimbreiro-536020';
-
-  function trackEvent(name, params) {
-    params = Object.assign({}, params, { variant: LP_TEST_VARIANT });
-    if (window.fbq) fbq('trackCustom', name, params);
-    if (window.gtag) gtag('event', name, params);
-  }
-
-  // MESMA função do quiz (index.html, linha ~1658) — copia fbclid/UTM da
-  // própria URL da LP pro link de checkout. Sem isso, uma compra real chega
-  // ao Supabase com utm_* tudo nulo, igual ao registro de teste que acabamos
-  // de corrigir (is_test). Provado ponta a ponta via leads reais (Gecimara/
-  // Eva, 06/09/2026): utm_source/medium/campaign/content/term sobrevivem
-  // LP -> HeroSpark -> webhook -> leads.
-  //
-  // ATENÇÃO — isso sozinho NÃO distingue "veio da LP B" vs "veio do Quiz":
-  // os UTMs vêm do anúncio (url_tags do Meta), não da página. Se o mesmo
-  // anúncio for redirecionado pra esta LP durante o teste, o utm_campaign
-  // será o mesmo texto que já aparece em compras do quiz. A discriminação
-  // real depende de usar uma campanha NOVA/dedicada pro lote de teste (ver
-  // checklist) — com isso, qualquer compra nessa janela de tempo já é
-  // inequivocamente atribuível à LP B, mesmo sem um campo "variant" dedicado
-  // no schema (leads/purchases não têm essa coluna, só os 5 UTMs padrão).
-  function withPassthrough(baseUrl) {
-    var url = new URL(baseUrl);
-    var params = new URLSearchParams(window.location.search);
-    ['fbclid','utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(key){
-      var val = params.get(key);
-      if (val) url.searchParams.set(key, val);
-    });
-    return url.toString();
-  }
-
-  document.querySelectorAll('[data-track-cta]').forEach(function (el) {
-    el.href = withPassthrough(CHECKOUT_URL);
-  });
-
-  // Equivalente ao QuizStart/LPV do quiz — dispara na carga da página.
-  trackEvent('LPView', {});
-  if (window.fbq) fbq('track', 'ViewContent', { content_name: 'Método do Zimbreiro', variant: LP_TEST_VARIANT });
-
-  // Equivalente ao CTAResultClick do quiz — único ponto de intenção comercial
-  // desta LP (não há etapa de resultado antes da oferta).
-  // Padrão final validado em julho (commits 3509634 -> ed4fcd5 -> 6a6f01c,
-  // protocolo-de-elias). As duas tentativas anteriores usaram
-  // event.preventDefault() + gtag event_callback e FALHARAM em teste real
-  // (o evento com callback não chegava à rede). A versão que sobreviveu:
-  // preventDefault + dispara os eventos sem callback + delay fixo de 150ms
-  // antes de navegar. Não reintroduzir event_callback aqui.
-  document.querySelectorAll('[data-track-cta]').forEach(function (el) {
-    el.addEventListener('click', function (event) {
-      event.preventDefault();
-      var destination = el.href;
-      trackEvent('CTAOfferClick', { cta_id: el.getAttribute('data-cta-id') });
-      if (window.fbq) fbq('track', 'AddToCart', { content_name: 'Método do Zimbreiro', variant: LP_TEST_VARIANT });
-      setTimeout(function () { window.location.href = destination; }, 150);
-    });
-  });
+var LP_TEST_VARIANT='lp_direta_hibrida_v1';
+var CHECKOUT_URL='https://pay.herospark.com/metodo-do-zimbreiro-536020';
+function trackEvent(name,params){params=Object.assign({},params,{variant:LP_TEST_VARIANT});if(window.fbq)fbq('trackCustom',name,params);if(window.gtag)gtag('event',name,params)}
+function withPassthrough(baseUrl){var url=new URL(baseUrl);var params=new URLSearchParams(window.location.search);['fbclid','utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(key){var val=params.get(key);if(val)url.searchParams.set(key,val)});return url.toString()}
+document.querySelectorAll('[data-track-cta]').forEach(function(el){el.href=withPassthrough(CHECKOUT_URL)});
+trackEvent('LPView',{});
+if(window.fbq)fbq('track','ViewContent',{content_name:'Método do Zimbreiro',variant:LP_TEST_VARIANT});
+document.querySelectorAll('[data-track-cta]').forEach(function(el){el.addEventListener('click',function(event){event.preventDefault();var destination=el.href;trackEvent('CTAOfferClick',{cta_id:el.getAttribute('data-cta-id')});if(window.fbq)fbq('track','AddToCart',{content_name:'Método do Zimbreiro',variant:LP_TEST_VARIANT});setTimeout(function(){window.location.href=destination},150)})});
 </script>
 </body>
 </html>

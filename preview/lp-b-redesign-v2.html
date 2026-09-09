@@ -145,21 +145,31 @@ h2{font-size:clamp(25px,4vw,34px);line-height:1.15;margin-bottom:18px;text-align
 footer{padding:30px 24px 44px;text-align:center;font-size:11.5px;color:var(--gold-muted);background:var(--dark-deep)}
 footer p{max-width:56ch;margin:0 auto;line-height:1.7}
 
-/* GRAFICOS ABSTRATOS - simbolos reais do conteudo, sem pessoas/fotos */
-.hero-visual{max-width:380px;margin:0 auto 28px;opacity:.95}
+/* IMAGENS REAIS - fotografia/mockup aprovados */
+.hero-media{max-width:640px;margin:0 auto 30px;overflow:hidden;background:#000}
+.hero-media img{width:100%;height:auto;object-fit:cover;display:block}
+.dor-media{max-width:820px;margin:0 auto 30px;overflow:hidden;background:var(--gray)}
+.dor-media img{width:100%;height:auto;object-fit:contain;display:block}
 .movement-row{display:flex;gap:0;align-items:center;flex-wrap:wrap;padding:36px 0;border-bottom:1px solid var(--line)}
 .movement-row:last-child{border-bottom:0}
-.movement-row .m-icon{flex:0 0 160px;display:flex;justify-content:center;color:var(--bordo)}
-.movement-row .m-text{flex:1 1 320px;padding:0 8px}
+.movement-row .m-icon{flex:1 1 320px;max-width:460px;overflow:hidden;background:rgba(0,0,0,.15)}
+.movement-row .m-icon img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;display:block}
+.movement-row .m-text{flex:1 1 300px;padding:0 8px}
 .movement-row.reverse{flex-direction:row-reverse}
-.band-dark .movement-row .m-icon{color:var(--gold-soft)}
-.m-icon svg{width:110px;height:110px}
 .quote-mark{font-family:var(--disp);font-size:110px;line-height:.5;color:var(--gold-soft);opacity:.3;display:block;text-align:center;margin-bottom:-10px}
+.metodo-media{max-width:760px;margin:0 auto 34px;overflow:hidden;background:#fff}
+.metodo-media img{width:100%;height:auto;object-fit:contain;display:block}
+.method-media-lead{margin:0 0 18px;overflow:hidden;background:var(--gray);max-height:180px;display:flex;justify-content:center}
+.method-media-lead img{width:auto;height:180px;object-fit:contain;display:block}
 .preview-wrap{position:relative;max-width:340px;margin:0 auto}
 .progress-ring{position:absolute;top:-14px;right:-8px;width:64px;height:64px;background:var(--cream);border-radius:50%;box-shadow:0 6px 16px -4px rgba(28,18,8,.25);display:flex;align-items:center;justify-content:center;transform:rotate(-6deg)}
 .progress-ring span{font-family:var(--disp);font-weight:700;font-size:13px;color:var(--bordo);text-align:center;line-height:1.1}
 .offer-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(250,247,242,.2);padding:8px 14px;font-size:12px;color:var(--gold-soft);margin-bottom:18px}
-@media(max-width:680px){.movement-row,.movement-row.reverse{flex-direction:column;text-align:center}.movement-row .m-icon{flex:0 0 auto;margin-bottom:12px}}
+.offer-layout{display:grid;grid-template-columns:1fr;gap:32px;align-items:center;max-width:960px;margin:0 auto}
+.offer-media{overflow:hidden;background:rgba(0,0,0,.2)}
+.offer-media img{width:100%;height:auto;object-fit:contain;display:block}
+@media(min-width:820px){.offer-layout{grid-template-columns:1fr 1fr}}
+@media(max-width:680px){.movement-row,.movement-row.reverse{flex-direction:column;text-align:center}.movement-row .m-icon{flex:0 0 auto;margin-bottom:12px;max-width:100%}}
 </style>
 
 <!-- Meta Pixel -->
@@ -182,14 +192,9 @@ gtag('config','G-DW808DQS8Q');
 <!-- HERO -->
 <section class="hero">
   <div class="wrap">
-    <svg class="hero-visual" viewBox="0 0 600 300" fill="none" aria-hidden="true">
-      <defs><radialGradient id="hg" cx="50%" cy="30%" r="65%"><stop offset="0%" stop-color="#C4973B" stop-opacity="0.4"/><stop offset="100%" stop-color="#C4973B" stop-opacity="0"/></radialGradient></defs>
-      <rect width="600" height="300" fill="url(#hg)"/>
-      <path d="M0 260 Q150 240 300 258 T600 258 V300 H0 Z" fill="#1A1209"/>
-      <ellipse cx="300" cy="252" rx="150" ry="12" fill="#000" opacity="0.35"/>
-      <path d="M300 80 C258 108 244 146 258 174 C234 170 220 188 234 206 C220 213 227 231 249 231 L351 231 C373 231 380 213 366 206 C380 188 366 170 342 174 C356 146 342 108 300 80 Z" fill="#D8C9A8" opacity="0.85"/>
-      <line x1="300" y1="231" x2="300" y2="256" stroke="#D8C9A8" stroke-width="5" opacity="0.85"/>
-    </svg>
+    <div class="hero-media">
+      <img src="assets/images/lp-b/hero-exaustao.jpg" width="1672" height="941" alt="Mulher exausta sentada sob um zimbro, céu turbulento ao fundo" fetchpriority="high" decoding="async">
+    </div>
     <p class="lede">Você já ouviu dezenas de mensagens sobre Elias. Mas existe um detalhe em 1 Reis 19 que quase ninguém percebe.</p>
     <h1>Você ama a Deus. Serve há anos. E ainda assim sente culpa toda vez que tenta parar.</h1>
     <p class="prose">Baseado no momento em que Deus tratou Elias como filho exausto — e a primeira coisa que fez não foi dar uma missão. Foi deixá-lo dormir.</p>
@@ -201,6 +206,9 @@ gtag('config','G-DW808DQS8Q');
 <section class="band band-white" data-track-section="dor_crenca">
   <div class="wrap">
     <span class="eyebrow">O que está acontecendo</span>
+    <div class="dor-media">
+      <img src="assets/images/lp-b/dor-identificacao.jpg" width="1672" height="941" loading="lazy" decoding="async" alt="Três mulheres em momentos diferentes de exaustão no dia a dia">
+    </div>
     <div class="pain-grid">
       <div class="pain-card"><p>Termina o culto. Abraça todo mundo. Diz que está tudo bem. Entra no carro. E chora sozinha antes de ligar o motor.</p></div>
       <div class="pain-card"><p>Não é falta de fé. É o peso de carregar sem parar — e a culpa que vem toda vez que você tenta descansar, como se parar fosse decepcionar a Deus.</p></div>
@@ -222,22 +230,22 @@ gtag('config','G-DW808DQS8Q');
   <div class="wrap">
     <span class="eyebrow center" style="display:block">O que Deus fez com Elias</span>
     <div class="movement-row">
-      <div class="m-icon"><svg viewBox="0 0 200 200" fill="currentColor"><ellipse cx="100" cy="175" rx="65" ry="7" opacity="0.15"/><path d="M100 45 C72 65 62 92 72 112 C58 108 48 122 58 136 C48 142 53 156 66 156 L134 156 C147 156 152 142 142 136 C152 122 142 108 128 112 C138 92 128 65 100 45 Z" opacity="0.9"/><line x1="100" y1="156" x2="100" y2="174" stroke="currentColor" stroke-width="4"/></svg></div>
+      <div class="m-icon"><img src="assets/images/lp-b/movimento-1-descanso.jpg" width="1672" height="941" loading="lazy" decoding="async" alt="Mulher descansando sob um zimbro, luz aberta no deserto"></div>
       <div class="m-text prose narrow" style="margin:0">
         <p>Elias era profeta. Chamou fogo do céu. Confrontou 450 profetas sozinho. E, mesmo assim, se sentou debaixo de uma árvore e pediu para morrer.</p>
         <p>Deus não repreendeu Elias por estar ali. A primeira coisa que fez foi deixá-lo dormir. Isso não foi fraqueza. Foi o início da restauração.</p>
       </div>
     </div>
     <div class="movement-row reverse">
-      <div class="m-icon"><svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="3"><ellipse cx="70" cy="118" rx="42" ry="26" fill="currentColor" opacity="0.85" stroke="none"/><path d="M128 88 L148 88 L143 138 Q138 148 128 148 L120 148 Q112 138 108 88" fill="none"/><line x1="108" y1="88" x2="148" y2="88"/></svg></div>
+      <div class="m-icon"><img src="assets/images/lp-b/movimento-2-cuidado.jpg" width="1672" height="941" loading="lazy" decoding="async" alt="Pão e água ao lado do zimbro, no deserto"></div>
       <div class="m-text prose narrow" style="margin:0"><p><strong>Depois, o cuidado:</strong> um anjo o alimentou e deixou que dormisse de novo, antes de qualquer missão nova.</p></div>
     </div>
     <div class="movement-row">
-      <div class="m-icon"><svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"><path d="M30 150 L75 70 L110 110 L170 40" opacity="0.35"/><path d="M20 165 Q65 135 100 152 Q140 172 180 145" stroke-dasharray="1 14"/></svg></div>
+      <div class="m-icon"><img src="assets/images/lp-b/movimento-3-caminho.jpg" width="1672" height="941" loading="lazy" decoding="async" alt="Mulher caminhando por um trilho de deserto sob luz de manhã"></div>
       <div class="m-text prose narrow" style="margin:0"><p><strong>Depois, a força do alimento:</strong> com aquela refeição, Elias caminhou 40 dias até Horebe — o que sustenta o caminho longo não é resistir sem parar.</p></div>
     </div>
     <div class="movement-row reverse">
-      <div class="m-icon"><svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="100" cy="100" r="16" fill="currentColor" stroke="none" opacity="0.9"/><circle cx="100" cy="100" r="38" opacity="0.5"/><circle cx="100" cy="100" r="60" opacity="0.3"/><circle cx="100" cy="100" r="82" opacity="0.15"/></svg></div>
+      <div class="m-icon"><img src="assets/images/lp-b/movimento-4-voz-mansa.jpg" width="1672" height="941" loading="lazy" decoding="async" alt="Entrada de uma caverna no deserto, tempestade se dissipando ao fundo"></div>
       <div class="m-text prose narrow" style="margin:0"><p><strong>Só depois, a voz:</strong> não estava no vento forte, no terremoto ou no fogo. Estava numa voz mansa e delicada.</p></div>
     </div>
     <p class="quote">Talvez você também esteja tentando ouvir uma voz mansa enquanto vive cercada pelo barulho do próprio cansaço.</p>
@@ -265,8 +273,14 @@ gtag('config','G-DW808DQS8Q');
     <span class="eyebrow">O método</span>
     <h2>Método do Zimbreiro</h2>
     <p class="prose narrow">Um protocolo de 7 dias que conduz você pela mesma sequência que Deus usou com Elias, um passo de cada vez.</p>
+    <div class="metodo-media">
+      <img src="assets/images/lp-b/metodo-jornada-7-dias.jpg" width="1448" height="1086" loading="lazy" decoding="async" alt="Jornada digital de sete dias do Método do Zimbreiro, do Dia 1 ao Dia 7">
+    </div>
     <div class="metodo-grid" style="text-align:left">
       <div class="method-card">
+        <div class="method-media-lead">
+          <img src="assets/images/lp-b/metodo-experiencia-dia1.jpg" width="1448" height="1086" loading="lazy" decoding="async" alt="Tela do app com os blocos Reflexão, Prática e Oração do Dia 1">
+        </div>
         <div class="method-row"><span class="method-num">01</span><div><div class="method-name">O Zimbro</div><div class="method-desc">Nomear o cansaço sem fingir, e ser encontrada nele.</div></div></div>
         <div class="method-row"><span class="method-num">02</span><div><div class="method-name">O Bolo e o Segundo Sono</div><div class="method-desc">Aprender a receber e a descansar de novo, sem culpa.</div></div></div>
         <div class="method-row"><span class="method-num">03</span><div><div class="method-name">A Força do Alimento</div><div class="method-desc">Descobrir que a pausa sustenta o que vem depois.</div></div></div>
@@ -325,13 +339,18 @@ gtag('config','G-DW808DQS8Q');
 <!-- OFERTA -->
 <section class="band offer-band" id="oferta" data-track-section="oferta">
   <div class="wrap">
-    <div class="offer">
-      <p class="offer-eyebrow">Método do Zimbreiro — Fase 1 do Protocolo de Elias</p>
-      <p class="offer-name">Sete dias para praticar o descanso como obediência</p>
-      <p class="offer-anchor">R$47,90</p>
-      <p class="offer-price">R$17,90</p>
-      <p class="offer-detail">Uma única vez · acesso imediato</p>
-      <a href="https://pay.herospark.com/metodo-do-zimbreiro-536020" class="btn btn-green btn-wide" id="cta-oferta" data-track-cta data-cta-id="cta-oferta">Começar meus 7 dias</a>
+    <div class="offer-layout">
+      <div class="offer">
+        <p class="offer-eyebrow">Método do Zimbreiro — Fase 1 do Protocolo de Elias</p>
+        <p class="offer-name">Sete dias para praticar o descanso como obediência</p>
+        <p class="offer-anchor">R$47,90</p>
+        <p class="offer-price">R$17,90</p>
+        <p class="offer-detail">Uma única vez · acesso imediato</p>
+        <a href="https://pay.herospark.com/metodo-do-zimbreiro-536020" class="btn btn-green btn-wide" id="cta-oferta" data-track-cta data-cta-id="cta-oferta">Começar meus 7 dias</a>
+      </div>
+      <div class="offer-media">
+        <img src="assets/images/lp-b/oferta-mockup.jpg" width="1672" height="941" loading="lazy" decoding="async" alt="Três celulares mostrando o app do Método do Zimbreiro">
+      </div>
     </div>
     <div class="guarantee">
       <p><strong>Garantia de 7 dias:</strong> você tem 7 dias para acessar e conhecer o Método do Zimbreiro. Se perceber que não é para você, solicite o reembolso dentro desse prazo. Pagamento processado com segurança por SparkPay by HeroSpark.</p>
